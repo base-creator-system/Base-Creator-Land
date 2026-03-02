@@ -13,5 +13,32 @@
   ],
   "backgroundColor": "#669c35",
   "contactEmail": "soliddreamz@gmail.com",
-  "contactLabel": "Connect"
+  "contactLabel": "Connect",
+
+  "mediaGateway": {
+    "enabled": true,
+    "collections": [
+      {
+        "title": "Latest",
+        "items": [
+          {
+            "id": "clip-001",
+            "title": "Text & Decks Clip",
+            "description": "Live performance excerpt.",
+            "thumbnail": "",
+            "url": "https://example.com/sample-video.mp4",
+            "access": "public"
+          },
+          {
+            "id": "set-locked-001",
+            "title": "Full Set (Members)",
+            "description": "Extended live set.",
+            "thumbnail": "",
+            "url": "",
+            "access": "paid"
+          }
+        ]
+      }
+    ]
+  }
 }
