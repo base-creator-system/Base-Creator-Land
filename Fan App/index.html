@@ -172,7 +172,8 @@ padding:14px;
 margin-bottom:12px;
 }
 
-.media-card img{
+.media-card img,
+.media-card video{
 width:100%;
 border-radius:8px;
 margin-bottom:8px;
@@ -240,6 +241,7 @@ background:rgba(255,255,255,0.08);
 }
 
 </style>
+
 <meta name="apple-mobile-web-app-title" content="DJ TEST 16">
 <meta name="application-name" content="DJ TEST 16">
 <link rel="icon" href="icons/icon-192-v8.png">
@@ -260,7 +262,6 @@ background:rgba(255,255,255,0.08);
 <img id="heroImg" src="icons/icon-512.png">
 </div>
 
-<!-- HOME -->
 <section id="view-home">
 <div class="card">
 <div class="h1" id="homeTitle">Home</div>
@@ -269,12 +270,10 @@ background:rgba(255,255,255,0.08);
 </div>
 </section>
 
-<!-- MEDIA -->
 <section id="view-media" class="hidden">
 <div id="mediaSection"></div>
 </section>
 
-<!-- LINKS -->
 <section id="view-links" class="hidden">
 <div id="links"></div>
 </section>
@@ -410,9 +409,20 @@ const card=document.createElement("div")
 card.className="media-card"
 
 if(item.thumbnail){
+
 const img=document.createElement("img")
 img.src=item.thumbnail
+img.loading="lazy"
 card.appendChild(img)
+
+}else if(item.url){
+
+const video=document.createElement("video")
+video.src=item.url
+video.controls=true
+video.preload="metadata"
+card.appendChild(video)
+
 }
 
 const t=document.createElement("div")
