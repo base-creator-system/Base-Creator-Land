@@ -2,276 +2,442 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-<title>DJ TEST 16</title>
-<meta name="apple-mobile-web-app-title" content="DJ TEST 16">
-<meta name="application-name" content="DJ TEST 16">
-<meta property="og:title" content="DJ TEST 10">
-<meta property="og:type" content="website">
-<meta property="og:image" content="icons/icon-512.png">
-<link rel="apple-touch-icon" href="icons/icon-192-v8.png">
+<title>Creator App</title>
+
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icons/icon-192-v8.png">
+<meta name="theme-color" content="#000000">
+
+<link rel="apple-touch-icon" href="icons/icon-192-v8.png">
 
 <style>
+
+:root{
+--bg:#000;
+--card:rgba(255,255,255,0.06);
+--stroke:rgba(255,255,255,0.10);
+--text:#fff;
+--muted:rgba(255,255,255,0.72);
+--pill:rgba(255,255,255,0.10);
+--pillStroke:rgba(255,255,255,0.12);
+}
+
+*{box-sizing:border-box}
+
 body{
-  margin:0;
-  font-family:system-ui;
-  background:#0b0b0f;
-  color:white;
-  transition:background-color 0.3s ease;
+margin:0;
+background:var(--bg);
+color:var(--text);
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
 }
-header{
-  padding:16px;
-  border-bottom:1px solid #222;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
+
+.wrap{
+max-width:720px;
+margin:0 auto;
+padding:18px 14px 90px;
 }
-#logoWrap{
-  width:100%;
-  text-align:center;
+
+.top{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+padding:6px 2px 10px;
 }
-#logo{
-  display:none;
-  margin:0 auto 12px auto;
-  max-width:80%;
-  max-height:200px;
-  height:auto;
-  object-fit:contain;
+
+.brand{
+display:flex;
+align-items:center;
+gap:10px;
+min-width:0;
 }
-section{ padding:16px; }
-.badge{
-  padding:6px 10px;
-  border-radius:20px;
-  background:#222;
-  font-size:12px;
-  display:inline-block;
+
+.brand img{
+width:44px;
+height:44px;
+border-radius:12px;
+object-fit:cover;
+border:1px solid var(--stroke);
+background:#000;
 }
-.links{
-  display:grid;
-  gap:10px;
-  max-width:520px;
+
+.brand .name{
+font-weight:800;
+font-size:16px;
 }
-a.btn{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:12px 14px;
-  border:1px solid #222;
-  border-radius:12px;
-  color:white;
-  text-decoration:none;
-  background:#0a0a0a;
+
+.hero{
+margin:10px 0 14px;
+border-radius:18px;
+border:1px solid var(--stroke);
+background:rgba(255,255,255,0.03);
+overflow:hidden;
 }
-.media-section{
-  margin-top:20px;
-  margin-bottom:20px;
+
+.hero img{
+width:100%;
+display:block;
 }
+
+.card{
+border:1px solid var(--stroke);
+background:var(--card);
+border-radius:18px;
+padding:14px;
+margin:12px 0;
+}
+
+.h1{
+font-size:18px;
+font-weight:800;
+margin:0 0 6px 0;
+}
+
+.p{
+margin:0;
+color:var(--muted);
+font-size:13px;
+}
+
+.hidden{display:none!important}
+
+.row{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+border:1px solid var(--stroke);
+background:rgba(255,255,255,0.04);
+border-radius:16px;
+padding:12px;
+margin:10px 0;
+text-decoration:none;
+color:inherit;
+}
+
+.left{
+display:flex;
+flex-direction:column;
+gap:3px;
+min-width:0;
+}
+
+.label{
+font-weight:700;
+font-size:14px;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.hint{
+color:var(--muted);
+font-size:12px;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.pill{
+flex:0 0 auto;
+padding:8px 10px;
+border-radius:999px;
+border:1px solid var(--pillStroke);
+background:var(--pill);
+font-size:12px;
+}
+
 .media-card{
-  background:#0a0a0a;
-  border:1px solid #222;
-  border-radius:12px;
-  padding:14px;
-  margin-bottom:12px;
+background:#0a0a0a;
+border:1px solid #222;
+border-radius:12px;
+padding:14px;
+margin-bottom:12px;
 }
+
 .media-card img{
-  width:100%;
-  border-radius:8px;
-  margin-bottom:8px;
+width:100%;
+border-radius:8px;
+margin-bottom:8px;
 }
+
 .media-title{
-  font-weight:600;
-  margin-bottom:4px;
+font-weight:600;
+margin-bottom:4px;
 }
+
 .media-desc{
-  font-size:14px;
-  opacity:0.8;
-  margin-bottom:10px;
+font-size:14px;
+opacity:0.8;
+margin-bottom:10px;
 }
+
 .media-btn{
-  display:inline-block;
-  padding:8px 14px;
-  border-radius:20px;
-  border:1px solid #333;
-  background:#111;
-  color:white;
-  text-decoration:none;
-  font-size:14px;
+display:inline-block;
+padding:8px 14px;
+border-radius:20px;
+border:1px solid #333;
+background:#111;
+color:white;
+text-decoration:none;
+font-size:14px;
 }
+
 .media-locked{
-  opacity:0.6;
-  cursor:not-allowed;
+opacity:0.6;
 }
+
+.tabs{
+position:fixed;
+left:0;
+right:0;
+bottom:0;
+background:rgba(0,0,0,0.82);
+backdrop-filter:blur(12px);
+border-top:1px solid var(--stroke);
+padding:10px 12px;
+}
+
+.tabrow{
+max-width:720px;
+margin:0 auto;
+display:flex;
+gap:10px;
+}
+
+.tab{
+flex:1;
+border:1px solid var(--stroke);
+background:rgba(255,255,255,0.04);
+color:var(--muted);
+padding:10px;
+border-radius:14px;
+font-size:13px;
+text-align:center;
+cursor:pointer;
+}
+
+.tab.active{
+color:var(--text);
+background:rgba(255,255,255,0.08);
+}
+
 </style>
 </head>
 
 <body>
 
-<header>
-  <div id="logoWrap">
-    <img id="logo" alt="Logo">
-    <h2 id="name" style="margin:0 0 6px 0;">Creator Name</h2>
-    <div class="badge" id="live">OFFLINE</div>
-  </div>
-</header>
+<div class="wrap">
 
-<section>
-  <p id="bio">Bio goes here</p>
+<div class="top">
+<div class="brand">
+<img id="logo" src="icons/icon-192-v8.png">
+<div class="name" id="name">Creator</div>
+</div>
+</div>
 
-  <!-- MEDIA GATEWAY -->
-  <div id="mediaSection" class="media-section"></div>
+<div class="hero" id="heroWrap">
+<img id="heroImg" src="icons/icon-512.png">
+</div>
 
-  <div class="links" id="links"></div>
+<!-- HOME -->
+<section id="view-home">
+<div class="card">
+<div class="h1" id="homeTitle">Home</div>
+<p class="p" id="bio"></p>
+</div>
 </section>
 
+<!-- MEDIA -->
+<section id="view-media" class="hidden">
+<div id="mediaSection"></div>
+</section>
+
+<!-- LINKS -->
+<section id="view-links" class="hidden">
+<div id="links"></div>
+</section>
+
+</div>
+
+<nav class="tabs">
+<div class="tabrow">
+<div class="tab active" data-id="home">Home</div>
+<div class="tab" data-id="media">Media</div>
+<div class="tab" data-id="links">Links</div>
+</div>
+</nav>
+
 <script>
-const CONTENT_URL = "./content.json";
-const POLL_INTERVAL = 15000;
+
+const CONTENT_URL="./content.json"
+const POLL_INTERVAL=15000
+
+const views={
+home:document.getElementById("view-home"),
+media:document.getElementById("view-media"),
+links:document.getElementById("view-links")
+}
+
+document.querySelectorAll(".tab").forEach(t=>{
+t.onclick=()=>setView(t.dataset.id)
+})
+
+function setView(id){
+Object.keys(views).forEach(k=>views[k].classList.toggle("hidden",k!==id))
+document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.id===id))
+}
 
 function applyState(d){
-  if (!d) return;
 
-  document.getElementById("name").textContent = d.name || "";
-  document.getElementById("bio").textContent  = d.bio || "";
+if(!d)return
 
-  if (d.backgroundColor && typeof d.backgroundColor === "string") {
-    document.body.style.background = d.backgroundColor;
-  } else {
-    document.body.style.background = "#0b0b0f";
-  }
+document.getElementById("name").textContent=d.name||""
+document.getElementById("bio").textContent=d.bio||""
 
-  const liveOn = d.isLive === true;
-  document.getElementById("live").textContent = liveOn ? "LIVE" : "OFFLINE";
+if(d.backgroundColor){
+document.body.style.background=d.backgroundColor
+}
 
-  renderMedia(d);
+renderMedia(d)
+renderLinks(d)
 
-  const linksEl = document.getElementById("links");
-  linksEl.innerHTML = "";
+}
 
-  const links = Array.isArray(d.links) ? d.links : [];
-  links.forEach((item) => {
-    if (!item || !item.url) return;
-    const a = document.createElement("a");
-    a.className = "btn";
-    a.href = item.url;
-    a.target = "_blank";
-    a.rel = "noopener";
-    a.textContent = item.label || item.url;
-    linksEl.appendChild(a);
-  });
+function renderLinks(d){
 
-  if (liveOn && d.liveUrl) {
-    const a = document.createElement("a");
-    a.className = "btn";
-    a.href = d.liveUrl;
-    a.target = "_blank";
-    a.rel = "noopener";
-    a.textContent = "Open Live";
-    linksEl.prepend(a);
-  }
+const container=document.getElementById("links")
+container.innerHTML=""
 
-  if (d.contactEmail && typeof d.contactEmail === "string") {
-    const label = (typeof d.contactLabel === "string" && d.contactLabel.trim())
-      ? d.contactLabel.trim()
-      : "Connect";
+const links=Array.isArray(d.links)?d.links:[]
 
-    const a = document.createElement("a");
-    a.className = "btn";
-    a.href = `mailto:${d.contactEmail.trim()}`;
-    a.textContent = label;
-    linksEl.appendChild(a);
-  }
+links.forEach(item=>{
 
-  const logo = document.getElementById("logo");
-  if (logo) {
-    logo.src = "./icons/icon-512.png?v=" + Date.now();
-    logo.style.display = "block";
-  }
+if(!item.url)return
+
+const a=document.createElement("a")
+a.className="row"
+a.href=item.url
+a.target="_blank"
+a.rel="noopener"
+
+const left=document.createElement("div")
+left.className="left"
+
+const label=document.createElement("div")
+label.className="label"
+label.textContent=item.label||"Link"
+
+const hint=document.createElement("div")
+hint.className="hint"
+hint.textContent=item.url.replace(/^https?:\/\//,"")
+
+left.appendChild(label)
+left.appendChild(hint)
+
+const pill=document.createElement("div")
+pill.className="pill"
+pill.textContent="Open"
+
+a.appendChild(left)
+a.appendChild(pill)
+
+container.appendChild(a)
+
+})
+
 }
 
 function renderMedia(d){
-  const container = document.getElementById("mediaSection");
-  container.innerHTML = "";
 
-  if (!d.mediaGateway || !d.mediaGateway.enabled) return;
+const container=document.getElementById("mediaSection")
+container.innerHTML=""
 
-  const collections = Array.isArray(d.mediaGateway.collections)
-    ? d.mediaGateway.collections
-    : [];
+if(!d.mediaGateway||!d.mediaGateway.enabled)return
 
-  collections.forEach(collection => {
-    if (!collection.items || !collection.items.length) return;
+const collections=Array.isArray(d.mediaGateway.collections)?d.mediaGateway.collections:[]
 
-    const heading = document.createElement("h3");
-    heading.textContent = collection.title;
-    heading.style.marginBottom = "10px";
-    container.appendChild(heading);
+collections.forEach(collection=>{
 
-    collection.items.forEach(item => {
-      const card = document.createElement("div");
-      card.className = "media-card";
+if(!collection.items)return
 
-      if (item.thumbnail) {
-        const img = document.createElement("img");
-        img.src = item.thumbnail;
-        card.appendChild(img);
-      }
+const title=document.createElement("h3")
+title.textContent=collection.title
+container.appendChild(title)
 
-      const title = document.createElement("div");
-      title.className = "media-title";
-      title.textContent = item.title || "";
-      card.appendChild(title);
+collection.items.forEach(item=>{
 
-      if (item.description) {
-        const desc = document.createElement("div");
-        desc.className = "media-desc";
-        desc.textContent = item.description;
-        card.appendChild(desc);
-      }
+const card=document.createElement("div")
+card.className="media-card"
 
-      if (item.access === "public" && item.url) {
-        const btn = document.createElement("a");
-        btn.className = "media-btn";
-        btn.href = item.url;
-        btn.target = "_blank";
-        btn.rel = "noopener";
-        btn.textContent = "Open";
-        card.appendChild(btn);
-      } else {
-        const locked = document.createElement("div");
-        locked.className = "media-btn media-locked";
-        locked.textContent = "Locked";
-        card.appendChild(locked);
-      }
+if(item.thumbnail){
+const img=document.createElement("img")
+img.src=item.thumbnail
+card.appendChild(img)
+}
 
-      container.appendChild(card);
-    });
-  });
+const t=document.createElement("div")
+t.className="media-title"
+t.textContent=item.title||""
+card.appendChild(t)
+
+if(item.description){
+const desc=document.createElement("div")
+desc.className="media-desc"
+desc.textContent=item.description
+card.appendChild(desc)
+}
+
+if(item.access==="public"&&item.url){
+
+const btn=document.createElement("a")
+btn.className="media-btn"
+btn.href=item.url
+btn.target="_blank"
+btn.rel="noopener"
+btn.textContent="Open"
+card.appendChild(btn)
+
+}else{
+
+const locked=document.createElement("div")
+locked.className="media-btn media-locked"
+locked.textContent="Locked"
+card.appendChild(locked)
+
+}
+
+container.appendChild(card)
+
+})
+
+})
+
 }
 
 async function fetchState(){
-  const url = new URL(CONTENT_URL, location.href);
-  url.searchParams.set("ts", Date.now());
-  const res = await fetch(url.toString(), { cache:"no-store" });
-  if (!res.ok) throw new Error("Failed to load content.json");
-  return res.json();
+
+const url=new URL(CONTENT_URL,location.href)
+url.searchParams.set("ts",Date.now())
+
+const res=await fetch(url.toString(),{cache:"no-store"})
+return res.json()
+
 }
 
 async function tick(){
-  try{
-    const state = await fetchState();
-    applyState(state);
-  }catch(e){}
+
+try{
+const state=await fetchState()
+applyState(state)
+}catch(e){}
+
 }
 
-tick();
-setInterval(tick, POLL_INTERVAL);
-document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) tick();
-});
+tick()
+setInterval(tick,POLL_INTERVAL)
+
 </script>
 
 </body>
