@@ -163,6 +163,22 @@ white-space:pre-wrap;
 font-size:12px;
 opacity:.75;
 }
+
+.previewFrame{
+display:block;
+width:100%;
+height:720px;
+border:0;
+background:#000;
+}
+
+.miniPreview{
+border:1px solid #222;
+border-radius:18px;
+padding:16px;
+background:#040404;
+}
+
 </style>
 </head>
 
@@ -201,6 +217,7 @@ opacity:.75;
 </div>
 
 <div class="card">
+
 <div class="row">
 <div class="col">
 <label>Name</label>
@@ -222,9 +239,11 @@ opacity:.75;
 <label>Pill Color</label>
 <input id="pillColor" type="color">
 </div>
+
 </div>
 
 <div class="card">
+
 <h3>Links</h3>
 
 <div class="row">
@@ -245,35 +264,31 @@ opacity:.75;
 </div>
 
 <div id="linksList" class="linksList"></div>
-</div>
-
-<div class="card">
-
-<div class="row">
-<div class="col">
-<label>Email</label>
-<input id="contactEmail">
-</div>
-
-<div class="col">
-<label>Button Label</label>
-<input id="contactLabel">
-</div>
-</div>
 
 </div>
 
 <div class="card">
 
-<div class="row">
-<div class="col">
-<label>Upload Icon</label>
-<input id="appIconFile" type="file">
+<h3>Fan App Preview</h3>
+
+<iframe
+id="fanPreviewFrame"
+class="previewFrame"
+src="../Fan App/index.html?basePreviewShell=1">
+</iframe>
+
+<div style="margin-top:16px">
+
+<div id="miniPreview" class="miniPreview">
+
+<div id="pName" style="font-size:20px;font-weight:700;margin-bottom:8px">—</div>
+
+<div id="pBio" style="opacity:.85;margin-bottom:12px">—</div>
+
+<div id="pLinks"></div>
+
 </div>
 
-<div class="col">
-<button id="btnUpdateIcon">Update Icon</button>
-</div>
 </div>
 
 </div>
@@ -288,7 +303,7 @@ opacity:.75;
 </div>
 
 <div style="display:flex;gap:12px;flex-wrap:wrap;">
-<button id="btnPublish">Publish</button>
+<button id="btnPublish" disabled>Publish</button>
 <button id="btnResetToken" class="danger">Reset Key</button>
 </div>
 
@@ -330,18 +345,19 @@ linkUrlInput:$("linkUrlInput"),
 addLinkBtn:$("addLinkBtn"),
 clearLinksBtn:$("clearLinksBtn"),
 linksList:$("linksList"),
-contactEmail:$("contactEmail"),
-contactLabel:$("contactLabel"),
 status:$("status"),
 repoLabel:$("repoLabel"),
 statePill:$("statePill"),
-lastSha:$("lastSha")
+lastSha:$("lastSha"),
+previewFrame:$("fanPreviewFrame"),
+previewName:$("pName"),
+previewBio:$("pBio"),
+previewLinks:$("pLinks")
 }
 
 const LS_TOKEN="base_creator_token_v1"
 
 let hasLoadedState=false
-let lastRemoteSha=null
 let linkState=[]
 
 function log(t){
@@ -359,6 +375,9 @@ const hasToken=(el.token.value||"").trim().length>0
 
 /* FIXED HERE */
 el.btnPublish.disabled=!(hasLoadedState && hasToken)
+
+refreshPreview()
+
 }
 
 async function fetchState(){
@@ -372,7 +391,9 @@ return res.json()
 }
 
 function renderLinks(){
+
 el.linksList.innerHTML=""
+el.previewLinks.innerHTML=""
 
 linkState.forEach((l,i)=>{
 
@@ -397,7 +418,31 @@ row.appendChild(remove)
 
 el.linksList.appendChild(row)
 
+const p=document.createElement("div")
+p.textContent=l.label
+el.previewLinks.appendChild(p)
+
 })
+
+}
+
+function refreshPreview(){
+
+el.previewName.textContent=el.name.value||"—"
+el.previewBio.textContent=el.bio.value||"—"
+
+try{
+el.previewFrame.contentWindow.postMessage({
+type:"BASE_PREVIEW",
+payload:{
+name:el.name.value,
+bio:el.bio.value,
+links:linkState,
+backgroundColor:el.backgroundColor.value,
+pillColor:el.pillColor.value
+}
+},"*")
+}catch(e){}
 
 }
 
@@ -423,6 +468,7 @@ enablePublishIfReady()
 }
 
 el.btnLoad.onclick=async()=>{
+
 try{
 
 setPill("warn","STATUS: loading…")
@@ -451,6 +497,7 @@ setPill("bad","STATUS: load failed")
 log(e.message)
 
 }
+
 }
 
 function ghHeaders(token){
@@ -520,8 +567,6 @@ if(!token)throw new Error("Missing creator key.")
 
 const meta=await ghGetFileMeta(token,TARGET_PATH)
 
-lastRemoteSha=meta.sha
-
 const existing=JSON.parse(fromBase64Utf8(meta.content))
 
 const merged={
@@ -533,13 +578,10 @@ backgroundColor:el.backgroundColor.value,
 pillColor:el.pillColor.value
 }
 
-if(el.contactEmail.value.trim())merged.contactEmail=el.contactEmail.value.trim()
-if(el.contactLabel.value.trim())merged.contactLabel=el.contactLabel.value.trim()
-
 const result=await ghPutFile(
 token,
 TARGET_PATH,
-lastRemoteSha,
+meta.sha,
 toBase64Utf8(JSON.stringify(merged,null,2)),
 "BASE publish"
 )
@@ -566,7 +608,6 @@ el.repoLabel.textContent=`${OWNER}/${REPO}@${BRANCH}`
 el.contentUrl.value=DEFAULT_CONTENT_URL
 
 const saved=localStorage.getItem(LS_TOKEN)
-
 if(saved)el.token.value=saved
 
 enablePublishIfReady()
