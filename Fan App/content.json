@@ -1,6 +1,6 @@
 {
-  "name": "DJ TEST 254",
-  "bio": "MO FIYA 10",
+  "name": "DJ TEST 26",
+  "bio": "DJ Mo Fiya Founder of the Base System — an independent creator infrastructure built for ownership, not algorithms.  Base gives creators their own digital land: apps they control, audiences they own, and content that isn’t locked inside platforms.  From DJ sets and live streaming to experimental creator tools, everything built here is about one principle:  Creators should control their work, their audience, and their future.",
   "links": [
     {
       "label": "Instagram",
@@ -11,7 +11,7 @@
       "url": "https://youtube.com/"
     }
   ],
-  "backgroundColor": "#da5100",
+  "backgroundColor": "#371a94",
   "contactEmail": "soliddreamz@gmail.com",
   "contactLabel": "Connect",
   "mediaGateway": {
@@ -56,5 +56,5 @@
       }
     ]
   },
-  "pillColor": "#be38f3"
+  "pillColor": "#c4bc00"
 }
