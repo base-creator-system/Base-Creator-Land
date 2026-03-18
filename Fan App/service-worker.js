@@ -4,7 +4,7 @@
 // 1. Cache app shell (HTML / static files)
 // 2. NEVER cache content.json (dynamic creator state)
 
-const CACHE_NAME = 'base-fan-shell-v1';
+const CACHE_NAME = 'base-fan-shell-v2';
 const SHELL_FILES = [
   './',
   './index.html'
