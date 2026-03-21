@@ -632,6 +632,15 @@ const bytes=Uint8Array.from(atob(b64.replace(/\s/g,"")),c=>c.charCodeAt(0))
 return new TextDecoder().decode(bytes)
 }
 
+function escapeHtml(text){
+return String(text ?? "")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#39;")
+}
+
 function enablePublishIfReady(){
 const hasToken=(el.token.value||"").trim().length>0
 const hasSha=String(loadedSha||"").trim().length>0
@@ -1257,6 +1266,61 @@ toBase64Utf8(JSON.stringify(merged,null,2)),
 "BASE publish"
 )
 
+const fanIndexPath="Fan App/index.html"
+const fanIndexMeta=await ghGetFileMeta(token,fanIndexPath)
+let fanIndexHtml=fromBase64Utf8(fanIndexMeta.content)
+
+const appName=escapeHtml(el.name.value.trim() || "App")
+const cacheVersion=Date.now()
+
+fanIndexHtml=fanIndexHtml.replace(
+/<title>.*?<\/title>/,
+`<title>${appName}</title>`
+)
+
+fanIndexHtml=fanIndexHtml.replace(
+/<meta name="apple-mobile-web-app-title" content=".*?">/g,
+`<meta name="apple-mobile-web-app-title" content="${appName}">`
+)
+
+fanIndexHtml=fanIndexHtml.replace(
+/<meta name="application-name" content=".*?">/g,
+`<meta name="application-name" content="${appName}">`
+)
+
+fanIndexHtml=fanIndexHtml.replace(
+/<link rel="apple-touch-icon" href="icons\/icon-512-v\d+\.png(?:\?v=\d+)?">/g,
+match=>`<link rel="apple-touch-icon" href="${match.match(/icons\/icon-512-v\d+\.png/)?.[0] || "icons/icon-512-v9.png"}?v=${cacheVersion}">`
+)
+
+fanIndexHtml=fanIndexHtml.replace(
+/<link rel="shortcut icon" href="icons\/icon-192-v\d+\.png(?:\?v=\d+)?">/g,
+match=>`<link rel="shortcut icon" href="${match.match(/icons\/icon-192-v\d+\.png/)?.[0] || "icons/icon-192-v9.png"}?v=${cacheVersion}">`
+)
+
+fanIndexHtml=fanIndexHtml.replace(
+/<link rel="icon" href="icons\/icon-192-v\d+\.png(?:\?v=\d+)?">/g,
+match=>`<link rel="icon" href="${match.match(/icons\/icon-192-v\d+\.png/)?.[0] || "icons/icon-192-v9.png"}?v=${cacheVersion}">`
+)
+
+fanIndexHtml=fanIndexHtml.replace(
+/<img id="logo" src="icons\/icon-192-v\d+\.png(?:\?v=\d+)?">/g,
+match=>`<img id="logo" src="${match.match(/icons\/icon-192-v\d+\.png/)?.[0] || "icons/icon-192-v9.png"}?v=${cacheVersion}">`
+)
+
+fanIndexHtml=fanIndexHtml.replace(
+/<img id="heroImg" src="icons\/icon-512-v\d+\.png(?:\?v=\d+)?">/g,
+match=>`<img id="heroImg" src="${match.match(/icons\/icon-512-v\d+\.png/)?.[0] || "icons/icon-512-v9.png"}?v=${cacheVersion}">`
+)
+
+await ghPutFile(
+token,
+fanIndexPath,
+fanIndexMeta.sha,
+toBase64Utf8(fanIndexHtml),
+"BASE HTML sync"
+)
+
 if(result?.content?.sha){
 loadedSha=result.content.sha
 shaConflict=false
@@ -1266,10 +1330,6 @@ el.lastSha.textContent=`sha: ${result.content.sha}`
 clearDirty()
 setPill("ok","STATUS: published")
 log("Publish success.")
-
-try{
-el.previewFrame.src=`../Fan App/index.html?basePreviewShell=1&v=${Date.now()}`
-}catch(e){}
 
 }catch(e){
 
