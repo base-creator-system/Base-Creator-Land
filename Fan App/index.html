@@ -211,6 +211,22 @@ function setView(id){
 function applyState(d){
   if(!d)return
   document.getElementById("name").textContent=d.name||""
+
+  // 🔥 TITLE + iOS APP NAME SYNC (STEP 1 FIX)
+  if(d.name){
+    document.title = d.name;
+
+    const iosTitle = document.querySelector('meta[name="apple-mobile-web-app-title"]');
+    if(iosTitle){
+      iosTitle.setAttribute("content", d.name);
+    }
+
+    const appName = document.querySelector('meta[name="application-name"]');
+    if(appName){
+      appName.setAttribute("content", d.name);
+    }
+  }
+
   document.getElementById("bio").textContent=d.bio||""
   document.documentElement.style.setProperty('--pillColor',d.pillColor||"#000")
 
