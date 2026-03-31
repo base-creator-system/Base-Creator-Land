@@ -19,7 +19,7 @@
       "url": "https://example.invalid/media/sample.mp4"
     }
   ],
-  "backgroundColor": "#ff4013",
+  "backgroundColor": "#669c35",
   "contactEmail": "soliddreamz@gmail.com",
   "contactLabel": "Connect",
   "mediaGateway": {
@@ -61,24 +61,24 @@
             "access": "public"
           },
           {
-            "id": "item-1774967732054-d3e484c434b7e8",
-            "title": "test content",
-            "description": "",
-            "thumbnail": "",
-            "url": "https://customer-sb4ix37adh6j9xvg.cloudflarestream.com/ad4dc24bf94a0aa0e8b096613c8b48b7",
-            "access": "public"
-          },
-          {
             "id": "item-1774967936518-390f2646f5b7c8",
             "title": "more test",
             "description": "",
             "thumbnail": "",
             "url": "https://iframe.videodelivery.net/ad4dc24bf94a0aa0e8b096613c8b48b7",
             "access": "public"
+          },
+          {
+            "id": "item-1774973017022-8251e0249dade8",
+            "title": "another test",
+            "description": "",
+            "thumbnail": "",
+            "url": "https://iframe.videodelivery.net/06afe612a42487f89f1c7eaf14c7cec7",
+            "access": "public"
           }
         ]
       }
     ]
   },
-  "pillColor": "#d9eb37"
+  "pillColor": "#d4e3fe"
 }
