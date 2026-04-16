@@ -1,9 +1,9 @@
 {
-  "name": "Your App",
-  "bio": "Edit App From Creator Dashboard",
+  "name": "DJ MOFIYA",
+  "bio": "This is my App",
   "links": [],
   "backgroundColor": "#000000",
-  "contactEmail": "",
+  "contactEmail": "bookdjmofiya@gmail.com",
   "contactLabel": "Connect",
   "mediaGateway": {
     "enabled": true,
@@ -14,5 +14,5 @@
       }
     ]
   },
-  "pillColor": "#fecb3e"
+  "pillColor": "#e22400"
 }
