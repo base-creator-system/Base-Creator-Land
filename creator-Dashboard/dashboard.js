@@ -250,8 +250,7 @@ input[type="color"] {
 </div>
 </div>
 
-<!-- KEEP YOUR EXISTING PUBLISHER SCRIPT EXACTLY BELOW THIS LINE -->
-<script src="publisher.js"></script>
+<script src="dashboard.js"></script>
 
 </body>
 </html>
