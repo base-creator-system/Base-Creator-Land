@@ -77,7 +77,9 @@
 
     <div class="card">
       <div class="player">
+        <!-- ✅ REMOVED HARDCODED SRC -->
         <iframe
+          id="liveFrame"
           allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
           allowfullscreen="true">
         </iframe>
@@ -98,6 +100,22 @@
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("service-worker.js");
     }
+
+    /* ✅ LOAD LIVE URL FROM content.json */
+    async function loadLive() {
+      try {
+        const res = await fetch("./content.json?ts=" + Date.now());
+        const data = await res.json();
+
+        const url = data?.live?.watch_url || "";
+
+        if (url) {
+          document.getElementById("liveFrame").src = url;
+        }
+      } catch (e) {}
+    }
+
+    loadLive();
   </script>
 </body>
 </html>
