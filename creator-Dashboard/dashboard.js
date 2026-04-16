@@ -72,7 +72,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
-input, textarea {
+input, textarea, select {
   width: 100%;
   background: #000;
   border: 1px solid #333;
@@ -205,6 +205,32 @@ input[type="color"] {
     <div class="col">
       <input id="contactLabel" placeholder="Button Text (optional)">
     </div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Live Control</h3>
+
+  <div class="row">
+    <div class="col">
+      <label style="display:flex;align-items:center;gap:10px;">
+        <input id="liveEnabled" type="checkbox" style="width:auto;">
+        <span>Enable Live</span>
+      </label>
+    </div>
+
+    <div class="col">
+      <label>Status</label>
+      <select id="liveStatus">
+        <option value="offline">offline</option>
+        <option value="live">live</option>
+      </select>
+    </div>
+  </div>
+
+  <div style="margin-top:16px;">
+    <label>Live Watch URL</label>
+    <input id="liveWatchUrl" placeholder="./live.html or https://your-host-url">
   </div>
 </div>
 
