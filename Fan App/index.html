@@ -180,6 +180,68 @@ liveStatus.textContent=d.live.status==="live"?"Live now":"Offline";
 }else{
 liveStatus.textContent="Unavailable";
 }
+
+// 🔥 LAYER 3 — LINKS (ADDED)
+renderLinks(d);
+
+// 🔥 LAYER 4 — MEDIA (ADDED)
+renderMedia(d);
+}
+
+/* 🔥 ADDED: LINKS RENDER */
+function renderLinks(d){
+const container=document.getElementById("links");
+container.innerHTML="";
+const links=Array.isArray(d.links)?d.links:[];
+links.forEach(item=>{
+if(!item || !item.url) return;
+
+const a=document.createElement("a");
+a.className="row";
+a.href=item.url;
+a.target="_blank";
+
+const left=document.createElement("div");
+left.innerHTML=`<div class="label">${item.label||"Link"}</div>`;
+
+const pill=document.createElement("div");
+pill.className="pill";
+pill.textContent="Open";
+
+a.appendChild(left);
+a.appendChild(pill);
+container.appendChild(a);
+});
+}
+
+/* 🔥 ADDED: MEDIA RENDER */
+function renderMedia(d){
+const container=document.getElementById("mediaSection");
+container.innerHTML="";
+if(!d.mediaGateway || !d.mediaGateway.enabled) return;
+
+(d.mediaGateway.collections||[]).forEach(collection=>{
+(collection.items||[]).forEach(item=>{
+const card=document.createElement("div");
+card.className="card";
+
+card.innerHTML=`
+<div class="h1">${item.title||""}</div>
+<p class="p">${item.description||""}</p>
+`;
+
+if(item.access==="public" && item.url){
+const a=document.createElement("a");
+a.className="btn";
+a.href=item.url;
+a.target="_blank";
+a.textContent="Open";
+card.appendChild(a);
+}
+
+container.appendChild(card);
+});
+});
 }
 
 // 🔴 PREVIEW BRIDGE (RESTORED FROM ZIP)
