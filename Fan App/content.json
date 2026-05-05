@@ -23,7 +23,7 @@
       }
     ]
   },
-  "pillColor": "#ff4013",
+  "pillColor": "#e22400",
   "live": {
     "enabled": true,
     "status": "live",
