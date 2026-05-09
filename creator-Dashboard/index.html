@@ -1,3 +1,6 @@
+# UPDATED `creator-Dashboard/index.html`
+
+```html
 <!doctype html>
 <html lang="en">
 <head>
@@ -499,7 +502,15 @@ height:520px;
 
 <div class="row" style="margin-top:12px;">
 <div class="col">
-<label>Thumbnail URL (optional)</label>
+<label>Thumbnail Upload (optional)</label>
+<input id="mediaThumbFile" type="file" accept="image/png,image/jpeg,image/webp">
+<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
+</div>
+</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Thumbnail URL (legacy/manual optional)</label>
 <input id="mediaThumb" type="text" placeholder="https://.../thumb.jpg">
 </div>
 </div>
@@ -619,6 +630,7 @@ mediaTitle:$("mediaTitle"),
 mediaAccess:$("mediaAccess"),
 mediaUrl:$("mediaUrl"),
 mediaThumb:$("mediaThumb"),
+mediaThumbFile:$("mediaThumbFile"),
 mediaDesc:$("mediaDesc"),
 btnAddMedia:$("btnAddMedia"),
 btnClearMedia:$("btnClearMedia"),
@@ -956,6 +968,68 @@ reader.readAsDataURL(file)
 })
 }
 
+function getSafeMediaThumbExtension(file){
+const name=String(file?.name || "")
+const ext=(name.split(".").pop() || "png").toLowerCase()
+return ["png","jpg","jpeg","webp"].includes(ext) ? ext : "png"
+}
+
+async function uploadMediaThumbnail(token,file,itemId){
+const safeExt=getSafeMediaThumbExtension(file)
+const safeId=String(itemId || `item-${Date.now()}`).replace(/[^a-zA-Z0-9_-]/g,"")
+const fileName=`thumb-${safeId}-${Date.now()}.${safeExt}`
+const repoPath=`Fan App/media/${fileName}`
+const localPath=`./media/${fileName}`
+const base64=await fileToBase64(file)
+
+await ghPutFile(
+token,
+repoPath,
+undefined,
+base64,
+`BASE media thumbnail ${fileName}`
+)
+
+return localPath
+}
+
+async function buildMediaGatewayForPublish(token){
+if(!(mediaHydrated || mediaTouched)) return null
+
+const title=(el.mediaCollectionTitle.value||"Latest").trim() || "Latest"
+
+const items=[]
+
+for(const it of mediaItems){
+
+let thumbnail=(it.thumbnail||"").trim()
+
+if(it.thumbnailFile instanceof File){
+log(`Thumbnail upload started: ${it.title || "media item"}`)
+thumbnail=await uploadMediaThumbnail(token,it.thumbnailFile,it.id)
+it.thumbnail=thumbnail
+delete it.thumbnailFile
+log(`Thumbnail uploaded: ${thumbnail}`)
+}
+
+items.push({
+id:it.id || `item-${Math.random().toString(16).slice(2)}`,
+title:(it.title||"").trim(),
+description:(it.description||"").trim(),
+thumbnail,
+url:it.access==="paid" ? "" : (it.url||"").trim(),
+access:it.access==="paid" ? "paid" : "public"
+})
+
+}
+
+return{
+enabled:el.mediaEnabled.checked===true,
+collections:[{title,items}]
+}
+
+}
+
 async function getLatestIconVersion(token){
 const folderPath="Fan App/icons"
 const api=`https://api.github.com/repos/${OWNER}/${REPO}/contents/${ghEncodePath(folderPath)}?ref=${BRANCH}`
@@ -1167,6 +1241,7 @@ const title=(el.mediaTitle.value||"").trim()
 const access=el.mediaAccess.value==="paid" ? "paid" : "public"
 const url=(el.mediaUrl.value||"").trim()
 const thumbnail=(el.mediaThumb.value||"").trim()
+const thumbnailFile=el.mediaThumbFile.files[0] || null
 const description=(el.mediaDesc.value||"").trim()
 
 if(!title)return
@@ -1176,6 +1251,7 @@ id:`item-${Date.now()}-${Math.random().toString(16).slice(2)}`,
 title,
 description,
 thumbnail,
+thumbnailFile,
 url:access==="paid" ? "" : url,
 access
 })
@@ -1185,6 +1261,7 @@ mediaTouched=true
 el.mediaTitle.value=""
 el.mediaUrl.value=""
 el.mediaThumb.value=""
+el.mediaThumbFile.value=""
 el.mediaDesc.value=""
 
 renderMediaList()
@@ -1396,7 +1473,7 @@ backgroundColor:el.backgroundColor.value,
 pillColor:el.pillColor.value
 }
 
-const mg=buildMediaGateway()
+const mg=await buildMediaGatewayForPublish(token)
 if(mg){
 merged.mediaGateway=mg
 }
@@ -1595,3 +1672,4 @@ init()
 </div>
 </body>
 </html>
+```
