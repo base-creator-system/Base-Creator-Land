@@ -21,19 +21,11 @@
         "title": "Latest",
         "items": [
           {
-            "id": "item-1778338927662-760e49fd9b728",
-            "title": "Media Test",
-            "description": "Blah Blah Blah Blah",
+            "id": "item-1778342537370-190f7b1aa08d48",
+            "title": "Media test 1",
+            "description": "BLAH BLAH BLAH",
             "thumbnail": "https://picsum.photos/1280/720?random=11",
             "url": "https://www.w3schools.com/html/mov_bbb.mp4",
-            "access": "public"
-          },
-          {
-            "id": "item-1778340586343-90608b0c2359e",
-            "title": "TEST 2",
-            "description": "BLAH",
-            "thumbnail": "https://picsum.photos/320/180?random=77",
-            "url": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
             "access": "public"
           }
         ]
