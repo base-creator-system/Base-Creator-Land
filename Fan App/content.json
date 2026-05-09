@@ -19,7 +19,16 @@
     "collections": [
       {
         "title": "Latest",
-        "items": []
+        "items": [
+          {
+            "id": "item-1778338927662-760e49fd9b728",
+            "title": "Media Test",
+            "description": "Blah Blah Blah Blah",
+            "thumbnail": "https://picsum.photos/1280/720?random=11",
+            "url": "https://www.w3schools.com/html/mov_bbb.mp4",
+            "access": "public"
+          }
+        ]
       }
     ]
   },
