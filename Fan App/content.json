@@ -19,24 +19,7 @@
     "collections": [
       {
         "title": "Latest",
-        "items": [
-          {
-            "id": "item-1778342537370-190f7b1aa08d48",
-            "title": "Media test 1",
-            "description": "BLAH BLAH BLAH",
-            "thumbnail": "https://picsum.photos/1280/720?random=11",
-            "url": "https://www.w3schools.com/html/mov_bbb.mp4",
-            "access": "public"
-          },
-          {
-            "id": "item-1778351189232-c584787cf5439",
-            "title": "Media Test 2",
-            "description": "BLAH BLAH BLAH",
-            "thumbnail": "./media/thumb-item-1778351189232-c584787cf5439-1778351209501.png",
-            "url": "https://samplelib.com/lib/preview/mp4/sample-10s.mp4",
-            "access": "public"
-          }
-        ]
+        "items": []
       }
     ]
   },
