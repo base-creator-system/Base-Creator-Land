@@ -19,7 +19,16 @@
     "collections": [
       {
         "title": "Latest",
-        "items": []
+        "items": [
+          {
+            "id": "item-1778513053656-013590dc68dbc",
+            "title": "APP Types",
+            "description": "APP Types",
+            "thumbnail": "./media/thumb-item-1778513053656-013590dc68dbc-1778513071756.png",
+            "url": "https://canva.link/7928yrfb9fho4s3",
+            "access": "public"
+          }
+        ]
       }
     ]
   },
