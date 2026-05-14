@@ -493,7 +493,15 @@ height:520px;
 <div class="col">
 <label>URL (public only)</label>
 <input id="mediaUrl" type="text" placeholder="https://...">
-<div class="tiny">If access=paid, URL is saved empty.</div>
+<div class="tiny">If access=paid, URL is saved empty. External URLs still work.</div>
+</div>
+</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Local Media Upload (optional)</label>
+<input id="mediaFile" type="file" accept="video/mp4,video/webm,video/quicktime,image/png,image/jpeg,image/webp">
+<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
 </div>
 </div>
 
@@ -626,6 +634,7 @@ mediaCollectionTitle:$("mediaCollectionTitle"),
 mediaTitle:$("mediaTitle"),
 mediaAccess:$("mediaAccess"),
 mediaUrl:$("mediaUrl"),
+mediaFile:$("mediaFile"),
 mediaThumb:$("mediaThumb"),
 mediaThumbFile:$("mediaThumbFile"),
 mediaDesc:$("mediaDesc"),
@@ -810,7 +819,7 @@ t.textContent=item.title||"(untitled)"
 
 const sub=document.createElement("div")
 sub.className="mediaSub"
-sub.textContent=`${item.access||"public"} — ${item.url ? item.url : "(no url)"}`
+sub.textContent=`${item.access||"public"} — ${item.url ? item.url : item.mediaFile ? item.mediaFile.name : "(no url)"}`
 
 left.appendChild(t)
 left.appendChild(sub)
@@ -971,6 +980,31 @@ const ext=(name.split(".").pop() || "png").toLowerCase()
 return ["png","jpg","jpeg","webp"].includes(ext) ? ext : "png"
 }
 
+function getSafeMediaExtension(file){
+const name=String(file?.name || "")
+const ext=(name.split(".").pop() || "mp4").toLowerCase()
+return ["mp4","webm","mov","png","jpg","jpeg","webp"].includes(ext) ? ext : "mp4"
+}
+
+async function uploadMediaFile(token,file,itemId){
+const safeExt=getSafeMediaExtension(file)
+const safeId=String(itemId || `item-${Date.now()}`).replace(/[^a-zA-Z0-9_-]/g,"")
+const fileName=`media-${safeId}-${Date.now()}.${safeExt}`
+const repoPath=`Fan App/media/${fileName}`
+const localPath=`./media/${fileName}`
+const base64=await fileToBase64(file)
+
+await ghPutFile(
+token,
+repoPath,
+undefined,
+base64,
+`BASE media upload ${fileName}`
+)
+
+return localPath
+}
+
 async function uploadMediaThumbnail(token,file,itemId){
 const safeExt=getSafeMediaThumbExtension(file)
 const safeId=String(itemId || `item-${Date.now()}`).replace(/[^a-zA-Z0-9_-]/g,"")
@@ -1009,12 +1043,22 @@ delete it.thumbnailFile
 log(`Thumbnail uploaded: ${thumbnail}`)
 }
 
+let url=it.access==="paid" ? "" : (it.url||"").trim()
+
+if(it.mediaFile instanceof File){
+log(`Media upload started: ${it.title || "media item"}`)
+url=await uploadMediaFile(token,it.mediaFile,it.id)
+it.url=url
+delete it.mediaFile
+log(`Media uploaded: ${url}`)
+}
+
 items.push({
 id:it.id || `item-${Math.random().toString(16).slice(2)}`,
 title:(it.title||"").trim(),
 description:(it.description||"").trim(),
 thumbnail,
-url:it.access==="paid" ? "" : (it.url||"").trim(),
+url,
 access:it.access==="paid" ? "paid" : "public"
 })
 
@@ -1237,6 +1281,7 @@ el.btnAddMedia.onclick=()=>{
 const title=(el.mediaTitle.value||"").trim()
 const access=el.mediaAccess.value==="paid" ? "paid" : "public"
 const url=(el.mediaUrl.value||"").trim()
+const mediaFile=el.mediaFile.files[0] || null
 const thumbnail=(el.mediaThumb.value||"").trim()
 const thumbnailFile=el.mediaThumbFile.files[0] || null
 const description=(el.mediaDesc.value||"").trim()
@@ -1249,6 +1294,7 @@ title,
 description,
 thumbnail,
 thumbnailFile,
+mediaFile,
 url:access==="paid" ? "" : url,
 access
 })
@@ -1257,6 +1303,7 @@ mediaTouched=true
 
 el.mediaTitle.value=""
 el.mediaUrl.value=""
+el.mediaFile.value=""
 el.mediaThumb.value=""
 el.mediaThumbFile.value=""
 el.mediaDesc.value=""
@@ -1669,4 +1716,3 @@ init()
 </div>
 </body>
 </html>
-```
