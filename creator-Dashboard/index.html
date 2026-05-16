@@ -493,7 +493,7 @@ height:520px;
 <div class="col">
 <label>URL (public only)</label>
 <input id="mediaUrl" type="text" placeholder="https://...">
-<div class="tiny">If access=paid, URL is saved empty. If a local media file is uploaded, the local path is generated during publish.</div>
+<div class="tiny">If access=paid, URL is saved empty.</div>
 </div>
 </div>
 
@@ -819,7 +819,7 @@ t.textContent=item.title||"(untitled)"
 
 const sub=document.createElement("div")
 sub.className="mediaSub"
-sub.textContent=`${item.access||"public"} — ${item.url ? item.url : (item.mediaFile instanceof File ? "(local media pending publish)" : "(no url)")}`
+sub.textContent=`${item.access||"public"} — ${item.url ? item.url : "(no url)"}`
 
 left.appendChild(t)
 left.appendChild(sub)
