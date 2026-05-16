@@ -35,6 +35,14 @@
             "thumbnail": "./media/thumb-item-1778608277173-af1c828854108-1778608286558.png",
             "url": "",
             "access": "paid"
+          },
+          {
+            "id": "item-1778941165452-9665ff71f15698",
+            "title": "Test media",
+            "description": "Test Media",
+            "thumbnail": "./media/thumb-item-1778941165452-9665ff71f15698-1778941175480.png",
+            "url": "./media/media-item-1778941165452-9665ff71f15698-1778941174489.mp4",
+            "access": "public"
           }
         ]
       }
