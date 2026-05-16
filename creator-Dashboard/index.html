@@ -493,7 +493,7 @@ height:520px;
 <div class="col">
 <label>URL (public only)</label>
 <input id="mediaUrl" type="text" placeholder="https://...">
-<div class="tiny">If access=paid, URL is saved empty. External URLs still work.</div>
+<div class="tiny">If access=paid, URL is saved empty. If a local media file is uploaded, the local path is generated during publish.</div>
 </div>
 </div>
 
@@ -501,7 +501,7 @@ height:520px;
 <div class="col">
 <label>Local Media Upload (optional)</label>
 <input id="mediaFile" type="file" accept="video/mp4,video/webm,video/quicktime,image/png,image/jpeg,image/webp">
-<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
+<div class="tiny">Uploads automatically into Fan App/media/ during publish and generates a local media URL.</div>
 </div>
 </div>
 
@@ -819,7 +819,7 @@ t.textContent=item.title||"(untitled)"
 
 const sub=document.createElement("div")
 sub.className="mediaSub"
-sub.textContent=`${item.access||"public"} — ${item.url ? item.url : item.mediaFile ? item.mediaFile.name : "(no url)"}`
+sub.textContent=`${item.access||"public"} — ${item.url ? item.url : (item.mediaFile instanceof File ? "(local media pending publish)" : "(no url)")}`
 
 left.appendChild(t)
 left.appendChild(sub)
@@ -982,27 +982,21 @@ return ["png","jpg","jpeg","webp"].includes(ext) ? ext : "png"
 
 function getSafeMediaExtension(file){
 const name=String(file?.name || "")
-const ext=(name.split(".").pop() || "mp4").toLowerCase()
-return ["mp4","webm","mov","png","jpg","jpeg","webp"].includes(ext) ? ext : "mp4"
+const ext=(name.split(".").pop() || "").toLowerCase()
+const mime=String(file?.type || "").toLowerCase()
+
+if(["mp4","webm","mov","png","jpg","jpeg","webp"].includes(ext)){
+return ext
 }
 
-async function uploadMediaFile(token,file,itemId){
-const safeExt=getSafeMediaExtension(file)
-const safeId=String(itemId || `item-${Date.now()}`).replace(/[^a-zA-Z0-9_-]/g,"")
-const fileName=`media-${safeId}-${Date.now()}.${safeExt}`
-const repoPath=`Fan App/media/${fileName}`
-const localPath=`./media/${fileName}`
-const base64=await fileToBase64(file)
+if(mime==="video/mp4") return "mp4"
+if(mime==="video/webm") return "webm"
+if(mime==="video/quicktime") return "mov"
+if(mime==="image/png") return "png"
+if(mime==="image/jpeg") return "jpg"
+if(mime==="image/webp") return "webp"
 
-await ghPutFile(
-token,
-repoPath,
-undefined,
-base64,
-`BASE media upload ${fileName}`
-)
-
-return localPath
+return "mp4"
 }
 
 async function uploadMediaThumbnail(token,file,itemId){
@@ -1024,6 +1018,25 @@ base64,
 return localPath
 }
 
+async function uploadMediaFile(token,file,itemId){
+const safeExt=getSafeMediaExtension(file)
+const safeId=String(itemId || `item-${Date.now()}`).replace(/[^a-zA-Z0-9_-]/g,"")
+const fileName=`media-${safeId}-${Date.now()}.${safeExt}`
+const repoPath=`Fan App/media/${fileName}`
+const localPath=`./media/${fileName}`
+const base64=await fileToBase64(file)
+
+await ghPutFile(
+token,
+repoPath,
+undefined,
+base64,
+`BASE media file ${fileName}`
+)
+
+return localPath
+}
+
 async function buildMediaGatewayForPublish(token){
 if(!(mediaHydrated || mediaTouched)) return null
 
@@ -1034,15 +1047,6 @@ const items=[]
 for(const it of mediaItems){
 
 let thumbnail=(it.thumbnail||"").trim()
-
-if(it.thumbnailFile instanceof File){
-log(`Thumbnail upload started: ${it.title || "media item"}`)
-thumbnail=await uploadMediaThumbnail(token,it.thumbnailFile,it.id)
-it.thumbnail=thumbnail
-delete it.thumbnailFile
-log(`Thumbnail uploaded: ${thumbnail}`)
-}
-
 let url=it.access==="paid" ? "" : (it.url||"").trim()
 
 if(it.mediaFile instanceof File){
@@ -1051,6 +1055,14 @@ url=await uploadMediaFile(token,it.mediaFile,it.id)
 it.url=url
 delete it.mediaFile
 log(`Media uploaded: ${url}`)
+}
+
+if(it.thumbnailFile instanceof File){
+log(`Thumbnail upload started: ${it.title || "media item"}`)
+thumbnail=await uploadMediaThumbnail(token,it.thumbnailFile,it.id)
+it.thumbnail=thumbnail
+delete it.thumbnailFile
+log(`Thumbnail uploaded: ${thumbnail}`)
 }
 
 items.push({
