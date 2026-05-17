@@ -177,8 +177,44 @@ const CONTENT_URL="./content.json"
 const POLL_INTERVAL=15000
 let previewMode=false
 
-function safeURL(url){if(!url)return"";try{const u=new URL(url);if(u.protocol==="http:"||u.protocol==="https:"||u.protocol==="mailto:")return u.href}catch(e){}return""}
-function normalizeURL(url){if(!url)return"";if(url.includes("dropbox.com")){url=url.replace("www.dropbox.com","dl.dropboxusercontent.com").replace("?dl=0","").replace("&dl=0","")}if(url.includes("drive.google.com")){url=url.replace("/view","/preview")}return url}
+function safeURL(url){
+
+if(!url) return "";
+
+if(
+url.startsWith("./media/") ||
+url.startsWith("media/")
+){
+return url;
+}
+
+try{
+
+const u=new URL(url);
+
+if(
+u.protocol==="http:" ||
+u.protocol==="https:" ||
+u.protocol==="mailto:"
+){
+return u.href;
+}
+
+}catch(e){}
+
+return "";
+}
+
+function normalizeURL(url){
+if(!url)return"";
+if(url.includes("dropbox.com")){
+url=url.replace("www.dropbox.com","dl.dropboxusercontent.com").replace("?dl=0","").replace("&dl=0","")
+}
+if(url.includes("drive.google.com")){
+url=url.replace("/view","/preview")
+}
+return url
+}
 
 const views={
 home:document.getElementById("view-home"),
@@ -257,15 +293,24 @@ label.className="label";
 label.textContent=item.label||"Link";
 const hint=document.createElement("div");
 hint.className="hint";
+
+try{
 const domain=new URL(url).hostname.replace(/^www\./,"");
 hint.textContent=domain+"/";
+}catch(e){
+hint.textContent=url;
+}
+
 left.appendChild(label);
 left.appendChild(hint);
+
 const pill=document.createElement("div");
 pill.className="pill";
 pill.textContent="Open";
+
 a.appendChild(left);
 a.appendChild(pill);
+
 container.appendChild(a)
 })
 }
@@ -274,13 +319,18 @@ function renderMedia(d){
 const container=document.getElementById("mediaSection");
 container.innerHTML="";
 if(!d.mediaGateway||!d.mediaGateway.enabled)return;
+
 const collections=d.mediaGateway.collections||[];
+
 collections.forEach(collection=>{
+
 const title=document.createElement("div");
 title.className="section-title";
 title.textContent=collection.title;
 container.appendChild(title);
+
 collection.items.forEach(item=>{
+
 const card=document.createElement("div");
 card.className="media-card";
 
@@ -315,21 +365,33 @@ card.appendChild(thumb);
 card.appendChild(body);
 
 if(item.access==="public"&&item.url){
+
 const btn=document.createElement("a");
 btn.className="media-btn";
-btn.href=safeURL(item.url);
+
+const safe=safeURL(item.url);
+
+btn.href=safe;
 btn.target="_blank";
 btn.rel="noopener";
 btn.textContent="Open";
+
 card.appendChild(btn)
+
 }else{
+
 const locked=document.createElement("div");
 locked.className="media-btn media-locked";
 locked.textContent="Locked";
+
 card.appendChild(locked)
+
 }
+
 container.appendChild(card)
+
 })
+
 })
 }
 
