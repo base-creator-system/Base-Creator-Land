@@ -11,7 +11,7 @@
       "url": "https://www.instagram.com/djmofiya/"
     }
   ],
-  "backgroundColor": "#b51a00",
+  "backgroundColor": "#000000",
   "contactEmail": "bookdjmofiya@gmail.com",
   "contactLabel": "Email",
   "mediaGateway": {
@@ -29,14 +29,6 @@
             "access": "public"
           },
           {
-            "id": "item-1778608277173-af1c828854108",
-            "title": "mjgjhfhjf",
-            "description": "try",
-            "thumbnail": "./media/thumb-item-1778608277173-af1c828854108-1778608286558.png",
-            "url": "",
-            "access": "paid"
-          },
-          {
             "id": "item-1778941165452-9665ff71f15698",
             "title": "Test media",
             "description": "Test Media",
@@ -48,7 +40,7 @@
       }
     ]
   },
-  "pillColor": "#e72900",
+  "pillColor": "#e32400",
   "live": {
     "enabled": true,
     "status": "live",
