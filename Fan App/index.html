@@ -492,35 +492,137 @@ url.includes("cloudflarestream.com")
 
 }
 
-function getEmbedUrl(url){
+function getYouTubeEmbed(url){
 
-if(!url) return ""
-
-if(
-url.endsWith(".mp4") ||
-url.endsWith(".webm") ||
-url.endsWith(".mov") ||
-url.includes("./media/")
-){
-return url
-}
+try{
 
 if(url.includes("youtube.com/watch?v=")){
-const id=url.split("v=")[1]?.split("&")[0]
-return `https://www.youtube.com/embed/${id}`
+
+const parsed=new URL(url)
+const id=parsed.searchParams.get("v")
+
+if(id){
+return `https://www.youtube.com/embed/${id}?autoplay=1&playsinline=1`
+}
+
 }
 
 if(url.includes("youtu.be/")){
+
 const id=url.split("youtu.be/")[1]?.split("?")[0]
-return `https://www.youtube.com/embed/${id}`
+
+if(id){
+return `https://www.youtube.com/embed/${id}?autoplay=1&playsinline=1`
 }
+
+}
+
+}catch(e){}
+
+return null
+
+}
+
+function getVimeoEmbed(url){
+
+try{
 
 if(url.includes("vimeo.com/")){
+
 const id=url.split("vimeo.com/")[1]?.split("?")[0]
-return `https://player.vimeo.com/video/${id}`
+
+if(id){
+return `https://player.vimeo.com/video/${id}?autoplay=1`
 }
 
+}
+
+}catch(e){}
+
+return null
+
+}
+
+function getCloudflareEmbed(url){
+
+try{
+
+if(url.includes("cloudflarestream.com")){
+
+if(url.includes("/embed/")){
 return url
+}
+
+return url.replace(
+"cloudflarestream.com/",
+"cloudflarestream.com/embed/"
+)
+
+}
+
+}catch(e){}
+
+return null
+
+}
+
+function getEmbedConfig(url){
+
+if(!url) return null
+
+const lower=url.toLowerCase()
+
+if(
+lower.endsWith(".mp4") ||
+lower.endsWith(".webm") ||
+lower.endsWith(".mov") ||
+url.includes("./media/")
+){
+
+return{
+type:"video",
+src:url
+}
+
+}
+
+const yt=getYouTubeEmbed(url)
+
+if(yt){
+
+return{
+type:"iframe",
+src:yt
+}
+
+}
+
+const vimeo=getVimeoEmbed(url)
+
+if(vimeo){
+
+return{
+type:"iframe",
+src:vimeo
+}
+
+}
+
+const cf=getCloudflareEmbed(url)
+
+if(cf){
+
+return{
+type:"iframe",
+src:cf
+}
+
+}
+
+return{
+type:"external",
+src:url
+}
 
 }
 
@@ -541,29 +643,33 @@ if(!url) return
 
 mediaViewerBody.innerHTML=""
 
-const embed=getEmbedUrl(url)
+const config=getEmbedConfig(url)
 
-if(
-embed.endsWith(".mp4") ||
-embed.endsWith(".webm") ||
-embed.endsWith(".mov") ||
-embed.includes("./media/")
-){
+if(!config) return
+
+if(config.type==="video"){
 
 const video=document.createElement("video")
 
 video.controls=true
 video.autoplay=true
 video.playsInline=true
-video.src=embed
+video.src=config.src
 
 mediaViewerBody.appendChild(video)
 
-}else{
+mediaViewer.classList.add("active")
+
+return
+
+}
+
+if(config.type==="iframe"){
 
 const iframe=document.createElement("iframe")
 
-iframe.src=embed
+iframe.src=config.src
+
 iframe.allow=
 "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 
@@ -571,9 +677,13 @@ iframe.allowFullscreen=true
 
 mediaViewerBody.appendChild(iframe)
 
+mediaViewer.classList.add("active")
+
+return
+
 }
 
-mediaViewer.classList.add("active")
+window.open(config.src,"_blank","noopener")
 
 }
 
