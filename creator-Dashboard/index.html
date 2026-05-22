@@ -247,6 +247,35 @@ flex-wrap:wrap;
 margin-top:12px;
 }
 
+.mediaCollectionBlock{
+border:1px solid #222;
+border-radius:16px;
+background:#050505;
+padding:12px;
+margin-top:12px;
+}
+
+.mediaCollectionHead{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px;
+}
+
+.mediaCollectionName{
+font-weight:800;
+font-size:14px;
+overflow:hidden;
+text-overflow:ellipsis;
+white-space:nowrap;
+}
+
+.mediaCollectionCount{
+font-size:12px;
+opacity:.65;
+flex:0 0 auto;
+}
+
 .mediaItemRow{
 display:flex;
 align-items:flex-start;
@@ -257,6 +286,10 @@ border:1px solid #222;
 border-radius:14px;
 margin-top:10px;
 background:#050505;
+}
+
+.mediaCollectionBlock .mediaItemRow{
+background:#020202;
 }
 
 .mediaMeta{
@@ -469,10 +502,21 @@ height:520px;
 
 <div class="row" style="margin-top:12px;">
 <div class="col">
-<label>Collection Title</label>
-<input id="mediaCollectionTitle" type="text" placeholder="Latest">
-<div class="tiny">V1: one collection.</div>
+<label>Collection</label>
+<select id="mediaCollectionSelect"></select>
+<div class="tiny">Choose where the next media item belongs.</div>
 </div>
+
+<div class="col">
+<label>New Collection</label>
+<input id="mediaCollectionTitle" type="text" placeholder="Event Night, Clips, Photos">
+<div class="tiny">Add lightweight groups without cluttering the fan app.</div>
+</div>
+</div>
+
+<div class="btnRow">
+<button id="btnAddCollection">Add Collection</button>
+<button id="btnRemoveCollection" class="danger">Remove Selected Collection</button>
 </div>
 
 <div class="row" style="margin-top:12px;">
@@ -630,7 +674,10 @@ addLinkBtn:$("addLinkBtn"),
 clearLinksBtn:$("clearLinksBtn"),
 linksList:$("linksList"),
 mediaEnabled:$("mediaEnabled"),
+mediaCollectionSelect:$("mediaCollectionSelect"),
 mediaCollectionTitle:$("mediaCollectionTitle"),
+btnAddCollection:$("btnAddCollection"),
+btnRemoveCollection:$("btnRemoveCollection"),
 mediaTitle:$("mediaTitle"),
 mediaAccess:$("mediaAccess"),
 mediaUrl:$("mediaUrl"),
@@ -651,6 +698,7 @@ previewFrame:$("fanPreviewFrame")
 let hasLoadedState=false
 let linkState=[]
 let mediaItems=[]
+let mediaCollections=[]
 let mediaHydrated=false
 let mediaTouched=false
 let isPublishing=false
@@ -701,6 +749,38 @@ return String(text ?? "")
 .replace(/>/g,"&gt;")
 .replace(/"/g,"&quot;")
 .replace(/'/g,"&#39;")
+}
+
+function makeCollectionId(){
+return `collection-${Date.now()}-${Math.random().toString(16).slice(2)}`
+}
+
+function ensureDefaultCollection(){
+if(!Array.isArray(mediaCollections)){
+mediaCollections=[]
+}
+
+if(mediaCollections.length===0){
+mediaCollections=[{
+id:"collection-default",
+title:"Latest"
+}]
+}
+
+mediaCollections=mediaCollections.map((c,i)=>({
+id:c.id || (i===0 ? "collection-default" : makeCollectionId()),
+title:String(c.title || (i===0 ? "Latest" : `Collection ${i+1}`))
+}))
+
+mediaItems=mediaItems.map(item=>({
+...item,
+collectionId:item.collectionId || mediaCollections[0].id
+}))
+}
+
+function getCollectionTitle(id){
+const found=mediaCollections.find(c=>c.id===id)
+return found ? found.title : "Latest"
 }
 
 function enablePublishIfReady(){
@@ -796,16 +876,62 @@ el.linksList.appendChild(row)
 
 }
 
+function renderCollectionSelect(){
+ensureDefaultCollection()
+
+const current=el.mediaCollectionSelect.value || mediaCollections[0].id
+
+el.mediaCollectionSelect.innerHTML=""
+
+mediaCollections.forEach(collection=>{
+const option=document.createElement("option")
+option.value=collection.id
+option.textContent=collection.title
+el.mediaCollectionSelect.appendChild(option)
+})
+
+if(mediaCollections.some(c=>c.id===current)){
+el.mediaCollectionSelect.value=current
+}else{
+el.mediaCollectionSelect.value=mediaCollections[0].id
+}
+}
+
 function renderMediaList(){
+
+ensureDefaultCollection()
+renderCollectionSelect()
 
 el.mediaList.innerHTML=""
 
-const meta=document.createElement("div")
-meta.className="tiny"
-meta.textContent=`Items: ${mediaItems.length}`
-el.mediaList.appendChild(meta)
+const total=document.createElement("div")
+total.className="tiny"
+total.textContent=`Collections: ${mediaCollections.length} · Items: ${mediaItems.length}`
+el.mediaList.appendChild(total)
 
-mediaItems.forEach((item,i)=>{
+mediaCollections.forEach(collection=>{
+
+const block=document.createElement("div")
+block.className="mediaCollectionBlock"
+
+const head=document.createElement("div")
+head.className="mediaCollectionHead"
+
+const name=document.createElement("div")
+name.className="mediaCollectionName"
+name.textContent=collection.title
+
+const itemsForCollection=mediaItems.filter(item=>(item.collectionId || mediaCollections[0].id)===collection.id)
+
+const count=document.createElement("div")
+count.className="mediaCollectionCount"
+count.textContent=`${itemsForCollection.length} item${itemsForCollection.length===1 ? "" : "s"}`
+
+head.appendChild(name)
+head.appendChild(count)
+block.appendChild(head)
+
+itemsForCollection.forEach((item)=>{
 
 const row=document.createElement("div")
 row.className="mediaItemRow"
@@ -819,7 +945,7 @@ t.textContent=item.title||"(untitled)"
 
 const sub=document.createElement("div")
 sub.className="mediaSub"
-sub.textContent=`${item.access||"public"} — ${item.url ? item.url : "(no url)"}`
+sub.textContent=`${item.access||"public"} — ${item.url ? item.url : (item.mediaFile instanceof File ? "(local media pending publish)" : "(no url)")}`
 
 left.appendChild(t)
 left.appendChild(sub)
@@ -828,7 +954,7 @@ const remove=document.createElement("button")
 remove.textContent="Remove"
 
 remove.onclick=()=>{
-mediaItems.splice(i,1)
+mediaItems=mediaItems.filter(x=>x.id!==item.id)
 mediaTouched=true
 renderMediaList()
 markDirty()
@@ -837,7 +963,11 @@ markDirty()
 row.appendChild(left)
 row.appendChild(remove)
 
-el.mediaList.appendChild(row)
+block.appendChild(row)
+
+})
+
+el.mediaList.appendChild(block)
 
 })
 
@@ -851,7 +981,7 @@ mediaHydrated=true
 
 if(!mg || typeof mg!=="object"){
 el.mediaEnabled.checked=false
-el.mediaCollectionTitle.value="Latest"
+mediaCollections=[{id:"collection-default",title:"Latest"}]
 mediaItems=[]
 renderMediaList()
 return
@@ -860,21 +990,39 @@ return
 el.mediaEnabled.checked=mg.enabled===true
 
 const collections=Array.isArray(mg.collections)?mg.collections:[]
-const first=(collections[0] && typeof collections[0]==="object") ? collections[0] : {}
 
-el.mediaCollectionTitle.value=String(first.title || "Latest")
+if(collections.length===0){
+mediaCollections=[{id:"collection-default",title:"Latest"}]
+mediaItems=[]
+renderMediaList()
+return
+}
 
-const items=Array.isArray(first.items) ? first.items : []
+mediaCollections=collections.map((collection,i)=>({
+id:collection?.id || (i===0 ? "collection-default" : `collection-${i}-${Math.random().toString(16).slice(2)}`),
+title:String(collection?.title || (i===0 ? "Latest" : `Collection ${i+1}`))
+}))
 
-mediaItems=items.map(x=>({
+mediaItems=[]
+
+collections.forEach((collection,i)=>{
+const collectionId=mediaCollections[i]?.id || "collection-default"
+const items=Array.isArray(collection?.items) ? collection.items : []
+
+items.forEach(x=>{
+mediaItems.push({
 id:x?.id || `item-${Math.random().toString(16).slice(2)}`,
+collectionId,
 title:String(x?.title || ""),
 description:String(x?.description || ""),
 thumbnail:String(x?.thumbnail || ""),
 url:String(x?.url || ""),
 access:x?.access==="paid" ? "paid" : "public"
-}))
+})
+})
+})
 
+ensureDefaultCollection()
 renderMediaList()
 
 }
@@ -882,9 +1030,13 @@ renderMediaList()
 function buildMediaGateway(){
 if(!(mediaHydrated || mediaTouched)) return null
 
-const title=(el.mediaCollectionTitle.value||"Latest").trim() || "Latest"
+ensureDefaultCollection()
 
-const items=mediaItems.map(it=>({
+const collections=mediaCollections.map(collection=>{
+
+const items=mediaItems
+.filter(it=>(it.collectionId || mediaCollections[0].id)===collection.id)
+.map(it=>({
 id:it.id || `item-${Math.random().toString(16).slice(2)}`,
 title:(it.title||"").trim(),
 description:(it.description||"").trim(),
@@ -894,8 +1046,16 @@ access:it.access==="paid" ? "paid" : "public"
 }))
 
 return{
+id:collection.id,
+title:(collection.title||"Latest").trim() || "Latest",
+items
+}
+
+})
+
+return{
 enabled:el.mediaEnabled.checked===true,
-collections:[{title,items}]
+collections
 }
 
 }
@@ -1040,11 +1200,17 @@ return localPath
 async function buildMediaGatewayForPublish(token){
 if(!(mediaHydrated || mediaTouched)) return null
 
-const title=(el.mediaCollectionTitle.value||"Latest").trim() || "Latest"
+ensureDefaultCollection()
+
+const collections=[]
+
+for(const collection of mediaCollections){
 
 const items=[]
 
-for(const it of mediaItems){
+const scopedItems=mediaItems.filter(it=>(it.collectionId || mediaCollections[0].id)===collection.id)
+
+for(const it of scopedItems){
 
 let thumbnail=(it.thumbnail||"").trim()
 let url=it.access==="paid" ? "" : (it.url||"").trim()
@@ -1076,9 +1242,17 @@ access:it.access==="paid" ? "paid" : "public"
 
 }
 
+collections.push({
+id:collection.id,
+title:(collection.title||"Latest").trim() || "Latest",
+items
+})
+
+}
+
 return{
 enabled:el.mediaEnabled.checked===true,
-collections:[{title,items}]
+collections
 }
 
 }
@@ -1289,7 +1463,62 @@ renderLinks()
 markDirty()
 }
 
+el.btnAddCollection.onclick=()=>{
+const title=(el.mediaCollectionTitle.value||"").trim()
+
+if(!title)return
+
+ensureDefaultCollection()
+
+const collection={
+id:makeCollectionId(),
+title
+}
+
+mediaCollections.push(collection)
+
+el.mediaCollectionTitle.value=""
+mediaTouched=true
+renderMediaList()
+el.mediaCollectionSelect.value=collection.id
+markDirty()
+}
+
+el.btnRemoveCollection.onclick=()=>{
+ensureDefaultCollection()
+
+const selected=el.mediaCollectionSelect.value
+
+if(mediaCollections.length<=1){
+log("At least one media collection is required.")
+return
+}
+
+const fallback=mediaCollections.find(c=>c.id!==selected)
+
+if(!fallback)return
+
+mediaItems=mediaItems.map(item=>{
+if((item.collectionId || mediaCollections[0].id)===selected){
+return{
+...item,
+collectionId:fallback.id
+}
+}
+return item
+})
+
+mediaCollections=mediaCollections.filter(c=>c.id!==selected)
+
+mediaTouched=true
+renderMediaList()
+el.mediaCollectionSelect.value=fallback.id
+markDirty()
+}
+
 el.btnAddMedia.onclick=()=>{
+ensureDefaultCollection()
+
 const title=(el.mediaTitle.value||"").trim()
 const access=el.mediaAccess.value==="paid" ? "paid" : "public"
 const url=(el.mediaUrl.value||"").trim()
@@ -1297,11 +1526,13 @@ const mediaFile=el.mediaFile.files[0] || null
 const thumbnail=(el.mediaThumb.value||"").trim()
 const thumbnailFile=el.mediaThumbFile.files[0] || null
 const description=(el.mediaDesc.value||"").trim()
+const collectionId=el.mediaCollectionSelect.value || mediaCollections[0].id
 
 if(!title)return
 
 mediaItems.push({
 id:`item-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+collectionId,
 title,
 description,
 thumbnail,
@@ -1321,6 +1552,7 @@ el.mediaThumbFile.value=""
 el.mediaDesc.value=""
 
 renderMediaList()
+el.mediaCollectionSelect.value=collectionId
 markDirty()
 }
 
@@ -1670,6 +1902,10 @@ mediaTouched=true
 markDirty()
 })
 
+el.mediaCollectionSelect.addEventListener("change",()=>{
+renderMediaList()
+})
+
 el.mediaCollectionTitle.addEventListener("input",()=>{
 mediaTouched=true
 markDirty()
@@ -1692,6 +1928,7 @@ localStorage.setItem(LS_TOKEN,saved)
 localStorage.removeItem(LS_TOKEN)
 }
 
+ensureDefaultCollection()
 renderLinks()
 renderMediaList()
 setPublishBusy(false)
