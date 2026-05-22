@@ -29,6 +29,7 @@ margin:0;
 background:var(--bg);
 color:var(--text);
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+overflow-x:hidden;
 }
 
 .wrap{
@@ -126,6 +127,7 @@ background:rgba(0,0,0,0.88);
 backdrop-filter:blur(12px);
 border-top:1px solid var(--stroke);
 padding:10px 12px;
+z-index:1000;
 }
 
 .tabrow{
@@ -152,7 +154,6 @@ color:var(--text);
 background:rgba(255,255,255,0.12);
 }
 
-/* RESTORED LINK/MEDIA DISPLAY LAYER FROM ZIP */
 .card,.media-card,.row,.pill,.media-btn,.btn,.tab{
 -webkit-tap-highlight-color:transparent;
 }
@@ -291,65 +292,77 @@ color:var(--muted);
 text-decoration:none;
 }
 
-/* NEW MEDIA VIEWER LAYER */
+/* INTERNAL BASE MEDIA VIEW */
 
-.mediaViewer{
+.mediaRuntime{
 position:fixed;
 inset:0;
-background:rgba(0,0,0,.96);
+background:#000;
 z-index:9999;
 display:none;
 flex-direction:column;
 }
 
-.mediaViewer.active{
+.mediaRuntime.active{
 display:flex;
 }
 
-.mediaViewerTop{
+.mediaRuntimeHeader{
+height:64px;
 display:flex;
-justify-content:flex-end;
-padding:14px;
+align-items:center;
+justify-content:space-between;
+padding:0 16px;
 border-bottom:1px solid rgba(255,255,255,.08);
+background:#000;
+flex:0 0 auto;
 }
 
-.mediaViewerClose{
-height:40px;
-padding:0 18px;
-border-radius:999px;
+.mediaRuntimeTitle{
+font-size:14px;
+font-weight:700;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+padding-right:10px;
+}
+
+.mediaRuntimeClose{
+height:38px;
+padding:0 16px;
 border:none;
+border-radius:999px;
 background:rgba(255,255,255,.1);
 color:#fff;
 font-weight:700;
 cursor:pointer;
+flex:0 0 auto;
 }
 
-.mediaViewerBody{
+.mediaRuntimeBody{
 flex:1;
 display:flex;
 align-items:center;
 justify-content:center;
-padding:18px;
-overflow:auto;
+overflow:hidden;
+background:#000;
+position:relative;
 }
 
-.mediaViewer video,
-.mediaViewer iframe{
+.mediaRuntime video,
+.mediaRuntime iframe{
 width:100%;
-max-width:1000px;
+height:100%;
 border:none;
-border-radius:18px;
 background:#000;
 }
 
-.mediaViewer video{
-max-height:80vh;
+.mediaRuntime video{
+object-fit:contain;
 }
 
-.mediaViewer iframe{
-aspect-ratio:16/9;
-height:auto;
-min-height:220px;
+.mediaRuntime iframe{
+min-height:100%;
 }
 
 </style>
@@ -409,15 +422,16 @@ min-height:220px;
 </div>
 </nav>
 
-<!-- NEW MEDIA VIEWER -->
+<!-- INTERNAL BASE MEDIA RUNTIME -->
 
-<div id="mediaViewer" class="mediaViewer">
+<div id="mediaRuntime" class="mediaRuntime">
 
-<div class="mediaViewerTop">
-<button id="mediaViewerClose" class="mediaViewerClose">Close</button>
+<div class="mediaRuntimeHeader">
+<div id="mediaRuntimeTitle" class="mediaRuntimeTitle">Media</div>
+<button id="mediaRuntimeClose" class="mediaRuntimeClose">Close</button>
 </div>
 
-<div id="mediaViewerBody" class="mediaViewerBody"></div>
+<div id="mediaRuntimeBody" class="mediaRuntimeBody"></div>
 
 </div>
 
@@ -502,7 +516,7 @@ const parsed=new URL(url)
 const id=parsed.searchParams.get("v")
 
 if(id){
-return `https://www.youtube.com/embed/${id}?autoplay=1&playsinline=1`
+return `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&playsinline=1&rel=0`
 }
 
 }
@@ -512,7 +526,7 @@ if(url.includes("youtu.be/")){
 const id=url.split("youtu.be/")[1]?.split("?")[0]
 
 if(id){
-return `https://www.youtube.com/embed/${id}?autoplay=1&playsinline=1`
+return `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&playsinline=1&rel=0`
 }
 
 }
@@ -626,24 +640,31 @@ src:url
 
 }
 
-const mediaViewer=document.getElementById("mediaViewer")
-const mediaViewerBody=document.getElementById("mediaViewerBody")
-const mediaViewerClose=document.getElementById("mediaViewerClose")
+const mediaRuntime=document.getElementById("mediaRuntime")
+const mediaRuntimeBody=document.getElementById("mediaRuntimeBody")
+const mediaRuntimeClose=document.getElementById("mediaRuntimeClose")
+const mediaRuntimeTitle=document.getElementById("mediaRuntimeTitle")
 
-function closeMediaViewer(){
+function closeMediaRuntime(){
 
-mediaViewer.classList.remove("active")
-mediaViewerBody.innerHTML=""
+mediaRuntime.classList.remove("active")
+mediaRuntimeBody.innerHTML=""
+
+document.body.style.overflow=""
 
 }
 
-function openMediaViewer(url){
+function openMediaRuntime(item){
 
-if(!url) return
+if(!item || !item.url) return
 
-mediaViewerBody.innerHTML=""
+mediaRuntimeBody.innerHTML=""
 
-const config=getEmbedConfig(url)
+document.body.style.overflow="hidden"
+
+mediaRuntimeTitle.textContent=item.title || "Media"
+
+const config=getEmbedConfig(item.url)
 
 if(!config) return
 
@@ -654,11 +675,12 @@ const video=document.createElement("video")
 video.controls=true
 video.autoplay=true
 video.playsInline=true
+video.setAttribute("webkit-playsinline","")
 video.src=config.src
 
-mediaViewerBody.appendChild(video)
+mediaRuntimeBody.appendChild(video)
 
-mediaViewer.classList.add("active")
+mediaRuntime.classList.add("active")
 
 return
 
@@ -675,9 +697,11 @@ iframe.allow=
 
 iframe.allowFullscreen=true
 
-mediaViewerBody.appendChild(iframe)
+iframe.referrerPolicy="strict-origin-when-cross-origin"
 
-mediaViewer.classList.add("active")
+mediaRuntimeBody.appendChild(iframe)
+
+mediaRuntime.classList.add("active")
 
 return
 
@@ -687,13 +711,7 @@ window.open(config.src,"_blank","noopener")
 
 }
 
-mediaViewerClose.onclick=closeMediaViewer
-
-mediaViewer.addEventListener("click",(e)=>{
-if(e.target===mediaViewer){
-closeMediaViewer()
-}
-})
+mediaRuntimeClose.onclick=closeMediaRuntime
 
 const views={
 home:document.getElementById("view-home"),
@@ -722,20 +740,14 @@ function applyState(d){
 
 if(!d)return;
 
-// TEXT
-
 document.getElementById("name").textContent=d.name||"";
 document.getElementById("bio").textContent=d.bio||"";
-
-// COLORS
 
 document.documentElement.style.setProperty('--pillColor',d.pillColor||"#000");
 
 if(d.backgroundColor){
 document.body.style.background=d.backgroundColor;
 }
-
-// EMAIL
 
 const mount=document.getElementById("connectMount");
 
@@ -753,8 +765,6 @@ mount.appendChild(a);
 
 }
 
-// LIVE
-
 const liveStatus=document.getElementById("liveStatus");
 
 if(d.live && d.live.enabled){
@@ -762,8 +772,6 @@ liveStatus.textContent=d.live.status==="live"?"Live now":"Offline";
 }else{
 liveStatus.textContent="Unavailable";
 }
-
-// LINKS + MEDIA
 
 renderLinks(d);
 renderMedia(d);
@@ -904,7 +912,7 @@ if(!safe) return;
 
 if(isVideoUrl(safe)){
 
-openMediaViewer(safe)
+openMediaRuntime(item)
 
 }else{
 
@@ -934,8 +942,6 @@ container.appendChild(card)
 })
 
 }
-
-// 🔴 PREVIEW BRIDGE
 
 window.addEventListener("message",(event)=>{
 
