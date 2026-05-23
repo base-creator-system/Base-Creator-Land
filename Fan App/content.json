@@ -18,6 +18,7 @@
     "enabled": true,
     "collections": [
       {
+        "id": "collection-default",
         "title": "Latest",
         "items": [
           {
@@ -42,6 +43,20 @@
             "description": "app live testing",
             "thumbnail": "./media/thumb-item-1779210556893-da64255cf802b-1779210561633.png",
             "url": "https://youtube.com/shorts/n531VztXLsM?si=CMN9dZXCRFQFOE5r",
+            "access": "public"
+          }
+        ]
+      },
+      {
+        "id": "collection-1779547824384-562696115900c8",
+        "title": "Alex & India's Prom Pictures 2026",
+        "items": [
+          {
+            "id": "item-1779547957338-9c4c54571c41d8",
+            "title": "Prom 2026",
+            "description": "",
+            "thumbnail": "",
+            "url": "./media/media-item-1779547957338-9c4c54571c41d8-1779548106462.jpg",
             "access": "public"
           }
         ]
