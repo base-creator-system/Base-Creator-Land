@@ -158,20 +158,6 @@ background:rgba(255,255,255,0.12);
 -webkit-tap-highlight-color:transparent;
 }
 
-.media-card{
-border:1px solid var(--stroke);
-background:var(--card);
-border-radius:18px;
-padding:12px;
-margin:10px 0;
-display:flex;
-align-items:center;
-gap:10px;
-width:100%;
-min-width:0;
-overflow:hidden;
-}
-
 .row{
 display:flex;
 align-items:center;
@@ -218,10 +204,148 @@ border:none;
 cursor:pointer;
 }
 
-.section-title{
-font-weight:700;
+.media-btn{
+margin-left:auto;
+flex:0 0 auto;
+}
+
+.media-locked{
+opacity:.6;
+background:rgba(255,255,255,.08);
+color:rgba(255,255,255,.7);
+}
+
+.baseFooter{
+max-width:720px;
+margin:18px auto 0;
+padding:0 16px;
+text-align:center;
+color:var(--muted);
+font-size:12px;
+font-weight:600;
+}
+
+.baseFooter a{
+color:var(--muted);
+text-decoration:none;
+}
+
+/* COLLECTION CARDS */
+
+.collectionCard{
+border:1px solid var(--stroke);
+background:var(--card);
+border-radius:20px;
+padding:16px;
+margin:14px 0;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:14px;
+cursor:pointer;
+}
+
+.collectionLeft{
+display:flex;
+flex-direction:column;
+min-width:0;
+}
+
+.collectionTitle{
 font-size:16px;
-margin:20px 4px 12px;
+font-weight:800;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.collectionMeta{
+font-size:12px;
+color:var(--muted);
+margin-top:4px;
+}
+
+.collectionArrow{
+height:38px;
+padding:0 18px;
+border-radius:999px;
+display:flex;
+align-items:center;
+justify-content:center;
+background:var(--pillColor);
+color:#fff;
+font-weight:700;
+font-size:13px;
+flex:0 0 auto;
+}
+
+/* COLLECTION VIEW */
+
+.collectionView{
+position:fixed;
+inset:0;
+background:#000;
+z-index:9998;
+display:none;
+flex-direction:column;
+overflow:hidden;
+}
+
+.collectionView.active{
+display:flex;
+}
+
+.collectionHeader{
+height:64px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 16px;
+border-bottom:1px solid rgba(255,255,255,.08);
+background:#000;
+flex:0 0 auto;
+}
+
+.collectionHeaderTitle{
+font-size:15px;
+font-weight:800;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+padding-right:10px;
+}
+
+.collectionBack{
+height:38px;
+padding:0 16px;
+border:none;
+border-radius:999px;
+background:rgba(255,255,255,.1);
+color:#fff;
+font-weight:700;
+cursor:pointer;
+}
+
+.collectionBody{
+flex:1;
+overflow:auto;
+padding:16px;
+}
+
+/* MEDIA CARDS */
+
+.media-card{
+border:1px solid var(--stroke);
+background:var(--card);
+border-radius:18px;
+padding:12px;
+margin:10px 0;
+display:flex;
+align-items:center;
+gap:10px;
+width:100%;
+min-width:0;
+overflow:hidden;
 }
 
 .media-thumb{
@@ -266,33 +390,7 @@ overflow:hidden;
 text-overflow:ellipsis;
 }
 
-.media-btn{
-margin-left:auto;
-flex:0 0 auto;
-}
-
-.media-locked{
-opacity:.6;
-background:rgba(255,255,255,.08);
-color:rgba(255,255,255,.7);
-}
-
-.baseFooter{
-max-width:720px;
-margin:18px auto 0;
-padding:0 16px;
-text-align:center;
-color:var(--muted);
-font-size:12px;
-font-weight:600;
-}
-
-.baseFooter a{
-color:var(--muted);
-text-decoration:none;
-}
-
-/* INTERNAL BASE MEDIA VIEW */
+/* INTERNAL MEDIA RUNTIME */
 
 .mediaRuntime{
 position:fixed;
@@ -422,13 +520,34 @@ min-height:100%;
 </div>
 </nav>
 
+<!-- COLLECTION VIEW -->
+
+<div id="collectionView" class="collectionView">
+
+<div class="collectionHeader">
+<div id="collectionHeaderTitle" class="collectionHeaderTitle">
+Collection
+</div>
+
+<button id="collectionBack" class="collectionBack">
+Back
+</button>
+</div>
+
+<div id="collectionBody" class="collectionBody"></div>
+
+</div>
+
 <!-- INTERNAL BASE MEDIA RUNTIME -->
 
 <div id="mediaRuntime" class="mediaRuntime">
 
 <div class="mediaRuntimeHeader">
 <div id="mediaRuntimeTitle" class="mediaRuntimeTitle">Media</div>
-<button id="mediaRuntimeClose" class="mediaRuntimeClose">Close</button>
+
+<button id="mediaRuntimeClose" class="mediaRuntimeClose">
+Close
+</button>
 </div>
 
 <div id="mediaRuntimeBody" class="mediaRuntimeBody"></div>
@@ -713,6 +832,121 @@ window.open(config.src,"_blank","noopener")
 
 mediaRuntimeClose.onclick=closeMediaRuntime
 
+/* COLLECTION VIEW */
+
+const collectionView=document.getElementById("collectionView")
+const collectionBody=document.getElementById("collectionBody")
+const collectionHeaderTitle=document.getElementById("collectionHeaderTitle")
+const collectionBack=document.getElementById("collectionBack")
+
+collectionBack.onclick=()=>{
+
+collectionView.classList.remove("active")
+
+document.body.style.overflow=""
+
+}
+
+function openCollection(collection){
+
+if(!collection) return
+
+collectionHeaderTitle.textContent=collection.title || "Collection"
+
+collectionBody.innerHTML=""
+
+document.body.style.overflow="hidden"
+
+;(collection.items || []).forEach(item=>{
+
+const card=document.createElement("div")
+card.className="media-card"
+
+const thumb=document.createElement("div")
+thumb.className="media-thumb"
+
+if(item.thumbnail){
+
+const img=document.createElement("img")
+
+img.src=normalizeURL(item.thumbnail)
+
+thumb.appendChild(img)
+
+}else{
+
+thumb.textContent="▶"
+
+}
+
+const body=document.createElement("div")
+body.className="media-body"
+
+const title=document.createElement("div")
+title.className="media-title"
+title.textContent=item.title || ""
+
+body.appendChild(title)
+
+if(item.description){
+
+const desc=document.createElement("div")
+desc.className="media-desc"
+desc.textContent=item.description
+
+body.appendChild(desc)
+
+}
+
+card.appendChild(thumb)
+card.appendChild(body)
+
+if(item.access==="public" && item.url){
+
+const btn=document.createElement("button")
+
+btn.className="media-btn"
+btn.textContent="Open"
+
+btn.onclick=()=>{
+
+const safe=safeURL(item.url)
+
+if(!safe) return
+
+if(isVideoUrl(safe)){
+
+openMediaRuntime(item)
+
+}else{
+
+window.open(safe,"_blank","noopener")
+
+}
+
+}
+
+card.appendChild(btn)
+
+}else{
+
+const locked=document.createElement("div")
+
+locked.className="media-btn media-locked"
+locked.textContent="Locked"
+
+card.appendChild(locked)
+
+}
+
+collectionBody.appendChild(card)
+
+})
+
+collectionView.classList.add("active")
+
+}
+
 const views={
 home:document.getElementById("view-home"),
 media:document.getElementById("view-media"),
@@ -844,100 +1078,36 @@ const collections=d.mediaGateway.collections||[];
 
 collections.forEach(collection=>{
 
-const title=document.createElement("div");
+const card=document.createElement("div")
+card.className="collectionCard"
 
-title.className="section-title";
-title.textContent=collection.title;
+card.onclick=()=>openCollection(collection)
 
-container.appendChild(title);
+const left=document.createElement("div")
+left.className="collectionLeft"
 
-collection.items.forEach(item=>{
+const title=document.createElement("div")
+title.className="collectionTitle"
+title.textContent=collection.title || "Collection"
 
-const card=document.createElement("div");
-card.className="media-card";
+const meta=document.createElement("div")
+meta.className="collectionMeta"
 
-const thumb=document.createElement("div");
-thumb.className="media-thumb";
+const count=(collection.items || []).length
 
-if(item.thumbnail){
+meta.textContent=`${count} item${count===1?"":"s"}`
 
-const img=document.createElement("img");
+left.appendChild(title)
+left.appendChild(meta)
 
-img.src=normalizeURL(item.thumbnail);
-img.alt="";
+const arrow=document.createElement("div")
+arrow.className="collectionArrow"
+arrow.textContent="Open"
 
-thumb.appendChild(img)
-
-}else{
-
-thumb.textContent="▶"
-
-}
-
-const body=document.createElement("div");
-body.className="media-body";
-
-const t=document.createElement("div");
-t.className="media-title";
-t.textContent=item.title||"";
-
-body.appendChild(t);
-
-if(item.description){
-
-const desc=document.createElement("div");
-
-desc.className="media-desc";
-desc.textContent=item.description;
-
-body.appendChild(desc)
-
-}
-
-card.appendChild(thumb);
-card.appendChild(body);
-
-if(item.access==="public"&&item.url){
-
-const btn=document.createElement("button");
-
-btn.className="media-btn";
-btn.textContent="Open";
-
-btn.onclick=()=>{
-
-const safe=safeURL(item.url);
-
-if(!safe) return;
-
-if(isVideoUrl(safe)){
-
-openMediaRuntime(item)
-
-}else{
-
-window.open(safe,"_blank","noopener")
-
-}
-
-}
-
-card.appendChild(btn)
-
-}else{
-
-const locked=document.createElement("div");
-
-locked.className="media-btn media-locked";
-locked.textContent="Locked";
-
-card.appendChild(locked)
-
-}
+card.appendChild(left)
+card.appendChild(arrow)
 
 container.appendChild(card)
-
-})
 
 })
 
