@@ -46,6 +46,20 @@
             "access": "public"
           }
         ]
+      },
+      {
+        "id": "collection-1779722863417-1b9eb28d3aa54",
+        "title": "Alex & India's Prom 20206",
+        "items": [
+          {
+            "id": "item-1779722874750-359dc1ec031f3",
+            "title": "GrandParents R US",
+            "description": "PROM NIGHT 2026",
+            "thumbnail": "./media/thumb-item-1779722874750-359dc1ec031f3-1779722898250.png",
+            "url": "./media/media-item-1779722874750-359dc1ec031f3-1779722896407.png",
+            "access": "public"
+          }
+        ]
       }
     ]
   },
