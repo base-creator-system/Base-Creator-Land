@@ -52,14 +52,6 @@
         "title": "Alex & India’s Prom 2026",
         "items": [
           {
-            "id": "item-1779899298061-de3a8645efc378",
-            "title": "Grandparents R US",
-            "description": "",
-            "thumbnail": "./media/thumb-item-1779899298061-de3a8645efc378-1779899311255.png",
-            "url": "./media/media-item-1779899298061-de3a8645efc378-1779899305889.jpeg",
-            "access": "public"
-          },
-          {
             "id": "item-1779900979953-f2972685c85368",
             "title": "Grandparents R US",
             "description": "🇵🇦 🇩🇪",
@@ -81,6 +73,14 @@
             "description": "💪🏿💪🏿💪🏿",
             "thumbnail": "./media/thumb-item-1779901120843-f614f2cd9e157-1779901137996.png",
             "url": "./media/media-item-1779901120843-f614f2cd9e157-1779901135015.png",
+            "access": "public"
+          },
+          {
+            "id": "item-1779901332427-b46ca573d07b28",
+            "title": "Cousin Brothers",
+            "description": "⛓️⛓️",
+            "thumbnail": "./media/thumb-item-1779901332427-b46ca573d07b28-1779901340579.png",
+            "url": "./media/media-item-1779901332427-b46ca573d07b28-1779901337740.jpg",
             "access": "public"
           }
         ]
