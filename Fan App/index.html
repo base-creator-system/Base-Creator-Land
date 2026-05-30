@@ -65,6 +65,22 @@ font-weight:800;
 font-size:17px;
 }
 
+.installInfoBtn{
+width:36px;
+height:36px;
+border-radius:999px;
+border:1px solid rgba(0,122,255,.55);
+background:rgba(0,122,255,.18);
+color:#5eb2ff;
+font-size:18px;
+font-weight:900;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+-webkit-tap-highlight-color:transparent;
+}
+
 .hero{
 margin:8px 0 18px;
 border-radius:18px;
@@ -228,6 +244,122 @@ font-weight:600;
 .baseFooter a{
 color:var(--muted);
 text-decoration:none;
+}
+
+/* INSTALL INFO MODAL */
+
+.installModal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.78);
+backdrop-filter:blur(14px);
+z-index:10000;
+display:none;
+align-items:center;
+justify-content:center;
+padding:18px;
+}
+
+.installModal.active{
+display:flex;
+}
+
+.installPanel{
+width:100%;
+max-width:420px;
+max-height:86vh;
+overflow:auto;
+border:1px solid var(--stroke);
+background:rgba(14,14,14,.96);
+border-radius:24px;
+padding:18px;
+box-shadow:0 18px 60px rgba(0,0,0,.55);
+}
+
+.installTop{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+margin-bottom:14px;
+}
+
+.installTitle{
+font-size:18px;
+font-weight:900;
+letter-spacing:-.2px;
+}
+
+.installClose{
+width:36px;
+height:36px;
+border-radius:999px;
+border:1px solid var(--stroke);
+background:rgba(255,255,255,.08);
+color:#fff;
+font-size:20px;
+font-weight:800;
+cursor:pointer;
+}
+
+.installIntro{
+font-size:13px;
+line-height:1.45;
+color:var(--muted);
+margin:0 0 14px;
+}
+
+.installBlock{
+border:1px solid rgba(255,255,255,.1);
+background:rgba(255,255,255,.04);
+border-radius:18px;
+padding:14px;
+margin:12px 0;
+}
+
+.installBlockTitle{
+display:flex;
+align-items:center;
+gap:8px;
+font-size:15px;
+font-weight:850;
+margin-bottom:8px;
+}
+
+.installBadge{
+width:26px;
+height:26px;
+border-radius:9px;
+display:flex;
+align-items:center;
+justify-content:center;
+background:rgba(0,122,255,.18);
+color:#5eb2ff;
+font-size:14px;
+font-weight:900;
+}
+
+.installSteps{
+margin:0;
+padding-left:20px;
+color:var(--muted);
+font-size:13px;
+line-height:1.55;
+}
+
+.installSteps li{
+margin:5px 0;
+}
+
+.installNote{
+margin:14px 0 0;
+padding:12px;
+border-radius:16px;
+background:rgba(0,122,255,.11);
+border:1px solid rgba(0,122,255,.28);
+color:rgba(255,255,255,.82);
+font-size:12px;
+line-height:1.45;
 }
 
 /* COLLECTION CARDS */
@@ -475,6 +607,10 @@ min-height:100%;
 <img id="logo" src="icons/icon-192-v37.png?v=1779901343070">
 <div class="name" id="name">Creator</div>
 </div>
+
+<button id="installInfoBtn" class="installInfoBtn" type="button" aria-label="Install app information">
+i
+</button>
 </div>
 
 <div class="hero">
@@ -520,6 +656,60 @@ min-height:100%;
 </div>
 </nav>
 
+<!-- INSTALL INFO MODAL -->
+
+<div id="installModal" class="installModal" aria-hidden="true">
+
+<div class="installPanel" role="dialog" aria-modal="true" aria-labelledby="installModalTitle">
+
+<div class="installTop">
+<div id="installModalTitle" class="installTitle">Install This App</div>
+
+<button id="installModalClose" class="installClose" type="button" aria-label="Close install instructions">
+×
+</button>
+</div>
+
+<p class="installIntro">
+Add this app to your phone so it opens like a regular app from your Home Screen.
+</p>
+
+<div class="installBlock">
+<div class="installBlockTitle">
+<div class="installBadge"></div>
+<div>iPhone / iPad</div>
+</div>
+
+<ol class="installSteps">
+<li>Open this app in Safari.</li>
+<li>Tap the Share button.</li>
+<li>Scroll down and tap Add to Home Screen.</li>
+<li>Tap Add.</li>
+</ol>
+</div>
+
+<div class="installBlock">
+<div class="installBlockTitle">
+<div class="installBadge">▶</div>
+<div>Android</div>
+</div>
+
+<ol class="installSteps">
+<li>Open this app in Chrome.</li>
+<li>Tap the three-dot menu.</li>
+<li>Tap Install App or Add to Home Screen.</li>
+<li>Tap Install.</li>
+</ol>
+</div>
+
+<div class="installNote">
+Once installed, the app icon will appear on your device and open directly from your Home Screen.
+</div>
+
+</div>
+
+</div>
+
 <!-- COLLECTION VIEW -->
 
 <div id="collectionView" class="collectionView">
@@ -560,6 +750,43 @@ const CONTENT_URL="./content.json"
 const POLL_INTERVAL=15000
 
 let previewMode=false
+
+const installInfoBtn=document.getElementById("installInfoBtn")
+const installModal=document.getElementById("installModal")
+const installModalClose=document.getElementById("installModalClose")
+
+function openInstallModal(){
+
+installModal.classList.add("active")
+installModal.setAttribute("aria-hidden","false")
+
+}
+
+function closeInstallModal(){
+
+installModal.classList.remove("active")
+installModal.setAttribute("aria-hidden","true")
+
+}
+
+installInfoBtn.onclick=openInstallModal
+installModalClose.onclick=closeInstallModal
+
+installModal.onclick=(event)=>{
+
+if(event.target===installModal){
+closeInstallModal()
+}
+
+}
+
+window.addEventListener("keydown",(event)=>{
+
+if(event.key==="Escape" && installModal.classList.contains("active")){
+closeInstallModal()
+}
+
+})
 
 function safeURL(url){
 
