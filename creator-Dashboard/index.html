@@ -1728,8 +1728,6 @@ const thumbnailFile=el.supporterThumbFile.files[0] || null
 const url=(el.supporterUrl.value||"").trim()
 const enabled=el.supporterEnabled.checked===true
 
-if(!name)return
-
 supporterState.push({
 id:`supporter-${Date.now()}-${Math.random().toString(16).slice(2)}`,
 type,
