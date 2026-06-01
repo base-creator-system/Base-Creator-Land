@@ -243,7 +243,8 @@ gap:12px;
 flex-wrap:wrap;
 }
 
-.mediaList{
+.mediaList,
+.supportersList{
 margin-top:12px;
 }
 
@@ -309,6 +310,38 @@ overflow:hidden;
 text-overflow:ellipsis;
 white-space:nowrap;
 }
+
+
+.supporterRow{
+display:flex;
+align-items:flex-start;
+justify-content:space-between;
+gap:12px;
+padding:12px;
+border:1px solid #222;
+border-radius:14px;
+margin-top:10px;
+background:#050505;
+}
+
+.supporterMeta{
+flex:1;
+min-width:0;
+}
+
+.supporterName{
+font-weight:800;
+margin-bottom:4px;
+}
+
+.supporterSub{
+opacity:.8;
+font-size:12px;
+overflow:hidden;
+text-overflow:ellipsis;
+white-space:nowrap;
+}
+
 
 @media (max-width:720px){
 .top{
@@ -450,6 +483,89 @@ height:520px;
 <div class="tiny">Paste your Cloudflare or other live host URL.</div>
 </div>
 </div>
+
+</div>
+
+<div style="margin-top:18px;border-top:1px solid #222;padding-top:14px;">
+
+<label style="margin-bottom:10px;display:block;">Supporters</label>
+<div class="tiny">Display sponsors, partners, venues, pilots, collaborators, and supporters without payments, accounts, tracking, or platform behavior.</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Type</label>
+<select id="supporterType">
+<option value="supporter">supporter</option>
+<option value="sponsor">sponsor</option>
+<option value="partner">partner</option>
+<option value="venue">venue</option>
+<option value="community">community</option>
+<option value="collaborator">collaborator</option>
+<option value="pilot">pilot</option>
+</select>
+</div>
+
+<div class="col">
+<label>Name</label>
+<input id="supporterName" type="text" placeholder="Name">
+</div>
+</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Tagline</label>
+<input id="supporterTagline" type="text" placeholder="Official supporter, launch partner, venue partner">
+</div>
+
+<div class="col">
+<label>Button Text</label>
+<input id="supporterButtonText" type="text" placeholder="Visit Supporter">
+</div>
+</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Description</label>
+<input id="supporterDesc" type="text" placeholder="Short explanation of the support relationship">
+</div>
+</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Supporter Thumbnail Upload</label>
+<input id="supporterThumbFile" type="file" accept="image/png,image/jpeg,image/webp">
+<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
+</div>
+</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Thumbnail URL (legacy/manual optional)</label>
+<input id="supporterThumbnail" type="text" placeholder="https://.../logo.png">
+</div>
+</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Supporter URL</label>
+<input id="supporterUrl" type="text" placeholder="https://...">
+</div>
+</div>
+
+<div class="toggleRow" style="margin-top:12px;">
+<div class="tiny">Only enabled supporters appear in the Fan App.</div>
+<label style="display:flex;align-items:center;gap:10px;margin:0;">
+<span class="tiny">Enabled</span>
+<input id="supporterEnabled" type="checkbox" checked style="width:auto;height:auto;">
+</label>
+</div>
+
+<div class="btnRow">
+<button id="btnAddSupporter">Add Supporter</button>
+<button id="btnClearSupporters" class="danger">Clear Supporters</button>
+</div>
+
+<div id="supportersList" class="supportersList"></div>
 
 </div>
 
@@ -688,6 +804,18 @@ mediaDesc:$("mediaDesc"),
 btnAddMedia:$("btnAddMedia"),
 btnClearMedia:$("btnClearMedia"),
 mediaList:$("mediaList"),
+supporterType:$("supporterType"),
+supporterName:$("supporterName"),
+supporterTagline:$("supporterTagline"),
+supporterButtonText:$("supporterButtonText"),
+supporterDesc:$("supporterDesc"),
+supporterThumbFile:$("supporterThumbFile"),
+supporterThumbnail:$("supporterThumbnail"),
+supporterUrl:$("supporterUrl"),
+supporterEnabled:$("supporterEnabled"),
+btnAddSupporter:$("btnAddSupporter"),
+btnClearSupporters:$("btnClearSupporters"),
+supportersList:$("supportersList"),
 status:$("status"),
 repoLabel:$("repoLabel"),
 statePill:$("statePill"),
@@ -701,6 +829,9 @@ let mediaItems=[]
 let mediaCollections=[]
 let mediaHydrated=false
 let mediaTouched=false
+let supporterState=[]
+let supportersHydrated=false
+let supportersTouched=false
 let isPublishing=false
 let isDirty=false
 let loadedSha=null
@@ -873,6 +1004,147 @@ row.appendChild(remove)
 el.linksList.appendChild(row)
 
 })
+
+}
+
+
+function renderSupporters(){
+
+el.supportersList.innerHTML=""
+
+const total=document.createElement("div")
+total.className="tiny"
+total.textContent=`Supporters: ${supporterState.length}`
+el.supportersList.appendChild(total)
+
+supporterState.forEach((item,i)=>{
+
+const row=document.createElement("div")
+row.className="supporterRow"
+
+const left=document.createElement("div")
+left.className="supporterMeta"
+
+const name=document.createElement("div")
+name.className="supporterName"
+name.textContent=item.name || "(unnamed supporter)"
+
+const sub=document.createElement("div")
+sub.className="supporterSub"
+sub.textContent=`${item.type || "supporter"} · ${item.enabled===false ? "disabled" : "enabled"} · ${item.thumbnail ? item.thumbnail : (item.thumbnailFile instanceof File ? "(thumbnail pending publish)" : "(no thumbnail)")}`
+
+left.appendChild(name)
+left.appendChild(sub)
+
+const remove=document.createElement("button")
+remove.textContent="Remove"
+
+remove.onclick=()=>{
+supporterState.splice(i,1)
+supportersTouched=true
+renderSupporters()
+markDirty()
+}
+
+row.appendChild(left)
+row.appendChild(remove)
+
+el.supportersList.appendChild(row)
+
+})
+
+}
+
+function hydrateSupporters(state){
+
+supportersHydrated=true
+
+const incoming=Array.isArray(state?.supporters) ? state.supporters : []
+
+supporterState=incoming.map(x=>({
+id:x?.id || `supporter-${Math.random().toString(16).slice(2)}`,
+type:String(x?.type || "supporter"),
+name:String(x?.name || ""),
+tagline:String(x?.tagline || ""),
+description:String(x?.description || ""),
+thumbnail:String(x?.thumbnail || ""),
+url:String(x?.url || ""),
+buttonText:String(x?.buttonText || "Visit Supporter"),
+enabled:x?.enabled===false ? false : true
+}))
+
+renderSupporters()
+
+}
+
+function buildSupporters(){
+if(!(supportersHydrated || supportersTouched)) return null
+
+return supporterState.map(item=>({
+id:item.id || `supporter-${Math.random().toString(16).slice(2)}`,
+type:(item.type || "supporter").trim() || "supporter",
+name:(item.name || "").trim(),
+tagline:(item.tagline || "").trim(),
+description:(item.description || "").trim(),
+thumbnail:(item.thumbnail || "").trim(),
+url:(item.url || "").trim(),
+buttonText:(item.buttonText || "Visit Supporter").trim() || "Visit Supporter",
+enabled:item.enabled===false ? false : true
+}))
+
+}
+
+async function uploadSupporterThumbnail(token,file,itemId){
+const safeExt=getSafeMediaThumbExtension(file)
+const safeId=String(itemId || `supporter-${Date.now()}`).replace(/[^a-zA-Z0-9_-]/g,"")
+const fileName=`supporter-${safeId}-${Date.now()}.${safeExt}`
+const repoPath=`Fan App/media/${fileName}`
+const localPath=`./media/${fileName}`
+const base64=await fileToBase64(file)
+
+await ghPutFile(
+token,
+repoPath,
+undefined,
+base64,
+`BASE supporter thumbnail ${fileName}`
+)
+
+return localPath
+}
+
+async function buildSupportersForPublish(token){
+if(!(supportersHydrated || supportersTouched)) return null
+
+const supporters=[]
+
+for(const item of supporterState){
+
+let thumbnail=(item.thumbnail || "").trim()
+
+if(item.thumbnailFile instanceof File){
+log(`Supporter thumbnail upload started: ${item.name || "supporter"}`)
+thumbnail=await uploadSupporterThumbnail(token,item.thumbnailFile,item.id)
+item.thumbnail=thumbnail
+delete item.thumbnailFile
+log(`Supporter thumbnail uploaded: ${thumbnail}`)
+}
+
+supporters.push({
+id:item.id || `supporter-${Math.random().toString(16).slice(2)}`,
+type:(item.type || "supporter").trim() || "supporter",
+name:(item.name || "").trim(),
+tagline:(item.tagline || "").trim(),
+description:(item.description || "").trim(),
+thumbnail,
+url:(item.url || "").trim(),
+buttonText:(item.buttonText || "Visit Supporter").trim() || "Visit Supporter",
+enabled:item.enabled===false ? false : true
+})
+
+}
+
+return supporters
 
 }
 
@@ -1080,6 +1352,9 @@ watch_url:el.liveWatchUrl.value.trim()
 
 const mg=buildMediaGateway()
 if(mg) payload.mediaGateway=mg
+
+const supporters=buildSupporters()
+if(supporters) payload.supporters=supporters
 
 el.previewFrame.contentWindow.postMessage({
 type:"BASE_PREVIEW",
@@ -1442,6 +1717,56 @@ log(e.message)
 
 }
 
+
+el.btnAddSupporter.onclick=()=>{
+const type=(el.supporterType.value||"supporter").trim() || "supporter"
+const name=(el.supporterName.value||"").trim()
+const tagline=(el.supporterTagline.value||"").trim()
+const buttonText=(el.supporterButtonText.value||"").trim()
+const description=(el.supporterDesc.value||"").trim()
+const thumbnail=(el.supporterThumbnail.value||"").trim()
+const thumbnailFile=el.supporterThumbFile.files[0] || null
+const url=(el.supporterUrl.value||"").trim()
+const enabled=el.supporterEnabled.checked===true
+
+if(!name)return
+
+supporterState.push({
+id:`supporter-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+type,
+name,
+tagline,
+description,
+thumbnail,
+thumbnailFile,
+url,
+buttonText:buttonText || "Visit Supporter",
+enabled
+})
+
+supportersTouched=true
+
+el.supporterType.value="supporter"
+el.supporterName.value=""
+el.supporterTagline.value=""
+el.supporterButtonText.value=""
+el.supporterDesc.value=""
+el.supporterThumbFile.value=""
+el.supporterThumbnail.value=""
+el.supporterUrl.value=""
+el.supporterEnabled.checked=true
+
+renderSupporters()
+markDirty()
+}
+
+el.btnClearSupporters.onclick=()=>{
+supporterState=[]
+supportersTouched=true
+renderSupporters()
+markDirty()
+}
+
 el.addLinkBtn.onclick=()=>{
 const label=(el.linkLabelInput.value||"").trim()
 const url=(el.linkUrlInput.value||"").trim()
@@ -1582,6 +1907,7 @@ el.backgroundColor.value=state.backgroundColor||"#000000"
 el.pillColor.value=state.pillColor||"#caa300"
 linkState=Array.isArray(state.links)?state.links:[]
 hydrateMediaGateway(state)
+hydrateSupporters(state)
 
 renderLinks()
 
@@ -1766,6 +2092,11 @@ if(mg){
 merged.mediaGateway=mg
 }
 
+const supporters=await buildSupportersForPublish(token)
+if(supporters){
+merged.supporters=supporters
+}
+
 const result=await ghPutFile(
 token,
 TARGET_PATH,
@@ -1897,6 +2228,16 @@ el.liveWatchUrl.addEventListener("input",markDirty)
 el.backgroundColor.addEventListener("input",markDirty)
 el.pillColor.addEventListener("input",markDirty)
 
+el.supporterType.addEventListener("change",()=>{supportersTouched=true;markDirty()})
+el.supporterName.addEventListener("input",()=>{supportersTouched=true;markDirty()})
+el.supporterTagline.addEventListener("input",()=>{supportersTouched=true;markDirty()})
+el.supporterButtonText.addEventListener("input",()=>{supportersTouched=true;markDirty()})
+el.supporterDesc.addEventListener("input",()=>{supportersTouched=true;markDirty()})
+el.supporterThumbnail.addEventListener("input",()=>{supportersTouched=true;markDirty()})
+el.supporterUrl.addEventListener("input",()=>{supportersTouched=true;markDirty()})
+el.supporterEnabled.addEventListener("change",()=>{supportersTouched=true;markDirty()})
+el.supporterThumbFile.addEventListener("change",()=>{supportersTouched=true;markDirty()})
+
 el.mediaEnabled.addEventListener("change",()=>{
 mediaTouched=true
 markDirty()
@@ -1931,6 +2272,7 @@ localStorage.removeItem(LS_TOKEN)
 ensureDefaultCollection()
 renderLinks()
 renderMediaList()
+renderSupporters()
 setPublishBusy(false)
 clearDirty()
 clearShaState()
