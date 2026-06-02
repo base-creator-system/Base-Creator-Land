@@ -246,6 +246,102 @@ color:var(--muted);
 text-decoration:none;
 }
 
+/* SUPPORTERS */
+
+.supportersCard{
+border:1px solid var(--stroke);
+background:var(--card);
+border-radius:18px;
+padding:16px;
+margin:16px 0;
+}
+
+.supportersList{
+display:flex;
+flex-direction:column;
+gap:12px;
+margin-top:12px;
+}
+
+.supporterCard{
+border:1px solid var(--stroke);
+background:rgba(255,255,255,0.04);
+border-radius:16px;
+padding:12px;
+display:flex;
+align-items:center;
+gap:12px;
+text-decoration:none;
+color:inherit;
+}
+
+.supporterThumb{
+width:54px;
+height:54px;
+border-radius:14px;
+overflow:hidden;
+border:1px solid var(--stroke);
+background:rgba(255,255,255,0.05);
+flex:0 0 auto;
+display:grid;
+place-items:center;
+font-weight:900;
+font-size:18px;
+}
+
+.supporterThumb img{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+}
+
+.supporterBody{
+flex:1;
+min-width:0;
+}
+
+.supporterType{
+font-size:11px;
+font-weight:800;
+text-transform:uppercase;
+letter-spacing:.4px;
+color:var(--muted);
+margin-bottom:3px;
+}
+
+.supporterName{
+font-size:14px;
+font-weight:800;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.supporterTagline,
+.supporterDesc{
+font-size:12px;
+color:var(--muted);
+margin-top:3px;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.supporterButton{
+height:32px;
+padding:0 14px;
+border-radius:999px;
+background:var(--pillColor);
+color:#fff;
+font-size:12px;
+font-weight:700;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+flex:0 0 auto;
+}
+
 /* INSTALL INFO MODAL */
 
 .installModal{
@@ -616,6 +712,13 @@ i
 <div class="hero">
 <img id="heroImg" src="icons/icon-512-v37.png?v=1779901343070">
 </div>
+
+<section id="supportersSection" class="hidden">
+<div class="supportersCard">
+<div class="h1">Supporters</div>
+<div id="supportersList" class="supportersList"></div>
+</div>
+</section>
 
 <section id="view-home">
 <div class="card">
@@ -1234,8 +1337,135 @@ liveStatus.textContent=d.live.status==="live"?"Live now":"Offline";
 liveStatus.textContent="Unavailable";
 }
 
+renderSupporters(d);
 renderLinks(d);
 renderMedia(d);
+
+}
+
+function renderSupporters(d){
+
+const section=document.getElementById("supportersSection");
+const container=document.getElementById("supportersList");
+
+container.innerHTML="";
+
+const supporters=Array.isArray(d.supporters)?d.supporters:[];
+
+const visible=supporters.filter(item=>{
+
+if(!item)return false;
+
+if(item.enabled===false)return false;
+
+return Boolean(
+String(item.type||"").trim() ||
+String(item.name||"").trim() ||
+String(item.tagline||"").trim() ||
+String(item.description||"").trim() ||
+String(item.thumbnail||"").trim() ||
+String(item.url||"").trim() ||
+String(item.buttonText||"").trim()
+);
+
+});
+
+if(visible.length===0){
+
+section.classList.add("hidden");
+
+return;
+
+}
+
+visible.forEach(item=>{
+
+const rawUrl=String(item.url||"").trim();
+const url=safeURL(rawUrl);
+
+const clickable=Boolean(url);
+
+const card=document.createElement(clickable ? "a" : "div");
+card.className="supporterCard";
+
+if(clickable){
+card.href=url;
+card.target="_blank";
+card.rel="noopener";
+}
+
+const thumb=document.createElement("div");
+thumb.className="supporterThumb";
+
+if(item.thumbnail){
+
+const img=document.createElement("img");
+img.src=normalizeURL(item.thumbnail);
+thumb.appendChild(img);
+
+}else{
+
+const fallback=String(item.name||item.type||"S").trim().charAt(0).toUpperCase() || "S";
+thumb.textContent=fallback;
+
+}
+
+const body=document.createElement("div");
+body.className="supporterBody";
+
+if(item.type){
+
+const type=document.createElement("div");
+type.className="supporterType";
+type.textContent=item.type;
+body.appendChild(type);
+
+}
+
+if(item.name){
+
+const name=document.createElement("div");
+name.className="supporterName";
+name.textContent=item.name;
+body.appendChild(name);
+
+}
+
+if(item.tagline){
+
+const tagline=document.createElement("div");
+tagline.className="supporterTagline";
+tagline.textContent=item.tagline;
+body.appendChild(tagline);
+
+}
+
+if(item.description){
+
+const desc=document.createElement("div");
+desc.className="supporterDesc";
+desc.textContent=item.description;
+body.appendChild(desc);
+
+}
+
+card.appendChild(thumb);
+card.appendChild(body);
+
+if(clickable){
+
+const button=document.createElement("div");
+button.className="supporterButton";
+button.textContent=item.buttonText || "Open";
+card.appendChild(button);
+
+}
+
+container.appendChild(card);
+
+});
+
+section.classList.remove("hidden");
 
 }
 
