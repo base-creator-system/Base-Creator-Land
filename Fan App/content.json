@@ -93,17 +93,5 @@
     "status": "live",
     "watch_url": "https://customer-sb4ix37adh6j9xvg.cloudflarestream.com/80cb955843a44433f4b0608b3e90f963/iframe"
   },
-  "supporters": [
-    {
-      "id": "supporter-1780377040276-98c67ffb98b048",
-      "type": "supporter",
-      "name": "DJ Alamo",
-      "tagline": "",
-      "description": "Top Supporter",
-      "thumbnail": "./media/supporter-supporter-1780377040276-98c67ffb98b048-1780377083970.png",
-      "url": "https://djalamo.com",
-      "buttonText": "DJ ALAMO",
-      "enabled": true
-    }
-  ]
+  "supporters": []
 }
