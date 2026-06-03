@@ -93,5 +93,17 @@
     "status": "live",
     "watch_url": "https://customer-sb4ix37adh6j9xvg.cloudflarestream.com/80cb955843a44433f4b0608b3e90f963/iframe"
   },
-  "supporters": []
+  "supporters": [
+    {
+      "id": "supporter-1780500227381-6cb963f348f0b8",
+      "type": "supporter",
+      "name": "DJ Alamo",
+      "tagline": "",
+      "description": "Alamo Allstars",
+      "thumbnail": "./media/supporter-supporter-1780500227381-6cb963f348f0b8-1780500264155.png",
+      "url": "https://djalamo.com/",
+      "buttonText": "DJ Alamo.com",
+      "enabled": true
+    }
+  ]
 }
