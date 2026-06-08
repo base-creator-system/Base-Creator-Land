@@ -342,6 +342,55 @@ text-overflow:ellipsis;
 white-space:nowrap;
 }
 
+.moduleBlock{
+border-top:1px solid #222;
+margin-top:18px;
+padding-top:14px;
+}
+
+.moduleToggle{
+width:100%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+border:1px solid #222;
+background:#050505;
+border-radius:14px;
+padding:12px 14px;
+text-align:left;
+}
+
+.moduleTitle{
+font-weight:800;
+font-size:14px;
+}
+
+.moduleHint{
+font-size:12px;
+opacity:.65;
+margin-top:4px;
+}
+
+.moduleArrow{
+font-size:16px;
+opacity:.75;
+flex:0 0 auto;
+}
+
+.moduleContent{
+display:none;
+padding-top:14px;
+}
+
+.moduleBlock.open .moduleContent{
+display:block;
+}
+
+.moduleBlock.open .moduleArrow{
+transform:rotate(90deg);
+}
+
 
 @media (max-width:720px){
 .top{
@@ -454,9 +503,17 @@ height:520px;
 <input id="appIconInput" type="file" accept="image/png,image/jpeg">
 </div>
 
-<div style="margin-top:18px;border-top:1px solid #222;padding-top:14px;">
+<div class="moduleBlock open" data-module="live">
 
-<label style="margin-bottom:10px;display:block;">Live Control</label>
+<button type="button" class="moduleToggle">
+<div>
+<div class="moduleTitle">Live Control</div>
+<div class="moduleHint">Control live availability and stream destination.</div>
+</div>
+<div class="moduleArrow">›</div>
+</button>
+
+<div class="moduleContent">
 
 <div class="toggleRow">
 <div class="tiny">Control live availability and stream destination.</div>
@@ -486,10 +543,19 @@ height:520px;
 
 </div>
 
-<div style="margin-top:18px;border-top:1px solid #222;padding-top:14px;">
+</div>
 
-<label style="margin-bottom:10px;display:block;">Supporters</label>
-<div class="tiny">Display sponsors, partners, venues, communities, collaborators, and supporters without payments, accounts, tracking, or platform behavior.</div>
+<div class="moduleBlock open" data-module="supporters">
+
+<button type="button" class="moduleToggle">
+<div>
+<div class="moduleTitle">Supporters</div>
+<div class="moduleHint">Display sponsors, partners, venues, collaborators, and supporters without payments, accounts, tracking, or platform behavior.</div>
+</div>
+<div class="moduleArrow">›</div>
+</button>
+
+<div class="moduleContent">
 
 <div class="row" style="margin-top:12px;">
 <div class="col">
@@ -499,7 +565,6 @@ height:520px;
 <option value="sponsor">sponsor</option>
 <option value="partner">partner</option>
 <option value="venue">venue</option>
-<option value="community">community</option>
 <option value="collaborator">collaborator</option>
 </select>
 </div>
@@ -565,6 +630,64 @@ height:520px;
 </div>
 
 <div id="supportersList" class="supportersList"></div>
+
+</div>
+
+</div>
+
+<div class="moduleBlock open" data-module="community">
+
+<button type="button" class="moduleToggle">
+<div>
+<div class="moduleTitle">Community</div>
+<div class="moduleHint">Connect a persistent community doorway without BASE owning accounts, messages, or audience data.</div>
+</div>
+<div class="moduleArrow">›</div>
+</button>
+
+<div class="moduleContent">
+
+<div class="toggleRow">
+<div class="tiny">Only enabled community doorways will publish into content.json.</div>
+<label style="display:flex;align-items:center;gap:10px;margin:0;">
+<span class="tiny">Enabled</span>
+<input id="communityEnabled" type="checkbox" style="width:auto;height:auto;">
+</label>
+</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Provider</label>
+<select id="communityProvider">
+<option value="matrix">Matrix</option>
+<option value="discord">Discord</option>
+<option value="telegram">Telegram</option>
+<option value="whatsapp">WhatsApp</option>
+<option value="custom">Custom</option>
+</select>
+</div>
+
+<div class="col">
+<label>Community Name</label>
+<input id="communityName" type="text" placeholder="Community name">
+</div>
+</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Button Text</label>
+<input id="communityButtonText" type="text" placeholder="Enter Community">
+</div>
+
+<div class="col">
+<label>Community URL</label>
+<input id="communityUrl" type="text" placeholder="https://...">
+</div>
+</div>
+
+<div class="tiny">Use Matrix first, or any provider that gives you a stable community link.</div>
+
+</div>
 
 </div>
 
@@ -815,6 +938,11 @@ supporterEnabled:$("supporterEnabled"),
 btnAddSupporter:$("btnAddSupporter"),
 btnClearSupporters:$("btnClearSupporters"),
 supportersList:$("supportersList"),
+communityEnabled:$("communityEnabled"),
+communityProvider:$("communityProvider"),
+communityName:$("communityName"),
+communityButtonText:$("communityButtonText"),
+communityUrl:$("communityUrl"),
 status:$("status"),
 repoLabel:$("repoLabel"),
 statePill:$("statePill"),
@@ -831,6 +959,8 @@ let mediaTouched=false
 let supporterState=[]
 let supportersHydrated=false
 let supportersTouched=false
+let communityHydrated=false
+let communityTouched=false
 let isPublishing=false
 let isDirty=false
 let loadedSha=null
@@ -1003,6 +1133,36 @@ row.appendChild(remove)
 el.linksList.appendChild(row)
 
 })
+
+}
+
+
+function hydrateCommunity(state){
+
+communityHydrated=true
+
+const community=state && typeof state==="object" && state.community && typeof state.community==="object"
+? state.community
+: {}
+
+el.communityEnabled.checked=community.enabled===true
+el.communityProvider.value=community.provider || "matrix"
+el.communityName.value=community.name || ""
+el.communityButtonText.value=community.buttonText || "Enter Community"
+el.communityUrl.value=community.url || ""
+
+}
+
+function buildCommunity(){
+if(!(communityHydrated || communityTouched)) return null
+
+return{
+enabled:el.communityEnabled.checked===true,
+provider:(el.communityProvider.value || "matrix").trim() || "matrix",
+name:(el.communityName.value || "").trim(),
+buttonText:(el.communityButtonText.value || "Enter Community").trim() || "Enter Community",
+url:(el.communityUrl.value || "").trim()
+}
 
 }
 
@@ -1354,6 +1514,9 @@ if(mg) payload.mediaGateway=mg
 
 const supporters=buildSupporters()
 if(supporters) payload.supporters=supporters
+
+const community=buildCommunity()
+if(community) payload.community=community
 
 el.previewFrame.contentWindow.postMessage({
 type:"BASE_PREVIEW",
@@ -1905,6 +2068,7 @@ el.pillColor.value=state.pillColor||"#caa300"
 linkState=Array.isArray(state.links)?state.links:[]
 hydrateMediaGateway(state)
 hydrateSupporters(state)
+hydrateCommunity(state)
 
 renderLinks()
 
@@ -2094,6 +2258,11 @@ if(supporters){
 merged.supporters=supporters
 }
 
+const community=buildCommunity()
+if(community){
+merged.community=community
+}
+
 const result=await ghPutFile(
 token,
 TARGET_PATH,
@@ -2235,6 +2404,12 @@ el.supporterUrl.addEventListener("input",()=>{supportersTouched=true;markDirty()
 el.supporterEnabled.addEventListener("change",()=>{supportersTouched=true;markDirty()})
 el.supporterThumbFile.addEventListener("change",()=>{supportersTouched=true;markDirty()})
 
+el.communityEnabled.addEventListener("change",()=>{communityTouched=true;markDirty()})
+el.communityProvider.addEventListener("change",()=>{communityTouched=true;markDirty()})
+el.communityName.addEventListener("input",()=>{communityTouched=true;markDirty()})
+el.communityButtonText.addEventListener("input",()=>{communityTouched=true;markDirty()})
+el.communityUrl.addEventListener("input",()=>{communityTouched=true;markDirty()})
+
 el.mediaEnabled.addEventListener("change",()=>{
 mediaTouched=true
 markDirty()
@@ -2253,7 +2428,22 @@ el.previewFrame.addEventListener("load",()=>{
 refreshPreview()
 })
 
+function initModules(){
+
+document.querySelectorAll(".moduleToggle").forEach(btn=>{
+btn.addEventListener("click",()=>{
+const block=btn.closest(".moduleBlock")
+if(block){
+block.classList.toggle("open")
+}
+})
+})
+
+}
+
 function init(){
+
+initModules()
 
 el.repoLabel.textContent=`${OWNER}/${REPO}@${BRANCH}`
 el.contentUrl.value=DEFAULT_CONTENT_URL
@@ -2270,6 +2460,9 @@ ensureDefaultCollection()
 renderLinks()
 renderMediaList()
 renderSupporters()
+hydrateCommunity({})
+communityHydrated=false
+communityTouched=false
 setPublishBusy(false)
 clearDirty()
 clearShaState()
@@ -2304,3 +2497,8 @@ init()
 </div>
 </body>
 </html>
+
+
+
+
+
