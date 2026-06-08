@@ -370,6 +370,7 @@ font-size:14px;
 font-size:12px;
 opacity:.65;
 margin-top:4px;
+display:none;
 }
 
 .moduleArrow{
@@ -464,7 +465,21 @@ height:520px;
 
 <div class="card">
 
-<div class="row">
+<div class="moduleBlock" data-module="creator-settings" style="border-top:none;margin-top:0;padding-top:0;">
+
+<button type="button" class="moduleToggle">
+<div>
+<div class="moduleTitle">Creator Settings</div>
+<div class="moduleHint">Basic creator identity, contact, colors, and app icon.</div>
+</div>
+<div class="moduleArrow">›</div>
+</button>
+
+<div class="moduleContent">
+
+<div class="tiny">Basic creator identity, contact, colors, and app icon.</div>
+
+<div class="row" style="margin-top:12px;">
 <div class="col">
 <label>Name</label>
 <input id="name">
@@ -503,7 +518,11 @@ height:520px;
 <input id="appIconInput" type="file" accept="image/png,image/jpeg">
 </div>
 
-<div class="moduleBlock open" data-module="live">
+</div>
+
+</div>
+
+<div class="moduleBlock" data-module="live">
 
 <button type="button" class="moduleToggle">
 <div>
@@ -515,8 +534,10 @@ height:520px;
 
 <div class="moduleContent">
 
-<div class="toggleRow">
 <div class="tiny">Control live availability and stream destination.</div>
+
+<div class="toggleRow" style="margin-top:12px;">
+<div class="tiny">Only enabled live sessions appear in the Fan App.</div>
 <label style="display:flex;align-items:center;gap:10px;margin:0;">
 <span class="tiny">Enabled</span>
 <input id="liveEnabled" type="checkbox" style="width:auto;height:auto;">
@@ -545,7 +566,7 @@ height:520px;
 
 </div>
 
-<div class="moduleBlock open" data-module="supporters">
+<div class="moduleBlock" data-module="supporters">
 
 <button type="button" class="moduleToggle">
 <div>
@@ -556,6 +577,8 @@ height:520px;
 </button>
 
 <div class="moduleContent">
+
+<div class="tiny">Display sponsors, partners, venues, collaborators, and supporters without payments, accounts, tracking, or platform behavior.</div>
 
 <div class="row" style="margin-top:12px;">
 <div class="col">
@@ -635,7 +658,7 @@ height:520px;
 
 </div>
 
-<div class="moduleBlock open" data-module="community">
+<div class="moduleBlock" data-module="community">
 
 <button type="button" class="moduleToggle">
 <div>
@@ -647,7 +670,9 @@ height:520px;
 
 <div class="moduleContent">
 
-<div class="toggleRow">
+<div class="tiny">Connect a persistent community doorway without BASE owning accounts, messages, or audience data.</div>
+
+<div class="toggleRow" style="margin-top:12px;">
 <div class="tiny">Only enabled community doorways will publish into content.json.</div>
 <label style="display:flex;align-items:center;gap:10px;margin:0;">
 <span class="tiny">Enabled</span>
