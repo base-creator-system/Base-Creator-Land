@@ -110,7 +110,7 @@
     "enabled": true,
     "provider": "matrix",
     "name": "FIYA TALK",
-    "buttonText": "Enter Community",
+    "buttonText": "Fiya",
     "url": "https://app.element.io/#/room/!vDyZzTjPBKuUpolKKz:matrix.org"
   }
 }
