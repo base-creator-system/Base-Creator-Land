@@ -738,6 +738,14 @@ i
 </div>
 </section>
 
+<section id="view-community" class="hidden">
+<div class="card">
+<div class="h1" id="communityTitle">Community</div>
+<p class="p" id="communityDescription">Join the community.</p>
+<a id="communityBtn" class="btn" href="#" target="_blank" rel="noopener">Enter Community</a>
+</div>
+</section>
+
 <section id="view-live" class="hidden">
 <div class="card">
 <div class="h1">Live</div>
@@ -755,6 +763,7 @@ i
 <div class="tab active" data-id="home">Home</div>
 <div class="tab" data-id="media">Media</div>
 <div class="tab" data-id="links">Links</div>
+<div id="communityTab" class="tab hidden" data-id="community">Community</div>
 <div class="tab" data-id="live">Live</div>
 </div>
 </nav>
@@ -1281,6 +1290,7 @@ const views={
 home:document.getElementById("view-home"),
 media:document.getElementById("view-media"),
 links:document.getElementById("view-links"),
+community:document.getElementById("view-community"),
 live:document.getElementById("view-live")
 }
 
@@ -1335,6 +1345,31 @@ if(d.live && d.live.enabled){
 liveStatus.textContent=d.live.status==="live"?"Live now":"Offline";
 }else{
 liveStatus.textContent="Unavailable";
+}
+
+
+const communityTab=document.getElementById("communityTab");
+const community=d.community||{};
+
+if(community.enabled===true && community.url){
+
+communityTab.classList.remove("hidden");
+
+document.getElementById("communityTitle").textContent=community.name || "Community";
+document.getElementById("communityDescription").textContent=(community.provider || "Community") + " Community";
+
+const communityBtn=document.getElementById("communityBtn");
+communityBtn.textContent=community.buttonText || "Enter Community";
+communityBtn.href=safeURL(community.url) || "#";
+
+}else{
+
+communityTab.classList.add("hidden");
+
+if(document.querySelector('.tab.active')?.dataset.id==="community"){
+setView("home");
+}
+
 }
 
 renderSupporters(d);
