@@ -105,5 +105,12 @@
       "buttonText": "DJ Alamo.com",
       "enabled": true
     }
-  ]
+  ],
+  "community": {
+    "enabled": true,
+    "provider": "matrix",
+    "name": "FIYA TALK",
+    "buttonText": "Enter Community",
+    "url": "https://matrix.to/#/!vDyZzTjPBKuUpolKKz:matrix.org?via=matrix.org"
+  }
 }
