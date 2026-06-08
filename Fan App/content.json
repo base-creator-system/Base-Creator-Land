@@ -108,9 +108,9 @@
   ],
   "community": {
     "enabled": true,
-    "provider": "matrix",
+    "provider": "custom",
     "name": "FIYA TALK",
     "buttonText": "Fiya",
-    "url": "https://app.element.io/#/room/!vDyZzTjPBKuUpolKKz:matrix.org"
+    "url": "https://chitchatter.im/public/7fdfaeba-b0ef-418a-a743-32794f12f751?embed=1"
   }
 }
