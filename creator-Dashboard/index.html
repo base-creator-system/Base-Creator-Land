@@ -710,7 +710,14 @@ height:520px;
 </div>
 </div>
 
-<div class="tiny">Use Matrix first, or any provider that gives you a stable community link.</div>
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Community Embed</label>
+<input id="communityEmbed" type="text" placeholder="https://...">
+</div>
+</div>
+
+<div class="tiny">Use Community URL for external communities. Use Community Embed for embedded community experiences.</div>
 
 </div>
 
@@ -968,6 +975,7 @@ communityProvider:$("communityProvider"),
 communityName:$("communityName"),
 communityButtonText:$("communityButtonText"),
 communityUrl:$("communityUrl"),
+communityEmbed:$("communityEmbed"),
 status:$("status"),
 repoLabel:$("repoLabel"),
 statePill:$("statePill"),
@@ -1175,6 +1183,7 @@ el.communityProvider.value=community.provider || "matrix"
 el.communityName.value=community.name || ""
 el.communityButtonText.value=community.buttonText || "Enter Community"
 el.communityUrl.value=community.url || ""
+el.communityEmbed.value=community.embed || ""
 
 }
 
@@ -1186,7 +1195,8 @@ enabled:el.communityEnabled.checked===true,
 provider:(el.communityProvider.value || "matrix").trim() || "matrix",
 name:(el.communityName.value || "").trim(),
 buttonText:(el.communityButtonText.value || "Enter Community").trim() || "Enter Community",
-url:(el.communityUrl.value || "").trim()
+url:(el.communityUrl.value || "").trim(),
+embed:(el.communityEmbed.value || "").trim()
 }
 
 }
@@ -2434,6 +2444,7 @@ el.communityProvider.addEventListener("change",()=>{communityTouched=true;markDi
 el.communityName.addEventListener("input",()=>{communityTouched=true;markDirty()})
 el.communityButtonText.addEventListener("input",()=>{communityTouched=true;markDirty()})
 el.communityUrl.addEventListener("input",()=>{communityTouched=true;markDirty()})
+el.communityEmbed.addEventListener("input",()=>{communityTouched=true;markDirty()})
 
 el.mediaEnabled.addEventListener("change",()=>{
 mediaTouched=true
