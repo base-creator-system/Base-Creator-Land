@@ -903,6 +903,7 @@ const CONTENT_URL="./content.json"
 const POLL_INTERVAL=15000
 
 let previewMode=false
+let activeCommunityEmbed=""
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -1397,7 +1398,6 @@ const communityBtn=document.getElementById("communityBtn");
 const communityIcon=document.getElementById("communityIcon");
 const communityEmbedMount=document.getElementById("communityEmbedMount");
 
-communityEmbedMount.innerHTML="";
 communityEmbedMount.classList.add("hidden");
 communityDescription.classList.remove("hidden");
 communityBtn.classList.remove("hidden");
@@ -1425,13 +1425,18 @@ communityEmbedMount.classList.remove("hidden");
 
 const embedValue=String(community.embed || "").trim();
 
+if(embedValue!==activeCommunityEmbed){
+
+activeCommunityEmbed=embedValue;
+communityEmbedMount.innerHTML="";
+
 if(embedValue.includes("minnit.chat")){
 
 const span=document.createElement("span");
 span.style.display="none";
 span.className="minnit-chat-sembed";
 span.setAttribute("data-chatname",embedValue);
-span.setAttribute("data-style","width:100%; height:500px; max-height:90vh;");
+span.setAttribute("data-style","width:100%; height:620px; max-height:80vh;");
 span.setAttribute("data-version","1.55");
 span.textContent="Chat";
 
@@ -1455,6 +1460,8 @@ iframe.allow="clipboard-write; encrypted-media; fullscreen";
 iframe.referrerPolicy="strict-origin-when-cross-origin";
 
 communityEmbedMount.appendChild(iframe);
+
+}
 
 }
 
