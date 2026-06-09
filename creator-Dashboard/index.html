@@ -719,6 +719,11 @@ height:520px;
 
 <div class="tiny">Use Community URL for external communities. Use Community Embed for embedded community experiences.</div>
 
+<div class="btnRow">
+<button id="btnAddCommunity">Add Community</button>
+<button id="btnClearCommunity" class="danger">Remove Community</button>
+</div>
+
 </div>
 
 </div>
@@ -976,6 +981,8 @@ communityName:$("communityName"),
 communityButtonText:$("communityButtonText"),
 communityUrl:$("communityUrl"),
 communityEmbed:$("communityEmbed"),
+btnAddCommunity:$("btnAddCommunity"),
+btnClearCommunity:$("btnClearCommunity"),
 status:$("status"),
 repoLabel:$("repoLabel"),
 statePill:$("statePill"),
@@ -2438,6 +2445,24 @@ el.supporterThumbnail.addEventListener("input",()=>{supportersTouched=true;markD
 el.supporterUrl.addEventListener("input",()=>{supportersTouched=true;markDirty()})
 el.supporterEnabled.addEventListener("change",()=>{supportersTouched=true;markDirty()})
 el.supporterThumbFile.addEventListener("change",()=>{supportersTouched=true;markDirty()})
+
+el.btnAddCommunity.onclick=()=>{
+communityTouched=true
+markDirty()
+log("Community staged for publish.")
+}
+
+el.btnClearCommunity.onclick=()=>{
+el.communityEnabled.checked=false
+el.communityProvider.value="custom"
+el.communityName.value=""
+el.communityButtonText.value="Enter Community"
+el.communityUrl.value=""
+el.communityEmbed.value=""
+communityTouched=true
+markDirty()
+log("Community removed from publish state.")
+}
 
 el.communityEnabled.addEventListener("change",()=>{communityTouched=true;markDirty()})
 el.communityProvider.addEventListener("change",()=>{communityTouched=true;markDirty()})
