@@ -700,6 +700,21 @@ height:520px;
 
 <div class="row" style="margin-top:12px;">
 <div class="col">
+<label>Community Icon Upload</label>
+<input id="communityIconFile" type="file" accept="image/png,image/jpeg,image/webp">
+<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
+</div>
+</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Community Icon URL (legacy/manual optional)</label>
+<input id="communityIcon" type="text" placeholder="https://.../icon.png">
+</div>
+</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
 <label>Button Text</label>
 <input id="communityButtonText" type="text" placeholder="Enter Community">
 </div>
@@ -978,6 +993,8 @@ supportersList:$("supportersList"),
 communityEnabled:$("communityEnabled"),
 communityProvider:$("communityProvider"),
 communityName:$("communityName"),
+communityIconFile:$("communityIconFile"),
+communityIcon:$("communityIcon"),
 communityButtonText:$("communityButtonText"),
 communityUrl:$("communityUrl"),
 communityEmbed:$("communityEmbed"),
@@ -1188,6 +1205,8 @@ const community=state && typeof state==="object" && state.community && typeof st
 el.communityEnabled.checked=community.enabled===true
 el.communityProvider.value=community.provider || "matrix"
 el.communityName.value=community.name || ""
+el.communityIcon.value=community.icon || ""
+el.communityIconFile.value=""
 el.communityButtonText.value=community.buttonText || "Enter Community"
 el.communityUrl.value=community.url || ""
 el.communityEmbed.value=community.embed || ""
@@ -1201,6 +1220,53 @@ return{
 enabled:el.communityEnabled.checked===true,
 provider:(el.communityProvider.value || "matrix").trim() || "matrix",
 name:(el.communityName.value || "").trim(),
+icon:(el.communityIcon.value || "").trim(),
+buttonText:(el.communityButtonText.value || "Enter Community").trim() || "Enter Community",
+url:(el.communityUrl.value || "").trim(),
+embed:(el.communityEmbed.value || "").trim()
+}
+
+}
+
+
+async function uploadCommunityIcon(token,file){
+const safeExt=getSafeMediaThumbExtension(file)
+const fileName=`community-icon-${Date.now()}.${safeExt}`
+const repoPath=`Fan App/media/${fileName}`
+const localPath=`./media/${fileName}`
+const base64=await fileToBase64(file)
+
+await ghPutFile(
+token,
+repoPath,
+undefined,
+base64,
+`BASE community icon ${fileName}`
+)
+
+return localPath
+}
+
+async function buildCommunityForPublish(token){
+if(!(communityHydrated || communityTouched)) return null
+
+let icon=(el.communityIcon.value || "").trim()
+
+const iconFile=el.communityIconFile.files[0] || null
+
+if(iconFile){
+log("Community icon upload started.")
+icon=await uploadCommunityIcon(token,iconFile)
+el.communityIcon.value=icon
+el.communityIconFile.value=""
+log(`Community icon uploaded: ${icon}`)
+}
+
+return{
+enabled:el.communityEnabled.checked===true,
+provider:(el.communityProvider.value || "matrix").trim() || "matrix",
+name:(el.communityName.value || "").trim(),
+icon,
 buttonText:(el.communityButtonText.value || "Enter Community").trim() || "Enter Community",
 url:(el.communityUrl.value || "").trim(),
 embed:(el.communityEmbed.value || "").trim()
@@ -2300,7 +2366,7 @@ if(supporters){
 merged.supporters=supporters
 }
 
-const community=buildCommunity()
+const community=await buildCommunityForPublish(token)
 if(community){
 merged.community=community
 }
@@ -2456,6 +2522,8 @@ el.btnClearCommunity.onclick=()=>{
 el.communityEnabled.checked=false
 el.communityProvider.value="custom"
 el.communityName.value=""
+el.communityIcon.value=""
+el.communityIconFile.value=""
 el.communityButtonText.value="Enter Community"
 el.communityUrl.value=""
 el.communityEmbed.value=""
@@ -2467,6 +2535,8 @@ log("Community removed from publish state.")
 el.communityEnabled.addEventListener("change",()=>{communityTouched=true;markDirty()})
 el.communityProvider.addEventListener("change",()=>{communityTouched=true;markDirty()})
 el.communityName.addEventListener("input",()=>{communityTouched=true;markDirty()})
+el.communityIcon.addEventListener("input",()=>{communityTouched=true;markDirty()})
+el.communityIconFile.addEventListener("change",()=>{communityTouched=true;markDirty()})
 el.communityButtonText.addEventListener("input",()=>{communityTouched=true;markDirty()})
 el.communityUrl.addEventListener("input",()=>{communityTouched=true;markDirty()})
 el.communityEmbed.addEventListener("input",()=>{communityTouched=true;markDirty()})
