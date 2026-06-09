@@ -246,6 +246,43 @@ color:var(--muted);
 text-decoration:none;
 }
 
+/* COMMUNITY */
+
+.communityHeader{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:8px;
+}
+
+.communityIcon{
+width:40px;
+height:40px;
+border-radius:12px;
+border:1px solid var(--stroke);
+object-fit:cover;
+display:none;
+background:rgba(255,255,255,0.05);
+flex:0 0 auto;
+}
+
+.communityEmbedMount{
+width:100%;
+margin-top:12px;
+overflow:hidden;
+border-radius:14px;
+}
+
+.communityEmbedMount iframe{
+width:100%;
+height:500px;
+max-height:90vh;
+border:none;
+border-radius:14px;
+background:#000;
+display:block;
+}
+
 /* SUPPORTERS */
 
 .supportersCard{
@@ -722,12 +759,13 @@ i
 
 <section id="communitySection" class="hidden">
 <div class="card">
-<div id="communityExternal">
+<div class="communityHeader">
+<img id="communityIcon" class="communityIcon" src="" alt="">
 <div class="h1" id="communityTitle">Community</div>
+</div>
 <p class="p" id="communityDescription">Join the community.</p>
 <a id="communityBtn" class="btn" href="#" target="_blank" rel="noopener">Enter Community</a>
-</div>
-<div id="communityEmbedWrap" class="hidden"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><img id="communityIcon" src="" style="width:40px;height:40px;border-radius:12px;border:1px solid var(--stroke);object-fit:cover;display:none;"><div class="h1" id="communityEmbedTitle" style="margin:0;">Community</div></div><div id="communityEmbedContainer"></div></div>
+<div id="communityEmbedMount" class="communityEmbedMount hidden"></div>
 </div>
 </section>
 
@@ -1353,64 +1391,87 @@ liveStatus.textContent="Unavailable";
 const communitySection=document.getElementById("communitySection");
 const community=d.community||{};
 
-const communityExternal=document.getElementById("communityExternal");
-const communityEmbedWrap=document.getElementById("communityEmbedWrap");
-const communityEmbedContainer=document.getElementById("communityEmbedContainer");
-communityEmbedContainer.innerHTML="";
+const communityTitle=document.getElementById("communityTitle");
+const communityDescription=document.getElementById("communityDescription");
+const communityBtn=document.getElementById("communityBtn");
+const communityIcon=document.getElementById("communityIcon");
+const communityEmbedMount=document.getElementById("communityEmbedMount");
 
-if(community.enabled===true){
+communityEmbedMount.innerHTML="";
+communityEmbedMount.classList.add("hidden");
+communityDescription.classList.remove("hidden");
+communityBtn.classList.remove("hidden");
+communityBtn.href="#";
+
+if(community.enabled===true && (community.embed || community.url)){
+
+communitySection.classList.remove("hidden");
+
+communityTitle.textContent=community.name || "Community";
+
+if(community.icon){
+communityIcon.src=normalizeURL(community.icon);
+communityIcon.style.display="block";
+}else{
+communityIcon.removeAttribute("src");
+communityIcon.style.display="none";
+}
 
 if(community.embed){
 
-communitySection.classList.remove("hidden");
-communityExternal.classList.add("hidden");
-communityEmbedWrap.classList.remove("hidden");
+communityDescription.classList.add("hidden");
+communityBtn.classList.add("hidden");
+communityEmbedMount.classList.remove("hidden");
 
-document.getElementById("communityEmbedTitle").textContent=community.name || "Community";
+const embedValue=String(community.embed || "").trim();
 
-const icon=document.getElementById("communityIcon");
-if(community.icon){icon.src=normalizeURL(community.icon);icon.style.display="block";}else{icon.style.display="none";}
+if(embedValue.includes("minnit.chat")){
 
-if(String(community.embed).includes("minnit.chat")){
+const span=document.createElement("span");
+span.style.display="none";
+span.className="minnit-chat-sembed";
+span.setAttribute("data-chatname",embedValue);
+span.setAttribute("data-style","width:100%; height:500px; max-height:90vh;");
+span.setAttribute("data-version","1.55");
+span.textContent="Chat";
+
+communityEmbedMount.appendChild(span);
+
 const script=document.createElement("script");
 script.src="https://minnit.chat/js/embed.js?c=1772345192";
 script.defer=true;
-const span=document.createElement("span");
-span.className="minnit-chat-sembed";
-span.setAttribute("data-chatname",community.embed);
-span.setAttribute("data-style","width:100%; height:500px; max-height:90vh;");
-span.setAttribute("data-version","1.55");
-communityEmbedContainer.appendChild(script);
-communityEmbedContainer.appendChild(span);
+
+communityEmbedMount.appendChild(script);
+
 }else{
+
+const safeEmbed=safeURL(embedValue);
+
+if(safeEmbed){
+
 const iframe=document.createElement("iframe");
-iframe.src=community.embed;
-iframe.style.width="100%";
-iframe.style.height="500px";
-iframe.style.border="none";
-iframe.style.borderRadius="12px";
-communityEmbedContainer.appendChild(iframe);
+iframe.src=safeEmbed;
+iframe.allow="clipboard-write; encrypted-media; fullscreen";
+iframe.referrerPolicy="strict-origin-when-cross-origin";
+
+communityEmbedMount.appendChild(iframe);
+
 }
 
-}else if(community.url){
+}
 
-communitySection.classList.remove("hidden");
-communityExternal.classList.remove("hidden");
-communityEmbedWrap.classList.add("hidden");
+}else{
 
-document.getElementById("communityTitle").textContent=community.name || "Community";
-document.getElementById("communityDescription").textContent=(community.provider || "Community") + " Community";
-
-const communityBtn=document.getElementById("communityBtn");
+communityDescription.textContent=(community.provider || "Community") + " Community";
 communityBtn.textContent=community.buttonText || "Enter Community";
 communityBtn.href=safeURL(community.url) || "#";
 
-}else{
-communitySection.classList.add("hidden");
 }
 
 }else{
+
 communitySection.classList.add("hidden");
+
 }
 
 renderSupporters(d);
