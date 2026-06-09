@@ -107,7 +107,7 @@
     }
   ],
   "community": {
-    "enabled": false,
+    "enabled": true,
     "provider": "custom",
     "name": "FIYA TALK",
     "icon": "./media/community-icon-1780984136024.png",
