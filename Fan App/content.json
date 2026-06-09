@@ -107,10 +107,11 @@
     }
   ],
   "community": {
-    "enabled": true,
+    "enabled": false,
     "provider": "custom",
-    "name": "FIYA TALK",
-    "buttonText": "Fiya",
-    "url": "https://organizations.minnit.chat/274505522146345/c/Main?embed&app"
+    "name": "",
+    "buttonText": "Enter Community",
+    "url": "",
+    "embed": ""
   }
 }
