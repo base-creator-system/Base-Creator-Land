@@ -722,9 +722,12 @@ i
 
 <section id="communitySection" class="hidden">
 <div class="card">
+<div id="communityExternal">
 <div class="h1" id="communityTitle">Community</div>
 <p class="p" id="communityDescription">Join the community.</p>
 <a id="communityBtn" class="btn" href="#" target="_blank" rel="noopener">Enter Community</a>
+</div>
+<div id="communityEmbedWrap" class="hidden"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><img id="communityIcon" src="" style="width:40px;height:40px;border-radius:12px;border:1px solid var(--stroke);object-fit:cover;display:none;"><div class="h1" id="communityEmbedTitle" style="margin:0;">Community</div></div><div id="communityEmbedContainer"></div></div>
 </div>
 </section>
 
@@ -1350,9 +1353,50 @@ liveStatus.textContent="Unavailable";
 const communitySection=document.getElementById("communitySection");
 const community=d.community||{};
 
-if(community.enabled===true && community.url){
+const communityExternal=document.getElementById("communityExternal");
+const communityEmbedWrap=document.getElementById("communityEmbedWrap");
+const communityEmbedContainer=document.getElementById("communityEmbedContainer");
+communityEmbedContainer.innerHTML="";
+
+if(community.enabled===true){
+
+if(community.embed){
 
 communitySection.classList.remove("hidden");
+communityExternal.classList.add("hidden");
+communityEmbedWrap.classList.remove("hidden");
+
+document.getElementById("communityEmbedTitle").textContent=community.name || "Community";
+
+const icon=document.getElementById("communityIcon");
+if(community.icon){icon.src=normalizeURL(community.icon);icon.style.display="block";}else{icon.style.display="none";}
+
+if(String(community.embed).includes("minnit.chat")){
+const script=document.createElement("script");
+script.src="https://minnit.chat/js/embed.js?c=1772345192";
+script.defer=true;
+const span=document.createElement("span");
+span.className="minnit-chat-sembed";
+span.setAttribute("data-chatname",community.embed);
+span.setAttribute("data-style","width:100%; height:500px; max-height:90vh;");
+span.setAttribute("data-version","1.55");
+communityEmbedContainer.appendChild(script);
+communityEmbedContainer.appendChild(span);
+}else{
+const iframe=document.createElement("iframe");
+iframe.src=community.embed;
+iframe.style.width="100%";
+iframe.style.height="500px";
+iframe.style.border="none";
+iframe.style.borderRadius="12px";
+communityEmbedContainer.appendChild(iframe);
+}
+
+}else if(community.url){
+
+communitySection.classList.remove("hidden");
+communityExternal.classList.remove("hidden");
+communityEmbedWrap.classList.add("hidden");
 
 document.getElementById("communityTitle").textContent=community.name || "Community";
 document.getElementById("communityDescription").textContent=(community.provider || "Community") + " Community";
@@ -1362,9 +1406,11 @@ communityBtn.textContent=community.buttonText || "Enter Community";
 communityBtn.href=safeURL(community.url) || "#";
 
 }else{
-
 communitySection.classList.add("hidden");
+}
 
+}else{
+communitySection.classList.add("hidden");
 }
 
 renderSupporters(d);
