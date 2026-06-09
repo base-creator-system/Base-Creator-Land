@@ -109,9 +109,9 @@
   "community": {
     "enabled": false,
     "provider": "custom",
-    "name": "",
+    "name": "FIYA TALK",
     "buttonText": "Enter Community",
     "url": "",
-    "embed": ""
+    "embed": "https://organizations.minnit.chat/274505522146345/c/Main?embed&app"
   }
 }
