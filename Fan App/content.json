@@ -107,12 +107,12 @@
     }
   ],
   "community": {
-    "enabled": true,
+    "enabled": false,
     "provider": "custom",
-    "name": "FIYA TALK",
-    "icon": "./media/community-icon-1780984136024.png",
+    "name": "",
+    "icon": "",
     "buttonText": "Enter Community",
     "url": "",
-    "embed": "https://organizations.minnit.chat/274505522146345/c/Main?embed&app"
+    "embed": ""
   }
 }
