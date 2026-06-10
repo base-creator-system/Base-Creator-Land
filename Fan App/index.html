@@ -276,7 +276,7 @@ transition:max-height .25s ease;
 cursor:pointer;
 }
 
-.communityEmbedMount.communityExpanded{
+.communityEmbedMount.expanded{
 max-height:55vh;
 }
 
@@ -1359,19 +1359,6 @@ t.classList.toggle("active",t.dataset.id===id)
 
 }
 
-document.addEventListener("click",(event)=>{
-
-const mount=event.target.closest ? event.target.closest("#communityEmbedMount") : null;
-
-if(mount && !mount.classList.contains("hidden")){
-
-communityExpanded=!communityExpanded;
-mount.classList.toggle("communityExpanded",communityExpanded);
-
-}
-
-})
-
 function applyState(d){
 
 if(!d)return;
@@ -1419,6 +1406,17 @@ const communityBtn=document.getElementById("communityBtn");
 const communityIcon=document.getElementById("communityIcon");
 const communityEmbedMount=document.getElementById("communityEmbedMount");
 
+communityEmbedMount.onclick=()=>{
+
+if(!communityEmbedMount.classList.contains("hidden")){
+
+communityExpanded=!communityExpanded;
+communityEmbedMount.classList.toggle("expanded",communityExpanded);
+
+}
+
+};
+
 communityEmbedMount.classList.add("hidden");
 communityDescription.classList.remove("hidden");
 communityBtn.classList.remove("hidden");
@@ -1443,7 +1441,7 @@ if(community.embed){
 communityDescription.classList.add("hidden");
 communityBtn.classList.add("hidden");
 communityEmbedMount.classList.remove("hidden");
-communityEmbedMount.classList.toggle("communityExpanded",communityExpanded);
+communityEmbedMount.classList.toggle("expanded",communityExpanded);
 
 const embedValue=String(community.embed || "").trim();
 
@@ -1491,8 +1489,6 @@ communityEmbedMount.appendChild(iframe);
 
 }else{
 
-communityExpanded=false;
-communityEmbedMount.classList.remove("communityExpanded");
 communityDescription.textContent=(community.provider || "Community") + " Community";
 communityBtn.textContent=community.buttonText || "Enter Community";
 communityBtn.href=safeURL(community.url) || "#";
@@ -1501,8 +1497,6 @@ communityBtn.href=safeURL(community.url) || "#";
 
 }else{
 
-communityExpanded=false;
-communityEmbedMount.classList.remove("communityExpanded");
 communitySection.classList.add("hidden");
 
 }
