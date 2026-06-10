@@ -253,6 +253,7 @@ display:flex;
 align-items:center;
 gap:10px;
 margin-bottom:8px;
+cursor:pointer;
 }
 
 .communityIcon{
@@ -271,12 +272,13 @@ width:100%;
 margin-top:12px;
 overflow:hidden;
 border-radius:14px;
+height:150px;
 max-height:150px;
-transition:max-height .25s ease;
-cursor:pointer;
+transition:height .25s ease,max-height .25s ease;
 }
 
 .communityEmbedMount.expanded{
+height:420px;
 max-height:55vh;
 }
 
@@ -950,6 +952,23 @@ closeInstallModal()
 
 })
 
+const communityHeaderToggle=document.querySelector("#communitySection .communityHeader")
+
+if(communityHeaderToggle){
+
+communityHeaderToggle.onclick=()=>{
+
+const communityEmbedMount=document.getElementById("communityEmbedMount")
+
+if(!communityEmbedMount || communityEmbedMount.classList.contains("hidden"))return
+
+communityExpanded=!communityExpanded
+communityEmbedMount.classList.toggle("expanded",communityExpanded)
+
+}
+
+}
+
 function safeURL(url){
 
 if(!url) return "";
@@ -1406,17 +1425,6 @@ const communityBtn=document.getElementById("communityBtn");
 const communityIcon=document.getElementById("communityIcon");
 const communityEmbedMount=document.getElementById("communityEmbedMount");
 
-communityEmbedMount.onclick=()=>{
-
-if(!communityEmbedMount.classList.contains("hidden")){
-
-communityExpanded=!communityExpanded;
-communityEmbedMount.classList.toggle("expanded",communityExpanded);
-
-}
-
-};
-
 communityEmbedMount.classList.add("hidden");
 communityDescription.classList.remove("hidden");
 communityBtn.classList.remove("hidden");
@@ -1489,6 +1497,8 @@ communityEmbedMount.appendChild(iframe);
 
 }else{
 
+communityExpanded=false;
+communityEmbedMount.classList.remove("expanded");
 communityDescription.textContent=(community.provider || "Community") + " Community";
 communityBtn.textContent=community.buttonText || "Enter Community";
 communityBtn.href=safeURL(community.url) || "#";
@@ -1497,6 +1507,8 @@ communityBtn.href=safeURL(community.url) || "#";
 
 }else{
 
+communityExpanded=false;
+communityEmbedMount.classList.remove("expanded");
 communitySection.classList.add("hidden");
 
 }
