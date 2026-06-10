@@ -271,6 +271,13 @@ width:100%;
 margin-top:12px;
 overflow:hidden;
 border-radius:14px;
+max-height:150px;
+transition:max-height .25s ease;
+cursor:pointer;
+}
+
+.communityEmbedMount.communityExpanded{
+max-height:55vh;
 }
 
 .communityEmbedMount iframe{
@@ -904,6 +911,7 @@ const POLL_INTERVAL=15000
 
 let previewMode=false
 let activeCommunityEmbed=""
+let communityExpanded=false""
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -1351,6 +1359,19 @@ t.classList.toggle("active",t.dataset.id===id)
 
 }
 
+document.addEventListener("click",(event)=>{
+
+const mount=event.target.closest ? event.target.closest("#communityEmbedMount") : null;
+
+if(mount && !mount.classList.contains("hidden")){
+
+communityExpanded=!communityExpanded;
+mount.classList.toggle("communityExpanded",communityExpanded);
+
+}
+
+})
+
 function applyState(d){
 
 if(!d)return;
@@ -1422,6 +1443,7 @@ if(community.embed){
 communityDescription.classList.add("hidden");
 communityBtn.classList.add("hidden");
 communityEmbedMount.classList.remove("hidden");
+communityEmbedMount.classList.toggle("communityExpanded",communityExpanded);
 
 const embedValue=String(community.embed || "").trim();
 
@@ -1469,6 +1491,8 @@ communityEmbedMount.appendChild(iframe);
 
 }else{
 
+communityExpanded=false;
+communityEmbedMount.classList.remove("communityExpanded");
 communityDescription.textContent=(community.provider || "Community") + " Community";
 communityBtn.textContent=community.buttonText || "Enter Community";
 communityBtn.href=safeURL(community.url) || "#";
@@ -1477,6 +1501,8 @@ communityBtn.href=safeURL(community.url) || "#";
 
 }else{
 
+communityExpanded=false;
+communityEmbedMount.classList.remove("communityExpanded");
 communitySection.classList.add("hidden");
 
 }
