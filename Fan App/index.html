@@ -266,6 +266,54 @@ background:rgba(255,255,255,0.05);
 flex:0 0 auto;
 }
 
+.communityPulse{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+margin-top:12px;
+padding:12px 14px;
+border:1px solid var(--stroke);
+background:rgba(255,255,255,0.04);
+border-radius:16px;
+cursor:pointer;
+-webkit-tap-highlight-color:transparent;
+}
+
+.communityPulseText{
+display:flex;
+flex-direction:column;
+gap:3px;
+min-width:0;
+}
+
+.communityPulseTitle{
+font-size:13px;
+font-weight:800;
+}
+
+.communityPulseHint{
+font-size:12px;
+color:var(--muted);
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.communityPulseAction{
+height:32px;
+padding:0 14px;
+border-radius:999px;
+background:var(--pillColor);
+color:#fff;
+font-size:12px;
+font-weight:800;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+flex:0 0 auto;
+}
+
 .communityEmbedMount{
 width:100%;
 margin-top:12px;
@@ -758,6 +806,13 @@ i
 </div>
 <p class="p" id="communityDescription">Join the community.</p>
 <a id="communityBtn" class="btn" href="#" target="_blank" rel="noopener">Enter Community</a>
+<div id="communityPulse" class="communityPulse hidden" role="button" tabindex="0" aria-expanded="false">
+<div class="communityPulseText">
+<div class="communityPulseTitle" id="communityPulseTitle">Tap to open</div>
+<div class="communityPulseHint" id="communityPulseHint">Conversation space is ready.</div>
+</div>
+<div class="communityPulseAction" id="communityPulseAction">Open</div>
+</div>
 <div id="communityEmbedMount" class="communityEmbedMount hidden"></div>
 </div>
 </section>
@@ -904,6 +959,7 @@ const POLL_INTERVAL=15000
 
 let previewMode=false
 let activeCommunityEmbed=""
+let communityExpanded=false""
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -938,6 +994,55 @@ window.addEventListener("keydown",(event)=>{
 
 if(event.key==="Escape" && installModal.classList.contains("active")){
 closeInstallModal()
+}
+
+})
+
+function updateCommunityExpandState(){
+
+const pulse=document.getElementById("communityPulse")
+const pulseAction=document.getElementById("communityPulseAction")
+const embedMount=document.getElementById("communityEmbedMount")
+
+if(!pulse || !pulseAction || !embedMount) return
+
+pulse.setAttribute("aria-expanded",communityExpanded ? "true" : "false")
+pulseAction.textContent=communityExpanded ? "Close" : "Open"
+
+if(communityExpanded){
+embedMount.classList.remove("hidden")
+}else{
+embedMount.classList.add("hidden")
+}
+
+}
+
+function toggleCommunityExpand(){
+
+communityExpanded=!communityExpanded
+updateCommunityExpandState()
+
+}
+
+document.addEventListener("click",(event)=>{
+
+const pulse=event.target.closest ? event.target.closest("#communityPulse") : null
+
+if(pulse){
+toggleCommunityExpand()
+}
+
+})
+
+document.addEventListener("keydown",(event)=>{
+
+if(event.target && event.target.id==="communityPulse"){
+
+if(event.key==="Enter" || event.key===" "){
+event.preventDefault()
+toggleCommunityExpand()
+}
+
 }
 
 })
@@ -1396,9 +1501,13 @@ const communityTitle=document.getElementById("communityTitle");
 const communityDescription=document.getElementById("communityDescription");
 const communityBtn=document.getElementById("communityBtn");
 const communityIcon=document.getElementById("communityIcon");
+const communityPulse=document.getElementById("communityPulse");
+const communityPulseTitle=document.getElementById("communityPulseTitle");
+const communityPulseHint=document.getElementById("communityPulseHint");
 const communityEmbedMount=document.getElementById("communityEmbedMount");
 
 communityEmbedMount.classList.add("hidden");
+communityPulse.classList.add("hidden");
 communityDescription.classList.remove("hidden");
 communityBtn.classList.remove("hidden");
 communityBtn.href="#";
@@ -1421,7 +1530,10 @@ if(community.embed){
 
 communityDescription.classList.add("hidden");
 communityBtn.classList.add("hidden");
-communityEmbedMount.classList.remove("hidden");
+communityPulse.classList.remove("hidden");
+communityPulseTitle.textContent=community.name || "Community";
+communityPulseHint.textContent="Tap to open the conversation space.";
+updateCommunityExpandState();
 
 const embedValue=String(community.embed || "").trim();
 
@@ -1469,6 +1581,8 @@ communityEmbedMount.appendChild(iframe);
 
 }else{
 
+communityExpanded=false;
+communityPulse.classList.add("hidden");
 communityDescription.textContent=(community.provider || "Community") + " Community";
 communityBtn.textContent=community.buttonText || "Enter Community";
 communityBtn.href=safeURL(community.url) || "#";
@@ -1477,6 +1591,7 @@ communityBtn.href=safeURL(community.url) || "#";
 
 }else{
 
+communityExpanded=false;
 communitySection.classList.add("hidden");
 
 }
