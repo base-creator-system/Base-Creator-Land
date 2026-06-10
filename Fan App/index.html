@@ -253,7 +253,6 @@ display:flex;
 align-items:center;
 gap:10px;
 margin-bottom:8px;
-cursor:pointer;
 }
 
 .communityIcon{
@@ -280,6 +279,23 @@ transition:height .25s ease,max-height .25s ease;
 .communityEmbedMount.expanded{
 height:420px;
 max-height:55vh;
+}
+
+.communityExpandBtn{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+width:100%;
+height:34px;
+border-radius:999px;
+border:1px solid var(--stroke);
+background:rgba(255,255,255,0.06);
+color:var(--text);
+font-weight:800;
+font-size:12px;
+cursor:pointer;
+margin-top:10px;
+-webkit-tap-highlight-color:transparent;
 }
 
 .communityEmbedMount iframe{
@@ -768,6 +784,7 @@ i
 <p class="p" id="communityDescription">Join the community.</p>
 <a id="communityBtn" class="btn" href="#" target="_blank" rel="noopener">Enter Community</a>
 <div id="communityEmbedMount" class="communityEmbedMount hidden"></div>
+<button id="communityExpandBtn" class="communityExpandBtn hidden" type="button">Expand FIYA TALK</button>
 </div>
 </section>
 
@@ -913,7 +930,7 @@ const POLL_INTERVAL=15000
 
 let previewMode=false
 let activeCommunityEmbed=""
-let communityExpanded=false""
+let communityExpanded=false
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -951,23 +968,6 @@ closeInstallModal()
 }
 
 })
-
-const communityHeaderToggle=document.querySelector("#communitySection .communityHeader")
-
-if(communityHeaderToggle){
-
-communityHeaderToggle.onclick=()=>{
-
-const communityEmbedMount=document.getElementById("communityEmbedMount")
-
-if(!communityEmbedMount || communityEmbedMount.classList.contains("hidden"))return
-
-communityExpanded=!communityExpanded
-communityEmbedMount.classList.toggle("expanded",communityExpanded)
-
-}
-
-}
 
 function safeURL(url){
 
@@ -1424,8 +1424,11 @@ const communityDescription=document.getElementById("communityDescription");
 const communityBtn=document.getElementById("communityBtn");
 const communityIcon=document.getElementById("communityIcon");
 const communityEmbedMount=document.getElementById("communityEmbedMount");
+const communityExpandBtn=document.getElementById("communityExpandBtn");
 
 communityEmbedMount.classList.add("hidden");
+communityEmbedMount.classList.toggle("expanded",communityExpanded);
+communityExpandBtn.classList.add("hidden");
 communityDescription.classList.remove("hidden");
 communityBtn.classList.remove("hidden");
 communityBtn.href="#";
@@ -1450,6 +1453,15 @@ communityDescription.classList.add("hidden");
 communityBtn.classList.add("hidden");
 communityEmbedMount.classList.remove("hidden");
 communityEmbedMount.classList.toggle("expanded",communityExpanded);
+communityExpandBtn.classList.remove("hidden");
+communityExpandBtn.textContent=communityExpanded ? "Collapse FIYA TALK" : "Expand FIYA TALK";
+communityExpandBtn.onclick=()=>{
+
+communityExpanded=!communityExpanded;
+communityEmbedMount.classList.toggle("expanded",communityExpanded);
+communityExpandBtn.textContent=communityExpanded ? "Collapse FIYA TALK" : "Expand FIYA TALK";
+
+};
 
 const embedValue=String(community.embed || "").trim();
 
@@ -1499,6 +1511,7 @@ communityEmbedMount.appendChild(iframe);
 
 communityExpanded=false;
 communityEmbedMount.classList.remove("expanded");
+communityExpandBtn.classList.add("hidden");
 communityDescription.textContent=(community.provider || "Community") + " Community";
 communityBtn.textContent=community.buttonText || "Enter Community";
 communityBtn.href=safeURL(community.url) || "#";
@@ -1509,6 +1522,7 @@ communityBtn.href=safeURL(community.url) || "#";
 
 communityExpanded=false;
 communityEmbedMount.classList.remove("expanded");
+communityExpandBtn.classList.add("hidden");
 communitySection.classList.add("hidden");
 
 }
