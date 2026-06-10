@@ -253,7 +253,6 @@ display:flex;
 align-items:center;
 gap:10px;
 margin-bottom:8px;
-cursor:pointer;
 }
 
 .communityIcon{
@@ -272,12 +271,6 @@ width:100%;
 margin-top:12px;
 overflow:hidden;
 border-radius:14px;
-max-height:140px;
-transition:max-height .25s ease;
-}
-
-.communityEmbedMount.communityExpanded{
-max-height:55vh;
 }
 
 .communityEmbedMount iframe{
@@ -911,7 +904,6 @@ const POLL_INTERVAL=15000
 
 let previewMode=false
 let activeCommunityEmbed=""
-let communityExpanded=false
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -949,22 +941,6 @@ closeInstallModal()
 }
 
 })
-
-const communityHeaderTap=document.querySelector("#communitySection .communityHeader")
-const communityEmbedTap=document.getElementById("communityEmbedMount")
-
-if(communityHeaderTap){
-
-communityHeaderTap.onclick=()=>{
-
-if(communityEmbedTap && !communityEmbedTap.classList.contains("hidden")){
-communityExpanded=!communityExpanded
-communityEmbedTap.classList.toggle("communityExpanded",communityExpanded)
-}
-
-}
-
-}
 
 function safeURL(url){
 
@@ -1446,7 +1422,6 @@ if(community.embed){
 communityDescription.classList.add("hidden");
 communityBtn.classList.add("hidden");
 communityEmbedMount.classList.remove("hidden");
-communityEmbedMount.classList.toggle("communityExpanded",communityExpanded);
 
 const embedValue=String(community.embed || "").trim();
 
@@ -1494,8 +1469,6 @@ communityEmbedMount.appendChild(iframe);
 
 }else{
 
-communityExpanded=false;
-communityEmbedMount.classList.remove("communityExpanded");
 communityDescription.textContent=(community.provider || "Community") + " Community";
 communityBtn.textContent=community.buttonText || "Enter Community";
 communityBtn.href=safeURL(community.url) || "#";
@@ -1504,8 +1477,6 @@ communityBtn.href=safeURL(community.url) || "#";
 
 }else{
 
-communityExpanded=false;
-communityEmbedMount.classList.remove("communityExpanded");
 communitySection.classList.add("hidden");
 
 }
