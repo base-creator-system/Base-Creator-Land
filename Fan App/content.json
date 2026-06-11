@@ -107,12 +107,12 @@
     }
   ],
   "community": {
-    "enabled": false,
+    "enabled": true,
     "provider": "custom",
-    "name": "",
-    "icon": "",
+    "name": "Where conversation Lives!",
+    "icon": "./media/community-icon-1781146353784.png",
     "buttonText": "Enter Community",
     "url": "",
-    "embed": ""
+    "embed": "https://organizations.minnit.chat/274505522146345/c/Main?embed&app"
   }
 }
