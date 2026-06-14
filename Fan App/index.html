@@ -818,8 +818,22 @@ i
 <div class="card">
 <div class="h1">Live</div>
 <p class="p" id="liveStatus"></p>
+<p class="p hidden" id="liveDescription"></p>
 <a id="liveBtn" class="btn" href="./live.html">Watch Live</a>
 </div>
+
+<section id="liveCommunitySection" class="hidden">
+<div class="card">
+<div class="communityHeader">
+<img id="liveCommunityIcon" class="communityIcon" src="" alt="">
+<div class="h1" id="liveCommunityTitle">Community</div>
+</div>
+<p class="p" id="liveCommunityDescription">Join the community.</p>
+<a id="liveCommunityBtn" class="btn" href="#" target="_blank" rel="noopener">Enter Community</a>
+<div id="liveCommunityEmbedMount" class="communityEmbedMount hidden"></div>
+<button id="liveCommunityExpandBtn" class="communityExpandBtn hidden" type="button">Expand FIYA TALK</button>
+</div>
+</section>
 </section>
 
 <div class="baseFooter">Powered by BASE</div>
@@ -930,7 +944,9 @@ const POLL_INTERVAL=15000
 
 let previewMode=false
 let activeCommunityEmbed=""
+let activeLiveCommunityEmbed=""
 let communityExpanded=false
+let liveCommunityExpanded=false
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -1408,11 +1424,20 @@ mount.appendChild(a);
 }
 
 const liveStatus=document.getElementById("liveStatus");
+const liveDescription=document.getElementById("liveDescription");
 
 if(d.live && d.live.enabled){
 liveStatus.textContent=d.live.status==="live"?"Live now":"Offline";
 }else{
 liveStatus.textContent="Unavailable";
+}
+
+if(d.live && d.live.enabled && String(d.live.description || "").trim()){
+liveDescription.textContent=String(d.live.description || "").trim();
+liveDescription.classList.remove("hidden");
+}else{
+liveDescription.textContent="";
+liveDescription.classList.add("hidden");
 }
 
 
@@ -1527,9 +1552,130 @@ communitySection.classList.add("hidden");
 
 }
 
+renderLiveCommunity(d);
 renderSupporters(d);
 renderLinks(d);
 renderMedia(d);
+
+}
+
+
+function renderLiveCommunity(d){
+
+const liveCommunitySection=document.getElementById("liveCommunitySection");
+
+if(!liveCommunitySection)return;
+
+const community=d.community||{};
+const live=d.live||{};
+
+const liveCommunityTitle=document.getElementById("liveCommunityTitle");
+const liveCommunityDescription=document.getElementById("liveCommunityDescription");
+const liveCommunityBtn=document.getElementById("liveCommunityBtn");
+const liveCommunityIcon=document.getElementById("liveCommunityIcon");
+const liveCommunityEmbedMount=document.getElementById("liveCommunityEmbedMount");
+const liveCommunityExpandBtn=document.getElementById("liveCommunityExpandBtn");
+
+liveCommunityEmbedMount.classList.add("hidden");
+liveCommunityEmbedMount.classList.toggle("expanded",liveCommunityExpanded);
+liveCommunityExpandBtn.classList.add("hidden");
+liveCommunityDescription.classList.remove("hidden");
+liveCommunityBtn.classList.remove("hidden");
+liveCommunityBtn.href="#";
+
+if(live.enabled===true && community.enabled===true && (community.embed || community.url)){
+
+liveCommunitySection.classList.remove("hidden");
+
+liveCommunityTitle.textContent=community.name || "Community";
+
+if(community.icon){
+liveCommunityIcon.src=normalizeURL(community.icon);
+liveCommunityIcon.style.display="block";
+}else{
+liveCommunityIcon.removeAttribute("src");
+liveCommunityIcon.style.display="none";
+}
+
+if(community.embed){
+
+liveCommunityDescription.classList.add("hidden");
+liveCommunityBtn.classList.add("hidden");
+liveCommunityEmbedMount.classList.remove("hidden");
+liveCommunityEmbedMount.classList.toggle("expanded",liveCommunityExpanded);
+liveCommunityExpandBtn.classList.remove("hidden");
+liveCommunityExpandBtn.textContent=liveCommunityExpanded ? "Collapse FIYA TALK" : "Expand FIYA TALK";
+liveCommunityExpandBtn.onclick=()=>{
+
+liveCommunityExpanded=!liveCommunityExpanded;
+liveCommunityEmbedMount.classList.toggle("expanded",liveCommunityExpanded);
+liveCommunityExpandBtn.textContent=liveCommunityExpanded ? "Collapse FIYA TALK" : "Expand FIYA TALK";
+
+};
+
+const embedValue=String(community.embed || "").trim();
+
+if(embedValue!==activeLiveCommunityEmbed){
+
+activeLiveCommunityEmbed=embedValue;
+liveCommunityEmbedMount.innerHTML="";
+
+if(embedValue.includes("minnit.chat")){
+
+const span=document.createElement("span");
+span.style.display="none";
+span.className="minnit-chat-sembed";
+span.setAttribute("data-chatname",embedValue);
+span.setAttribute("data-style","width:100%; height:420px; max-height:55vh;");
+span.setAttribute("data-version","1.55");
+span.textContent="Chat";
+
+liveCommunityEmbedMount.appendChild(span);
+
+const script=document.createElement("script");
+script.src="https://minnit.chat/js/embed.js?c=1772345192";
+script.defer=true;
+
+liveCommunityEmbedMount.appendChild(script);
+
+}else{
+
+const safeEmbed=safeURL(embedValue);
+
+if(safeEmbed){
+
+const iframe=document.createElement("iframe");
+iframe.src=safeEmbed;
+iframe.allow="clipboard-write; encrypted-media; fullscreen";
+iframe.referrerPolicy="strict-origin-when-cross-origin";
+
+liveCommunityEmbedMount.appendChild(iframe);
+
+}
+
+}
+
+}
+
+}else{
+
+liveCommunityExpanded=false;
+liveCommunityEmbedMount.classList.remove("expanded");
+liveCommunityExpandBtn.classList.add("hidden");
+liveCommunityDescription.textContent=(community.provider || "Community") + " Community";
+liveCommunityBtn.textContent=community.buttonText || "Enter Community";
+liveCommunityBtn.href=safeURL(community.url) || "#";
+
+}
+
+}else{
+
+liveCommunityExpanded=false;
+liveCommunityEmbedMount.classList.remove("expanded");
+liveCommunityExpandBtn.classList.add("hidden");
+liveCommunitySection.classList.add("hidden");
+
+}
 
 }
 
