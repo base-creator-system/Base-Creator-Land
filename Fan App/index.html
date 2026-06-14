@@ -308,53 +308,6 @@ background:#000;
 display:block;
 }
 
-/* LIVE */
-
-.livePlayerMount{
-width:100%;
-margin-top:14px;
-border-radius:16px;
-overflow:hidden;
-border:1px solid var(--stroke);
-background:#000;
-aspect-ratio:16/9;
-display:flex;
-align-items:center;
-justify-content:center;
-}
-
-.livePlayerMount iframe,
-.livePlayerMount video{
-width:100%;
-height:100%;
-border:none;
-background:#000;
-display:block;
-}
-
-.livePlayerMount video{
-object-fit:contain;
-}
-
-.livePlayerPlaceholder{
-width:100%;
-height:100%;
-display:flex;
-align-items:center;
-justify-content:center;
-text-align:center;
-padding:18px;
-color:var(--text);
-font-size:14px;
-font-weight:800;
-}
-
-.liveDescriptionText{
-margin-top:14px;
-line-height:1.45;
-font-weight:650;
-}
-
 /* SUPPORTERS */
 
 .supportersCard{
@@ -800,6 +753,31 @@ object-fit:contain;
 min-height:100%;
 }
 
+/* LIVE TAB INLINE PLAYER */
+
+.liveFrameMount{
+width:100%;
+margin-top:12px;
+overflow:hidden;
+border-radius:14px;
+border:1px solid var(--stroke);
+background:#000;
+height:315px;
+}
+
+.liveFrameMount iframe{
+width:100%;
+height:100%;
+border:none;
+background:#000;
+display:block;
+}
+
+.liveDescriptionText{
+margin-top:12px;
+line-height:1.45;
+}
+
 </style>
 </head>
 
@@ -818,7 +796,7 @@ i
 </button>
 </div>
 
-<div class="hero">
+<div id="heroSection" class="hero">
 <img id="heroImg" src="icons/icon-512-v37.png?v=1781146357310">
 </div>
 
@@ -865,9 +843,24 @@ i
 <div class="card">
 <div class="h1">Live</div>
 <p class="p" id="liveStatus"></p>
-<div id="livePlayerMount" class="livePlayerMount"></div>
+<div id="liveFrameMount" class="liveFrameMount hidden">
+<iframe id="liveFrame" src="./live.html" title="Live" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+</div>
 <p class="p liveDescriptionText hidden" id="liveDescription"></p>
 </div>
+
+<section id="liveCommunitySection" class="hidden">
+<div class="card">
+<div class="communityHeader">
+<img id="liveCommunityIcon" class="communityIcon" src="" alt="">
+<div class="h1" id="liveCommunityTitle">Community</div>
+</div>
+<p class="p" id="liveCommunityDescription">Join the community.</p>
+<a id="liveCommunityBtn" class="btn" href="#" target="_blank" rel="noopener">Enter Community</a>
+<div id="liveCommunityEmbedMount" class="communityEmbedMount hidden"></div>
+<button id="liveCommunityExpandBtn" class="communityExpandBtn hidden" type="button">Expand FIYA TALK</button>
+</div>
+</section>
 </section>
 
 <div class="baseFooter">Powered by BASE</div>
@@ -978,8 +971,9 @@ const POLL_INTERVAL=15000
 
 let previewMode=false
 let activeCommunityEmbed=""
-let activeLiveURL=""
+let activeLiveCommunityEmbed=""
 let communityExpanded=false
+let liveCommunityExpanded=false
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -1411,13 +1405,6 @@ links:document.getElementById("view-links"),
 live:document.getElementById("view-live")
 }
 
-const hero=document.querySelector(".hero")
-const communitySection=document.getElementById("communitySection")
-const supportersSection=document.getElementById("supportersSection")
-const viewHome=document.getElementById("view-home")
-const viewLive=document.getElementById("view-live")
-const livePlayerMount=document.getElementById("livePlayerMount")
-
 document.querySelectorAll(".tab").forEach(t=>{
 t.onclick=()=>setView(t.dataset.id)
 })
@@ -1428,98 +1415,32 @@ Object.keys(views).forEach(k=>{
 views[k].classList.toggle("hidden",k!==id)
 })
 
-if(id==="live"){
+const liveMode=id==="live";
 
-if(hero){
-hero.classList.add("hidden")
+const heroSection=document.getElementById("heroSection");
+const communitySection=document.getElementById("communitySection");
+const supportersSection=document.getElementById("supportersSection");
+const liveCommunitySection=document.getElementById("liveCommunitySection");
+
+if(heroSection){
+heroSection.classList.toggle("hidden",liveMode);
+}
+
+if(communitySection){
+communitySection.classList.toggle("hidden",liveMode || communitySection.dataset.available!=="true");
 }
 
 if(supportersSection){
-supportersSection.classList.add("hidden")
+supportersSection.classList.toggle("hidden",liveMode || supportersSection.dataset.available!=="true");
 }
 
-if(communitySection && viewLive && communitySection.parentNode!==viewLive){
-viewLive.appendChild(communitySection)
-}
-
-}else{
-
-if(hero){
-hero.classList.remove("hidden")
-}
-
-if(communitySection && viewHome && communitySection.parentNode!==viewHome.parentNode){
-viewHome.parentNode.insertBefore(communitySection,supportersSection || viewHome)
-}
-
+if(liveCommunitySection){
+liveCommunitySection.classList.toggle("hidden",!liveMode || liveCommunitySection.dataset.available!=="true");
 }
 
 document.querySelectorAll(".tab").forEach(t=>{
 t.classList.toggle("active",t.dataset.id===id)
 })
-
-}
-
-function renderLivePlayer(d){
-
-if(!livePlayerMount)return;
-
-const live=d.live||{};
-const watchURL=safeURL(String(live.watch_url || "").trim());
-
-if(!(live.enabled===true) || !watchURL){
-
-activeLiveURL="";
-livePlayerMount.innerHTML="";
-
-const placeholder=document.createElement("div");
-placeholder.className="livePlayerPlaceholder";
-placeholder.textContent="Stream has not started yet.";
-livePlayerMount.appendChild(placeholder);
-
-return;
-
-}
-
-if(watchURL===activeLiveURL && livePlayerMount.children.length){
-return;
-}
-
-activeLiveURL=watchURL;
-livePlayerMount.innerHTML="";
-
-const config=getEmbedConfig(watchURL);
-
-if(!config){
-return;
-}
-
-if(config.type==="video"){
-
-const video=document.createElement("video");
-video.controls=true;
-video.autoplay=true;
-video.playsInline=true;
-video.setAttribute("webkit-playsinline","");
-video.src=config.src;
-
-livePlayerMount.appendChild(video);
-
-return;
-
-}
-
-if(config.type==="iframe" || config.type==="external"){
-
-const iframe=document.createElement("iframe");
-iframe.src=config.src;
-iframe.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen";
-iframe.allowFullscreen=true;
-iframe.referrerPolicy="strict-origin-when-cross-origin";
-
-livePlayerMount.appendChild(iframe);
-
-}
 
 }
 
@@ -1554,11 +1475,22 @@ mount.appendChild(a);
 
 const liveStatus=document.getElementById("liveStatus");
 const liveDescription=document.getElementById("liveDescription");
+const liveFrameMount=document.getElementById("liveFrameMount");
+const liveFrame=document.getElementById("liveFrame");
 
 if(d.live && d.live.enabled){
 liveStatus.textContent=d.live.status==="live"?"Live now":"Offline";
+if(liveFrameMount){
+liveFrameMount.classList.remove("hidden");
+}
+if(liveFrame && !liveFrame.getAttribute("src")){
+liveFrame.setAttribute("src","./live.html");
+}
 }else{
 liveStatus.textContent="Unavailable";
+if(liveFrameMount){
+liveFrameMount.classList.add("hidden");
+}
 }
 
 if(d.live && d.live.enabled && String(d.live.description || "").trim()){
@@ -1569,8 +1501,8 @@ liveDescription.textContent="";
 liveDescription.classList.add("hidden");
 }
 
-renderLivePlayer(d);
 
+const communitySection=document.getElementById("communitySection");
 const community=d.community||{};
 
 const communityTitle=document.getElementById("communityTitle");
@@ -1589,7 +1521,12 @@ communityBtn.href="#";
 
 if(community.enabled===true && (community.embed || community.url)){
 
+communitySection.dataset.available="true";
+if(!views.live.classList.contains("hidden")){
+communitySection.classList.add("hidden");
+}else{
 communitySection.classList.remove("hidden");
+}
 
 communityTitle.textContent=community.name || "Community";
 
@@ -1677,16 +1614,143 @@ communityBtn.href=safeURL(community.url) || "#";
 communityExpanded=false;
 communityEmbedMount.classList.remove("expanded");
 communityExpandBtn.classList.add("hidden");
+communitySection.dataset.available="false";
 communitySection.classList.add("hidden");
 
 }
 
+renderLiveCommunity(d);
 renderSupporters(d);
 renderLinks(d);
 renderMedia(d);
 
 }
 
+
+function renderLiveCommunity(d){
+
+const liveCommunitySection=document.getElementById("liveCommunitySection");
+
+if(!liveCommunitySection)return;
+
+const community=d.community||{};
+const live=d.live||{};
+
+const liveCommunityTitle=document.getElementById("liveCommunityTitle");
+const liveCommunityDescription=document.getElementById("liveCommunityDescription");
+const liveCommunityBtn=document.getElementById("liveCommunityBtn");
+const liveCommunityIcon=document.getElementById("liveCommunityIcon");
+const liveCommunityEmbedMount=document.getElementById("liveCommunityEmbedMount");
+const liveCommunityExpandBtn=document.getElementById("liveCommunityExpandBtn");
+
+liveCommunityEmbedMount.classList.add("hidden");
+liveCommunityEmbedMount.classList.toggle("expanded",liveCommunityExpanded);
+liveCommunityExpandBtn.classList.add("hidden");
+liveCommunityDescription.classList.remove("hidden");
+liveCommunityBtn.classList.remove("hidden");
+liveCommunityBtn.href="#";
+
+if(live.enabled===true && community.enabled===true && (community.embed || community.url)){
+
+liveCommunitySection.dataset.available="true";
+if(views.live && views.live.classList.contains("hidden")){
+liveCommunitySection.classList.add("hidden");
+}else{
+liveCommunitySection.classList.remove("hidden");
+}
+
+liveCommunityTitle.textContent=community.name || "Community";
+
+if(community.icon){
+liveCommunityIcon.src=normalizeURL(community.icon);
+liveCommunityIcon.style.display="block";
+}else{
+liveCommunityIcon.removeAttribute("src");
+liveCommunityIcon.style.display="none";
+}
+
+if(community.embed){
+
+liveCommunityDescription.classList.add("hidden");
+liveCommunityBtn.classList.add("hidden");
+liveCommunityEmbedMount.classList.remove("hidden");
+liveCommunityEmbedMount.classList.toggle("expanded",liveCommunityExpanded);
+liveCommunityExpandBtn.classList.remove("hidden");
+liveCommunityExpandBtn.textContent=liveCommunityExpanded ? "Collapse FIYA TALK" : "Expand FIYA TALK";
+liveCommunityExpandBtn.onclick=()=>{
+
+liveCommunityExpanded=!liveCommunityExpanded;
+liveCommunityEmbedMount.classList.toggle("expanded",liveCommunityExpanded);
+liveCommunityExpandBtn.textContent=liveCommunityExpanded ? "Collapse FIYA TALK" : "Expand FIYA TALK";
+
+};
+
+const embedValue=String(community.embed || "").trim();
+
+if(embedValue!==activeLiveCommunityEmbed){
+
+activeLiveCommunityEmbed=embedValue;
+liveCommunityEmbedMount.innerHTML="";
+
+if(embedValue.includes("minnit.chat")){
+
+const span=document.createElement("span");
+span.style.display="none";
+span.className="minnit-chat-sembed";
+span.setAttribute("data-chatname",embedValue);
+span.setAttribute("data-style","width:100%; height:420px; max-height:55vh;");
+span.setAttribute("data-version","1.55");
+span.textContent="Chat";
+
+liveCommunityEmbedMount.appendChild(span);
+
+const script=document.createElement("script");
+script.src="https://minnit.chat/js/embed.js?c=1772345192";
+script.defer=true;
+
+liveCommunityEmbedMount.appendChild(script);
+
+}else{
+
+const safeEmbed=safeURL(embedValue);
+
+if(safeEmbed){
+
+const iframe=document.createElement("iframe");
+iframe.src=safeEmbed;
+iframe.allow="clipboard-write; encrypted-media; fullscreen";
+iframe.referrerPolicy="strict-origin-when-cross-origin";
+
+liveCommunityEmbedMount.appendChild(iframe);
+
+}
+
+}
+
+}
+
+}else{
+
+liveCommunityExpanded=false;
+liveCommunityEmbedMount.classList.remove("expanded");
+liveCommunityExpandBtn.classList.add("hidden");
+liveCommunityDescription.textContent=(community.provider || "Community") + " Community";
+liveCommunityBtn.textContent=community.buttonText || "Enter Community";
+liveCommunityBtn.href=safeURL(community.url) || "#";
+
+}
+
+}else{
+
+liveCommunityExpanded=false;
+liveCommunityEmbedMount.classList.remove("expanded");
+liveCommunityExpandBtn.classList.add("hidden");
+liveCommunitySection.dataset.available="false";
+liveCommunitySection.classList.add("hidden");
+
+}
+
+}
 
 function renderSupporters(d){
 
@@ -1717,6 +1781,7 @@ String(item.buttonText||"").trim()
 
 if(visible.length===0){
 
+section.dataset.available="false";
 section.classList.add("hidden");
 
 return;
@@ -1803,7 +1868,11 @@ container.appendChild(card);
 
 });
 
-if(!views.live || views.live.classList.contains("hidden")){
+section.dataset.available="true";
+
+if(views.live && !views.live.classList.contains("hidden")){
+section.classList.add("hidden");
+}else{
 section.classList.remove("hidden");
 }
 
