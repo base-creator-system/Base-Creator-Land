@@ -755,13 +755,23 @@ min-height:100%;
 
 /* LIVE TAB INLINE PLAYER */
 
-.liveFrameNative{
+.livePlayerMount{
+width:100%;
+margin:0 0 12px;
+background:transparent;
+}
+
+.livePlayerMount iframe,
+.livePlayerMount video{
 width:100%;
 height:315px;
-margin:0 0 12px;
 border:none;
-background:transparent;
+background:#000;
 display:block;
+}
+
+.livePlayerMount video{
+object-fit:contain;
 }
 
 .liveDescriptionText{
@@ -832,7 +842,7 @@ i
 
 <section id="view-live" class="hidden">
 <p class="p hidden" id="liveStatus"></p>
-<iframe id="liveFrame" class="liveFrameNative hidden" src="./live.html" title="Live" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+<div id="livePlayerMount" class="livePlayerMount hidden"></div>
 <p class="p liveDescriptionText hidden" id="liveDescription"></p>
 
 <section id="liveCommunitySection" class="hidden">
@@ -1116,6 +1126,10 @@ return null
 function getCloudflareEmbed(url){
 
 try{
+
+if(url.includes("videodelivery.net") || url.includes("iframe.cloudflarestream.com")){
+return url
+}
 
 if(url.includes("cloudflarestream.com")){
 
@@ -1461,21 +1475,63 @@ mount.appendChild(a);
 
 const liveStatus=document.getElementById("liveStatus");
 const liveDescription=document.getElementById("liveDescription");
-const liveFrame=document.getElementById("liveFrame");
+const livePlayerMount=document.getElementById("livePlayerMount");
 
 if(d.live && d.live.enabled){
+
 liveStatus.textContent=d.live.status==="live"?"Live now":"Offline";
-if(liveFrame){
-if(!liveFrame.getAttribute("src")){
-liveFrame.setAttribute("src","./live.html");
-}
-liveFrame.classList.remove("hidden");
-}
+
+if(livePlayerMount){
+
+const liveSource=String(d.live.watch_url || d.live.watchUrl || d.live.url || "./live.html").trim();
+
+livePlayerMount.innerHTML="";
+
+if(liveSource){
+
+const config=getEmbedConfig(liveSource);
+
+if(config && config.type==="video"){
+
+const video=document.createElement("video");
+video.controls=true;
+video.autoplay=true;
+video.playsInline=true;
+video.setAttribute("webkit-playsinline","");
+video.src=config.src;
+livePlayerMount.appendChild(video);
+
 }else{
-liveStatus.textContent="Unavailable";
-if(liveFrame){
-liveFrame.classList.add("hidden");
+
+const iframe=document.createElement("iframe");
+iframe.src=(config && config.src) ? config.src : liveSource;
+iframe.title="Live";
+iframe.allow="autoplay; fullscreen; picture-in-picture";
+iframe.allowFullscreen=true;
+iframe.referrerPolicy="strict-origin-when-cross-origin";
+livePlayerMount.appendChild(iframe);
+
 }
+
+livePlayerMount.classList.remove("hidden");
+
+}else{
+
+livePlayerMount.classList.add("hidden");
+
+}
+
+}
+
+}else{
+
+liveStatus.textContent="Unavailable";
+
+if(livePlayerMount){
+livePlayerMount.innerHTML="";
+livePlayerMount.classList.add("hidden");
+}
+
 }
 
 if(d.live && d.live.enabled && String(d.live.description || "").trim()){
