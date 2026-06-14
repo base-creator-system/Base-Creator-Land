@@ -755,23 +755,20 @@ min-height:100%;
 
 /* LIVE TAB INLINE PLAYER */
 
-.livePlayerMount{
+.livePlayerNative{
 width:100%;
 margin:0 0 12px;
-background:transparent;
-}
-
-.livePlayerMount iframe,
-.livePlayerMount video{
-width:100%;
-height:315px;
-border:none;
-background:#000;
 display:block;
 }
 
-.livePlayerMount video{
-object-fit:contain;
+.livePlayerNative iframe,
+.livePlayerNative video{
+width:100%;
+height:315px;
+border:none;
+border-radius:14px;
+background:#000;
+display:block;
 }
 
 .liveDescriptionText{
@@ -842,7 +839,7 @@ i
 
 <section id="view-live" class="hidden">
 <p class="p hidden" id="liveStatus"></p>
-<div id="livePlayerMount" class="livePlayerMount hidden"></div>
+<div id="livePlayerMount" class="livePlayerNative hidden"></div>
 <p class="p liveDescriptionText hidden" id="liveDescription"></p>
 
 <section id="liveCommunitySection" class="hidden">
@@ -967,6 +964,7 @@ const POLL_INTERVAL=15000
 
 let previewMode=false
 let activeCommunityEmbed=""
+let activeLivePlayerSrc=""
 let activeLiveCommunityEmbed=""
 let communityExpanded=false
 let liveCommunityExpanded=false
@@ -1126,10 +1124,6 @@ return null
 function getCloudflareEmbed(url){
 
 try{
-
-if(url.includes("videodelivery.net") || url.includes("iframe.cloudflarestream.com")){
-return url
-}
 
 if(url.includes("cloudflarestream.com")){
 
@@ -1444,6 +1438,85 @@ t.classList.toggle("active",t.dataset.id===id)
 
 }
 
+
+function getLiveSource(live){
+
+if(!live)return"";
+
+return String(
+live.watch_url ||
+live.watchUrl ||
+live.url ||
+live.embed ||
+live.src ||
+live.stream_url ||
+live.streamUrl ||
+""
+).trim();
+
+}
+
+function renderLivePlayer(live){
+
+const livePlayerMount=document.getElementById("livePlayerMount");
+
+if(!livePlayerMount)return;
+
+const source=getLiveSource(live);
+
+if(!live || live.enabled!==true || !source){
+activeLivePlayerSrc="";
+livePlayerMount.innerHTML="";
+livePlayerMount.classList.add("hidden");
+return;
+}
+
+const config=getEmbedConfig(source);
+
+if(!config){
+activeLivePlayerSrc="";
+livePlayerMount.innerHTML="";
+livePlayerMount.classList.add("hidden");
+return;
+}
+
+const key=config.type + ":" + config.src;
+
+if(key===activeLivePlayerSrc){
+livePlayerMount.classList.remove("hidden");
+return;
+}
+
+activeLivePlayerSrc=key;
+livePlayerMount.innerHTML="";
+
+if(config.type==="video"){
+
+const video=document.createElement("video");
+video.controls=true;
+video.autoplay=true;
+video.playsInline=true;
+video.setAttribute("webkit-playsinline","");
+video.src=config.src;
+
+livePlayerMount.appendChild(video);
+livePlayerMount.classList.remove("hidden");
+return;
+
+}
+
+const iframe=document.createElement("iframe");
+iframe.src=config.src;
+iframe.title="Live";
+iframe.allow="autoplay; fullscreen; picture-in-picture; encrypted-media; clipboard-write";
+iframe.allowFullscreen=true;
+iframe.referrerPolicy="strict-origin-when-cross-origin";
+
+livePlayerMount.appendChild(iframe);
+livePlayerMount.classList.remove("hidden");
+
+}
+
 function applyState(d){
 
 if(!d)return;
@@ -1478,60 +1551,11 @@ const liveDescription=document.getElementById("liveDescription");
 const livePlayerMount=document.getElementById("livePlayerMount");
 
 if(d.live && d.live.enabled){
-
 liveStatus.textContent=d.live.status==="live"?"Live now":"Offline";
-
-if(livePlayerMount){
-
-const liveSource=String(d.live.watch_url || d.live.watchUrl || d.live.url || "./live.html").trim();
-
-livePlayerMount.innerHTML="";
-
-if(liveSource){
-
-const config=getEmbedConfig(liveSource);
-
-if(config && config.type==="video"){
-
-const video=document.createElement("video");
-video.controls=true;
-video.autoplay=true;
-video.playsInline=true;
-video.setAttribute("webkit-playsinline","");
-video.src=config.src;
-livePlayerMount.appendChild(video);
-
+renderLivePlayer(d.live);
 }else{
-
-const iframe=document.createElement("iframe");
-iframe.src=(config && config.src) ? config.src : liveSource;
-iframe.title="Live";
-iframe.allow="autoplay; fullscreen; picture-in-picture";
-iframe.allowFullscreen=true;
-iframe.referrerPolicy="strict-origin-when-cross-origin";
-livePlayerMount.appendChild(iframe);
-
-}
-
-livePlayerMount.classList.remove("hidden");
-
-}else{
-
-livePlayerMount.classList.add("hidden");
-
-}
-
-}
-
-}else{
-
 liveStatus.textContent="Unavailable";
-
-if(livePlayerMount){
-livePlayerMount.innerHTML="";
-livePlayerMount.classList.add("hidden");
-}
-
+renderLivePlayer(null);
 }
 
 if(d.live && d.live.enabled && String(d.live.description || "").trim()){
