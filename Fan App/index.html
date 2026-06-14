@@ -841,7 +841,7 @@ i
 <section id="view-live" class="hidden">
 <p class="p hidden" id="liveStatus"></p>
 <div id="liveFrameMount" class="liveFrameMount hidden">
-<iframe id="liveFrame" src="./live.html" title="Live" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+<iframe id="liveFrame" title="Live" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
 </div>
 <p class="p liveDescriptionText hidden" id="liveDescription"></p>
 
@@ -1476,16 +1476,33 @@ const liveFrame=document.getElementById("liveFrame");
 
 if(d.live && d.live.enabled){
 liveStatus.textContent=d.live.status==="live"?"Live now":"Offline";
-if(liveFrameMount){
+
+const liveUrl=String(d.live.watch_url || "").trim();
+const liveConfig=getEmbedConfig(liveUrl);
+
+if(liveFrameMount && liveFrame && liveConfig && liveConfig.src){
 liveFrameMount.classList.remove("hidden");
+
+if(liveFrame.getAttribute("src")!==liveConfig.src){
+liveFrame.setAttribute("src",liveConfig.src);
 }
-if(liveFrame && !liveFrame.getAttribute("src")){
-liveFrame.setAttribute("src","./live.html");
+
+}else{
+if(liveFrameMount){
+liveFrameMount.classList.add("hidden");
 }
+if(liveFrame){
+liveFrame.removeAttribute("src");
+}
+}
+
 }else{
 liveStatus.textContent="Unavailable";
 if(liveFrameMount){
 liveFrameMount.classList.add("hidden");
+}
+if(liveFrame){
+liveFrame.removeAttribute("src");
 }
 }
 
