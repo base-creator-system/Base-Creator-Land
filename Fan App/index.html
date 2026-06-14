@@ -764,8 +764,7 @@ background:#000;
 height:315px;
 }
 
-.liveFrameMount iframe,
-.liveFrameMount video{
+.liveFrameMount iframe{
 width:100%;
 height:100%;
 border:none;
@@ -773,12 +772,8 @@ background:#000;
 display:block;
 }
 
-.liveFrameMount video{
-object-fit:contain;
-}
-
 .liveDescriptionText{
-margin:0 0 16px;
+margin-top:12px;
 line-height:1.45;
 }
 
@@ -845,7 +840,9 @@ i
 
 <section id="view-live" class="hidden">
 <p class="p hidden" id="liveStatus"></p>
-<div id="liveFrameMount" class="liveFrameMount hidden"></div>
+<div id="liveFrameMount" class="liveFrameMount hidden">
+<iframe id="liveFrame" src="./live.html" title="Live" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+</div>
 <p class="p liveDescriptionText hidden" id="liveDescription"></p>
 
 <section id="liveCommunitySection" class="hidden">
@@ -1132,7 +1129,7 @@ try{
 
 if(url.includes("cloudflarestream.com")){
 
-if(url.includes("iframe.cloudflarestream.com") || url.includes("/embed/")){
+if(url.includes("/embed/")){
 return url
 }
 
@@ -1443,69 +1440,6 @@ t.classList.toggle("active",t.dataset.id===id)
 
 }
 
-function renderLivePlayer(live){
-
-const mount=document.getElementById("liveFrameMount");
-
-if(!mount)return;
-
-const watchUrl=String((live && live.watch_url) || "").trim();
-
-mount.innerHTML="";
-
-if(!watchUrl){
-mount.classList.add("hidden");
-return;
-}
-
-const safe=safeURL(watchUrl);
-
-if(!safe){
-mount.classList.add("hidden");
-return;
-}
-
-const config=getEmbedConfig(safe);
-
-if(!config || config.type==="external"){
-mount.classList.add("hidden");
-return;
-}
-
-if(config.type==="video"){
-
-const video=document.createElement("video");
-
-video.controls=true;
-video.autoplay=true;
-video.playsInline=true;
-video.setAttribute("webkit-playsinline","");
-video.src=config.src;
-
-mount.appendChild(video);
-mount.classList.remove("hidden");
-
-return;
-
-}
-
-if(config.type==="iframe"){
-
-const iframe=document.createElement("iframe");
-
-iframe.src=config.src;
-iframe.title="Live";
-iframe.allow="autoplay; fullscreen; picture-in-picture";
-iframe.allowFullscreen=true;
-iframe.referrerPolicy="strict-origin-when-cross-origin";
-
-mount.appendChild(iframe);
-mount.classList.remove("hidden");
-
-}
-
-}
-
 function applyState(d){
 
 if(!d)return;
@@ -1538,14 +1472,19 @@ mount.appendChild(a);
 const liveStatus=document.getElementById("liveStatus");
 const liveDescription=document.getElementById("liveDescription");
 const liveFrameMount=document.getElementById("liveFrameMount");
+const liveFrame=document.getElementById("liveFrame");
 
 if(d.live && d.live.enabled){
 liveStatus.textContent=d.live.status==="live"?"Live now":"Offline";
-renderLivePlayer(d.live);
+if(liveFrameMount){
+liveFrameMount.classList.remove("hidden");
+}
+if(liveFrame && !liveFrame.getAttribute("src")){
+liveFrame.setAttribute("src","./live.html");
+}
 }else{
 liveStatus.textContent="Unavailable";
 if(liveFrameMount){
-liveFrameMount.innerHTML="";
 liveFrameMount.classList.add("hidden");
 }
 }
