@@ -758,22 +758,26 @@ min-height:100%;
 .liveFrameMount{
 width:100%;
 margin:0 0 12px;
-overflow:hidden;
-border-radius:14px;
-background:#000;
-height:315px;
+overflow:visible;
+background:transparent;
 }
 
-.liveFrameMount iframe{
+.liveFrameMount iframe,
+.liveFrameMount video{
 width:100%;
-height:100%;
+height:315px;
 border:none;
+border-radius:14px;
 background:#000;
 display:block;
 }
 
+.liveFrameMount video{
+object-fit:contain;
+}
+
 .liveDescriptionText{
-margin-top:12px;
+margin:0 0 12px;
 line-height:1.45;
 }
 
@@ -840,9 +844,7 @@ i
 
 <section id="view-live" class="hidden">
 <p class="p hidden" id="liveStatus"></p>
-<div id="liveFrameMount" class="liveFrameMount hidden">
-<iframe id="liveFrame" title="Live" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-</div>
+<div id="liveFrameMount" class="liveFrameMount hidden"></div>
 <p class="p liveDescriptionText hidden" id="liveDescription"></p>
 
 <section id="liveCommunitySection" class="hidden">
@@ -967,6 +969,7 @@ const POLL_INTERVAL=15000
 
 let previewMode=false
 let activeCommunityEmbed=""
+let activeLiveSource=""
 let activeLiveCommunityEmbed=""
 let communityExpanded=false
 let liveCommunityExpanded=false
@@ -1472,37 +1475,16 @@ mount.appendChild(a);
 const liveStatus=document.getElementById("liveStatus");
 const liveDescription=document.getElementById("liveDescription");
 const liveFrameMount=document.getElementById("liveFrameMount");
-const liveFrame=document.getElementById("liveFrame");
 
 if(d.live && d.live.enabled){
 liveStatus.textContent=d.live.status==="live"?"Live now":"Offline";
-
-const liveUrl=String(d.live.watch_url || "").trim();
-const liveConfig=getEmbedConfig(liveUrl);
-
-if(liveFrameMount && liveFrame && liveConfig && liveConfig.src){
-liveFrameMount.classList.remove("hidden");
-
-if(liveFrame.getAttribute("src")!==liveConfig.src){
-liveFrame.setAttribute("src",liveConfig.src);
-}
-
-}else{
-if(liveFrameMount){
-liveFrameMount.classList.add("hidden");
-}
-if(liveFrame){
-liveFrame.removeAttribute("src");
-}
-}
-
+renderLivePlayer(d.live);
 }else{
 liveStatus.textContent="Unavailable";
+activeLiveSource="";
 if(liveFrameMount){
+liveFrameMount.innerHTML="";
 liveFrameMount.classList.add("hidden");
-}
-if(liveFrame){
-liveFrame.removeAttribute("src");
 }
 }
 
@@ -1639,6 +1621,68 @@ renderMedia(d);
 
 }
 
+
+function renderLivePlayer(live){
+
+const liveFrameMount=document.getElementById("liveFrameMount");
+
+if(!liveFrameMount)return;
+
+const liveUrl=String((live && live.watch_url) || "").trim();
+const safeLive=safeURL(liveUrl);
+
+if(!safeLive){
+activeLiveSource="";
+liveFrameMount.innerHTML="";
+liveFrameMount.classList.add("hidden");
+return;
+}
+
+const config=getEmbedConfig(safeLive);
+
+if(!config){
+activeLiveSource="";
+liveFrameMount.innerHTML="";
+liveFrameMount.classList.add("hidden");
+return;
+}
+
+const sourceKey=config.type + ":" + config.src;
+
+if(sourceKey===activeLiveSource){
+liveFrameMount.classList.remove("hidden");
+return;
+}
+
+activeLiveSource=sourceKey;
+liveFrameMount.innerHTML="";
+
+if(config.type==="video"){
+
+const video=document.createElement("video");
+video.controls=true;
+video.autoplay=true;
+video.playsInline=true;
+video.setAttribute("webkit-playsinline","");
+video.src=config.src;
+
+liveFrameMount.appendChild(video);
+liveFrameMount.classList.remove("hidden");
+return;
+
+}
+
+const iframe=document.createElement("iframe");
+iframe.src=config.src;
+iframe.title="Live";
+iframe.allow="autoplay; fullscreen; picture-in-picture; encrypted-media";
+iframe.allowFullscreen=true;
+iframe.referrerPolicy="strict-origin-when-cross-origin";
+
+liveFrameMount.appendChild(iframe);
+liveFrameMount.classList.remove("hidden");
+
+}
 
 function renderLiveCommunity(d){
 
