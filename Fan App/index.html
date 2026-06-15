@@ -1416,13 +1416,18 @@ t.classList.toggle("active",t.dataset.id===id)
 
 const communitySection=document.getElementById("communitySection")
 const supportersSection=document.getElementById("supportersSection")
+const hero=document.querySelector(".hero")
 
 if(id==="live"){
+
+hero.classList.add("hidden")
 
 views.live.appendChild(communitySection)
 supportersSection.classList.add("hidden")
 
 }else{
+
+hero.classList.remove("hidden")
 
 views.home.parentNode.insertBefore(communitySection,views.home)
 views.home.parentNode.insertBefore(supportersSection,views.home)
