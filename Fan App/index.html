@@ -246,6 +246,34 @@ color:var(--muted);
 text-decoration:none;
 }
 
+/* LIVE */
+
+.livePlayer{
+position:relative;
+padding-top:56.25%;
+border-radius:14px;
+overflow:hidden;
+border:1px solid var(--stroke);
+background:#000;
+margin-top:12px;
+}
+
+.livePlayer iframe{
+position:absolute;
+inset:0;
+width:100%;
+height:100%;
+border:0;
+background:#000;
+}
+
+.liveDescription{
+margin-top:12px;
+color:var(--muted);
+font-size:13px;
+line-height:1.4;
+}
+
 /* COMMUNITY */
 
 .communityHeader{
@@ -818,7 +846,14 @@ i
 <div class="card">
 <div class="h1">Live</div>
 <p class="p" id="liveStatus"></p>
-<a id="liveBtn" class="btn" href="./live.html">Watch Live</a>
+<div id="livePlayer" class="livePlayer hidden">
+<iframe
+id="liveFrame"
+allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+allowfullscreen="true">
+</iframe>
+</div>
+<p class="liveDescription hidden" id="liveDescription"></p>
 </div>
 </section>
 
@@ -931,6 +966,7 @@ const POLL_INTERVAL=15000
 let previewMode=false
 let activeCommunityEmbed=""
 let communityExpanded=false
+let activeView="home"
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -1368,6 +1404,8 @@ t.onclick=()=>setView(t.dataset.id)
 
 function setView(id){
 
+activeView=id
+
 Object.keys(views).forEach(k=>{
 views[k].classList.toggle("hidden",k!==id)
 })
@@ -1375,6 +1413,21 @@ views[k].classList.toggle("hidden",k!==id)
 document.querySelectorAll(".tab").forEach(t=>{
 t.classList.toggle("active",t.dataset.id===id)
 })
+
+const communitySection=document.getElementById("communitySection")
+const supportersSection=document.getElementById("supportersSection")
+
+if(id==="live"){
+
+views.live.appendChild(communitySection)
+supportersSection.classList.add("hidden")
+
+}else{
+
+views.home.parentNode.insertBefore(communitySection,views.home)
+views.home.parentNode.insertBefore(supportersSection,views.home)
+
+}
 
 }
 
@@ -1408,11 +1461,41 @@ mount.appendChild(a);
 }
 
 const liveStatus=document.getElementById("liveStatus");
+const livePlayer=document.getElementById("livePlayer");
+const liveFrame=document.getElementById("liveFrame");
+const liveDescription=document.getElementById("liveDescription");
 
 if(d.live && d.live.enabled){
 liveStatus.textContent=d.live.status==="live"?"Live now":"Offline";
+
+const liveURL=safeURL(d.live.watch_url || "");
+
+if(liveURL){
+livePlayer.classList.remove("hidden");
+
+if(liveFrame.src!==liveURL){
+liveFrame.src=liveURL;
+}
+
+}else{
+livePlayer.classList.add("hidden");
+liveFrame.removeAttribute("src");
+}
+
+if(String(d.live.description || "").trim()){
+liveDescription.textContent=d.live.description;
+liveDescription.classList.remove("hidden");
+}else{
+liveDescription.textContent="";
+liveDescription.classList.add("hidden");
+}
+
 }else{
 liveStatus.textContent="Unavailable";
+livePlayer.classList.add("hidden");
+liveFrame.removeAttribute("src");
+liveDescription.textContent="";
+liveDescription.classList.add("hidden");
 }
 
 
@@ -1433,7 +1516,7 @@ communityDescription.classList.remove("hidden");
 communityBtn.classList.remove("hidden");
 communityBtn.href="#";
 
-if(community.enabled===true && (community.embed || community.url)){
+if((activeView==="home" || activeView==="live") && community.enabled===true && (community.embed || community.url)){
 
 communitySection.classList.remove("hidden");
 
@@ -1539,6 +1622,14 @@ const section=document.getElementById("supportersSection");
 const container=document.getElementById("supportersList");
 
 container.innerHTML="";
+
+if(activeView!=="home"){
+
+section.classList.add("hidden");
+
+return;
+
+}
 
 const supporters=Array.isArray(d.supporters)?d.supporters:[];
 
