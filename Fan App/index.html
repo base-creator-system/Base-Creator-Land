@@ -268,11 +268,8 @@ text-decoration:none;
 .livePlayer{
 position:relative;
 padding-top:56.25%;
-border-radius:14px;
 overflow:hidden;
-border:1px solid var(--stroke);
 background:#000;
-margin-top:12px;
 }
 
 .livePlayer iframe{
@@ -860,9 +857,7 @@ i
 
 
 <section id="view-live" class="hidden">
-<div class="card">
-<div class="h1">Live</div>
-<p class="p" id="liveStatus"></p>
+<p class="p hidden" id="liveStatus"></p>
 <div id="livePlayer" class="livePlayer hidden">
 <iframe
 id="liveFrame"
@@ -871,7 +866,6 @@ allowfullscreen="true">
 </iframe>
 </div>
 <p class="liveDescription hidden" id="liveDescription"></p>
-</div>
 </section>
 
 <div class="baseFooter">Powered by BASE</div>
