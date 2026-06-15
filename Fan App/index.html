@@ -94,6 +94,23 @@ width:100%;
 display:block;
 }
 
+body.liveActive .wrap{
+display:flex;
+flex-direction:column;
+}
+
+body.liveActive #view-live{
+order:2;
+}
+
+body.liveActive #communitySection{
+order:3;
+}
+
+body.liveActive .baseFooter{
+order:4;
+}
+
 .card{
 border:1px solid var(--stroke);
 background:var(--card);
@@ -967,6 +984,7 @@ let previewMode=false
 let activeCommunityEmbed=""
 let communityExpanded=false
 let activeView="home"
+let currentState=null
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -1414,24 +1432,24 @@ document.querySelectorAll(".tab").forEach(t=>{
 t.classList.toggle("active",t.dataset.id===id)
 })
 
-const communitySection=document.getElementById("communitySection")
 const supportersSection=document.getElementById("supportersSection")
 const hero=document.querySelector(".hero")
+
+document.body.classList.toggle("liveActive",id==="live")
 
 if(id==="live"){
 
 hero.classList.add("hidden")
-
-views.live.appendChild(communitySection)
 supportersSection.classList.add("hidden")
 
 }else{
 
 hero.classList.remove("hidden")
 
-views.home.parentNode.insertBefore(communitySection,views.home)
-views.home.parentNode.insertBefore(supportersSection,views.home)
+}
 
+if(currentState){
+applyState(currentState)
 }
 
 }
@@ -1439,6 +1457,8 @@ views.home.parentNode.insertBefore(supportersSection,views.home)
 function applyState(d){
 
 if(!d)return;
+
+currentState=d;
 
 document.getElementById("name").textContent=d.name||"";
 document.getElementById("bio").textContent=d.bio||"";
