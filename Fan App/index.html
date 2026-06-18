@@ -313,8 +313,8 @@ width:100%;
 margin-top:12px;
 overflow:hidden;
 border-radius:14px;
-height:150px;
-max-height:150px;
+height:110px;
+max-height:110px;
 transition:height .25s ease,max-height .25s ease;
 }
 
@@ -826,7 +826,7 @@ i
 <p class="p" id="communityDescription">Join the community.</p>
 <a id="communityBtn" class="btn" href="#" target="_blank" rel="noopener">Enter Community</a>
 <div id="communityEmbedMount" class="communityEmbedMount hidden"></div>
-<button id="communityExpandBtn" class="communityExpandBtn hidden" type="button">Expand FIYA TALK</button>
+<button id="communityExpandBtn" class="communityExpandBtn hidden" type="button">Expand</button>
 </div>
 </section>
 
@@ -1556,12 +1556,12 @@ communityBtn.classList.add("hidden");
 communityEmbedMount.classList.remove("hidden");
 communityEmbedMount.classList.toggle("expanded",communityExpanded);
 communityExpandBtn.classList.remove("hidden");
-communityExpandBtn.textContent=communityExpanded ? "Collapse FIYA TALK" : "Expand FIYA TALK";
+communityExpandBtn.textContent=communityExpanded ? "Collapse" : "Expand";
 communityExpandBtn.onclick=()=>{
 
 communityExpanded=!communityExpanded;
 communityEmbedMount.classList.toggle("expanded",communityExpanded);
-communityExpandBtn.textContent=communityExpanded ? "Collapse FIYA TALK" : "Expand FIYA TALK";
+communityExpandBtn.textContent=communityExpanded ? "Collapse" : "Expand";
 
 };
 
