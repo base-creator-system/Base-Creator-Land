@@ -30,12 +30,46 @@ background:var(--bg);
 color:var(--text);
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
 overflow-x:hidden;
+min-height:100vh;
+}
+
+.appBackground{
+position:fixed;
+inset:0;
+z-index:0;
+overflow:hidden;
+pointer-events:none;
+display:none;
+background:transparent;
+}
+
+.appBackground.active{
+display:block;
+}
+
+.appBackground img,
+.appBackground video{
+position:absolute;
+inset:0;
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+}
+
+.appBackground::after{
+content:"";
+position:absolute;
+inset:0;
+background:rgba(0,0,0,.42);
 }
 
 .wrap{
 max-width:720px;
 margin:0 auto;
 padding:20px 16px 100px;
+position:relative;
+z-index:1;
 }
 
 .top{
@@ -810,6 +844,8 @@ min-height:100%;
 
 <body>
 
+<div id="appBackground" class="appBackground" aria-hidden="true"></div>
+
 <div class="wrap">
 
 <div class="top">
@@ -986,6 +1022,11 @@ const POLL_INTERVAL=15000
 
 let previewMode=false
 let activeCommunityEmbed=""
+let activeBackgroundAsset=""
+let activeChimeAsset=""
+let chimeAudio=null
+let chimePlayed=false
+let chimePending=false
 let communityExpanded=false
 let activeView="home"
 let currentState=null
@@ -1071,6 +1112,276 @@ url=url.replace("/view","/preview")
 }
 
 return url
+}
+
+
+function safeAssetURL(url){
+
+if(!url) return "";
+
+const normalized=normalizeURL(url);
+const safe=safeURL(normalized);
+
+if(!safe || safe.startsWith("mailto:")) return "";
+
+return safe;
+
+}
+
+function isImageAsset(url){
+
+if(!url) return false;
+
+const clean=url.toLowerCase().split("?")[0];
+
+return(
+clean.endsWith(".jpg") ||
+clean.endsWith(".jpeg") ||
+clean.endsWith(".png") ||
+clean.endsWith(".gif") ||
+clean.endsWith(".webp") ||
+clean.endsWith(".svg")
+);
+
+}
+
+function isVideoAsset(url){
+
+if(!url) return false;
+
+const clean=url.toLowerCase().split("?")[0];
+
+return(
+clean.endsWith(".mp4") ||
+clean.endsWith(".webm") ||
+clean.endsWith(".mov") ||
+clean.endsWith(".m4v")
+);
+
+}
+
+
+function isAudioAsset(url){
+
+if(!url) return false;
+
+const clean=url.toLowerCase().split("?")[0];
+
+return(
+clean.endsWith(".mp3") ||
+clean.endsWith(".m4a") ||
+clean.endsWith(".wav") ||
+clean.endsWith(".ogg") ||
+clean.endsWith(".aac") ||
+clean.endsWith(".webm")
+);
+
+}
+
+function getChimeConfig(d){
+
+const chime=d.chime || d.appChime || d.openChime || {};
+
+if(chime.enabled!==true) return null;
+
+const rawUrl=String(
+chime.url ||
+chime.file ||
+chime.audio ||
+d.chimeUrl ||
+d.appChimeUrl ||
+""
+).trim();
+
+const src=safeAssetURL(rawUrl);
+
+if(!src) return null;
+
+const volumeNumber=Number(chime.volume);
+let volume=.65;
+
+if(!Number.isNaN(volumeNumber)){
+volume=Math.max(0,Math.min(1,volumeNumber));
+}
+
+return{
+src:src,
+volume:volume
+};
+
+}
+
+function playChime(){
+
+if(!chimeAudio || chimePlayed) return;
+
+try{
+
+chimeAudio.currentTime=0;
+
+const result=chimeAudio.play();
+
+if(result && typeof result.then==="function"){
+
+result.then(()=>{
+chimePlayed=true;
+chimePending=false;
+}).catch(()=>{
+chimePending=true;
+});
+
+}else{
+chimePlayed=true;
+chimePending=false;
+}
+
+}catch(e){
+chimePending=true;
+}
+
+}
+
+function unlockChime(){
+
+if(chimePending && !chimePlayed){
+playChime();
+}
+
+}
+
+document.addEventListener("pointerdown",unlockChime,{passive:true});
+document.addEventListener("keydown",unlockChime);
+
+function applyChime(d){
+
+const config=getChimeConfig(d);
+
+if(!config){
+activeChimeAsset="";
+chimeAudio=null;
+chimePlayed=false;
+chimePending=false;
+return;
+}
+
+if(config.src!==activeChimeAsset){
+activeChimeAsset=config.src;
+chimePlayed=false;
+chimePending=false;
+chimeAudio=new Audio();
+chimeAudio.preload="auto";
+chimeAudio.volume=config.volume;
+chimeAudio.src=config.src;
+}
+
+if(!chimePlayed && !chimePending){
+playChime();
+}
+
+}
+
+function getBackgroundConfig(d){
+
+const background=d.background || {};
+
+if(background.enabled===false) return null;
+
+const rawUrl=String(
+background.url ||
+background.image ||
+background.video ||
+d.backgroundImage ||
+d.backgroundVideo ||
+""
+).trim();
+
+const src=safeAssetURL(rawUrl);
+
+if(!src) return null;
+
+let type=String(background.type || "").toLowerCase().trim();
+
+if(!type){
+
+if(background.video || d.backgroundVideo || isVideoAsset(src)){
+type="video";
+}else if(background.image || d.backgroundImage || isImageAsset(src)){
+type="image";
+}
+
+}
+
+if(type!=="video" && type!=="image"){
+return null;
+}
+
+return{
+type:type,
+src:src
+};
+
+}
+
+function applyBackground(d){
+
+const appBackground=document.getElementById("appBackground");
+
+if(d.backgroundColor){
+document.body.style.background=d.backgroundColor;
+}else{
+document.body.style.background="var(--bg)";
+}
+
+const config=getBackgroundConfig(d);
+
+if(!config){
+activeBackgroundAsset="";
+appBackground.innerHTML="";
+appBackground.classList.remove("active");
+return;
+}
+
+const assetKey=config.type + "|" + config.src;
+
+if(assetKey===activeBackgroundAsset){
+appBackground.classList.add("active");
+return;
+}
+
+activeBackgroundAsset=assetKey;
+appBackground.innerHTML="";
+
+if(config.type==="image"){
+
+const img=document.createElement("img");
+img.src=config.src;
+img.alt="";
+
+appBackground.appendChild(img);
+appBackground.classList.add("active");
+
+return;
+
+}
+
+if(config.type==="video"){
+
+const video=document.createElement("video");
+video.src=config.src;
+video.autoplay=true;
+video.loop=true;
+video.muted=true;
+video.playsInline=true;
+video.setAttribute("webkit-playsinline","");
+video.preload="auto";
+
+appBackground.appendChild(video);
+appBackground.classList.add("active");
+
+video.play().catch(()=>{});
+
+}
+
 }
 
 function isVideoUrl(url){
@@ -1469,9 +1780,8 @@ document.getElementById("bio").textContent=d.bio||"";
 
 document.documentElement.style.setProperty('--pillColor',d.pillColor||"#000");
 
-if(d.backgroundColor){
-document.body.style.background=d.backgroundColor;
-}
+applyBackground(d);
+applyChime(d);
 
 const mount=document.getElementById("connectMount");
 
