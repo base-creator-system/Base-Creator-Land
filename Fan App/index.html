@@ -158,6 +158,71 @@ padding:6px;
 margin:4px 0;
 }
 
+body.cardAnimFloat .card,
+body.cardAnimFloat .supportersCard,
+body.cardAnimFloat .supporterCard,
+body.cardAnimFloat .collectionCard,
+body.cardAnimFloat .media-card,
+body.cardAnimFloat .row{
+animation:baseCardFloat 6s ease-in-out infinite;
+}
+
+body.cardAnimPulse .card,
+body.cardAnimPulse .supportersCard,
+body.cardAnimPulse .supporterCard,
+body.cardAnimPulse .collectionCard,
+body.cardAnimPulse .media-card,
+body.cardAnimPulse .row{
+animation:baseCardPulse 4.5s ease-in-out infinite;
+}
+
+body.cardAnimGlow .card,
+body.cardAnimGlow .supportersCard,
+body.cardAnimGlow .supporterCard,
+body.cardAnimGlow .collectionCard,
+body.cardAnimGlow .media-card,
+body.cardAnimGlow .row{
+animation:baseCardGlow 5s ease-in-out infinite;
+}
+
+@keyframes baseCardFloat{
+0%,100%{transform:translateY(0)}
+50%{transform:translateY(-3px)}
+}
+
+@keyframes baseCardPulse{
+0%,100%{transform:scale(1)}
+50%{transform:scale(1.01)}
+}
+
+@keyframes baseCardGlow{
+0%,100%{box-shadow:0 0 0 rgba(255,255,255,0)}
+50%{box-shadow:0 0 22px rgba(255,255,255,.10)}
+}
+
+@media (prefers-reduced-motion: reduce){
+body.cardAnimFloat .card,
+body.cardAnimFloat .supportersCard,
+body.cardAnimFloat .supporterCard,
+body.cardAnimFloat .collectionCard,
+body.cardAnimFloat .media-card,
+body.cardAnimFloat .row,
+body.cardAnimPulse .card,
+body.cardAnimPulse .supportersCard,
+body.cardAnimPulse .supporterCard,
+body.cardAnimPulse .collectionCard,
+body.cardAnimPulse .media-card,
+body.cardAnimPulse .row,
+body.cardAnimGlow .card,
+body.cardAnimGlow .supportersCard,
+body.cardAnimGlow .supporterCard,
+body.cardAnimGlow .collectionCard,
+body.cardAnimGlow .media-card,
+body.cardAnimGlow .row{
+animation:none;
+}
+}
+
 #communitySection .h1{
 font-size:16px;
 margin:0;
@@ -1252,6 +1317,35 @@ playChime();
 document.addEventListener("pointerdown",unlockChime,{passive:true});
 document.addEventListener("keydown",unlockChime);
 
+function applyCardAnimation(d){
+
+const raw=String(
+(d.cardAnimation && (d.cardAnimation.type || d.cardAnimation.name || d.cardAnimation.style)) ||
+(d.animation && (d.animation.type || d.animation.name || d.animation.style)) ||
+d.cardAnimation ||
+d.animation ||
+""
+).toLowerCase().trim();
+
+document.body.classList.remove("cardAnimFloat","cardAnimPulse","cardAnimGlow");
+
+if(raw==="float"){
+document.body.classList.add("cardAnimFloat");
+return;
+}
+
+if(raw==="pulse"){
+document.body.classList.add("cardAnimPulse");
+return;
+}
+
+if(raw==="glow"){
+document.body.classList.add("cardAnimGlow");
+return;
+}
+
+}
+
 function applyChime(d){
 
 const config=getChimeConfig(d);
@@ -1782,6 +1876,7 @@ document.documentElement.style.setProperty('--pillColor',d.pillColor||"#000");
 
 applyBackground(d);
 applyChime(d);
+applyCardAnimation(d);
 
 const mount=document.getElementById("connectMount");
 
