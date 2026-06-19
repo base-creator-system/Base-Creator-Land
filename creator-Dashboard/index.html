@@ -531,6 +531,39 @@ height:520px;
 </div>
 </div>
 
+<div style="margin-top:18px;border-top:1px solid #222;padding-top:14px;">
+<label>App Open Chime</label>
+<div class="toggleRow" style="margin-top:12px;">
+<div class="tiny">Optional sound that plays when the Fan App opens.</div>
+<label style="display:flex;align-items:center;gap:10px;margin:0;">
+<span class="tiny">Enabled</span>
+<input id="chimeEnabled" type="checkbox" style="width:auto;height:auto;">
+</label>
+</div>
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Chime Audio Upload</label>
+<input id="chimeFile" type="file" accept="audio/mpeg,audio/mp3,audio/wav,audio/ogg,audio/aac,audio/mp4,audio/webm">
+<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
+</div>
+</div>
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Chime URL (legacy/manual optional)</label>
+<input id="chimeUrl" type="text" placeholder="https://... or ./media/chime.mp3">
+</div>
+<div class="col">
+<label>Chime Volume</label>
+<input id="chimeVolume" type="range" min="0" max="1" step="0.05" value="0.65">
+<div class="tiny">Recommended: 0.65</div>
+</div>
+</div>
+<div class="btnRow">
+<button id="btnPreviewChime" type="button">Preview Chime</button>
+<button id="btnClearChime" class="danger" type="button">Remove Chime</button>
+</div>
+</div>
+
 <div style="margin-top:14px;">
 <label>Pill Color</label>
 <input id="pillColor" type="color">
@@ -985,6 +1018,12 @@ backgroundColor:$("backgroundColor"),
 backgroundType:$("backgroundType"),
 backgroundFile:$("backgroundFile"),
 backgroundUrl:$("backgroundUrl"),
+chimeEnabled:$("chimeEnabled"),
+chimeFile:$("chimeFile"),
+chimeUrl:$("chimeUrl"),
+chimeVolume:$("chimeVolume"),
+btnPreviewChime:$("btnPreviewChime"),
+btnClearChime:$("btnClearChime"),
 pillColor:$("pillColor"),
 appIconInput:$("appIconInput"),
 contactEmail:$("contactEmail"),
@@ -1781,6 +1820,135 @@ url
 }
 }
 
+
+function hydrateChime(state){
+const chime=state && typeof state==="object" && state.chime && typeof state.chime==="object"
+? state.chime
+: {}
+
+const url=String(
+chime.url ||
+chime.file ||
+chime.audio ||
+state?.chimeUrl ||
+state?.appChimeUrl ||
+""
+).trim()
+
+const volumeNumber=Number(chime.volume)
+let volume="0.65"
+
+if(!Number.isNaN(volumeNumber)){
+volume=String(Math.max(0,Math.min(1,volumeNumber)))
+}
+
+el.chimeEnabled.checked=chime.enabled===true
+el.chimeUrl.value=url
+el.chimeVolume.value=volume
+el.chimeFile.value=""
+}
+
+function buildChime(){
+const enabled=el.chimeEnabled.checked===true
+const url=String(el.chimeUrl.value || "").trim()
+const volumeNumber=Number(el.chimeVolume.value)
+const volume=Number.isNaN(volumeNumber) ? .65 : Math.max(0,Math.min(1,volumeNumber))
+
+return{
+enabled,
+url:enabled ? url : "",
+volume
+}
+}
+
+function getSafeChimeExtension(file){
+const name=String(file?.name || "")
+const ext=(name.split(".").pop() || "").toLowerCase()
+const mime=String(file?.type || "").toLowerCase()
+
+if(["mp3","m4a","wav","ogg","aac","webm"].includes(ext)) return ext
+if(mime==="audio/mpeg") return "mp3"
+if(mime==="audio/mp3") return "mp3"
+if(mime==="audio/mp4") return "m4a"
+if(mime==="audio/wav") return "wav"
+if(mime==="audio/ogg") return "ogg"
+if(mime==="audio/aac") return "aac"
+if(mime==="audio/webm") return "webm"
+
+return "mp3"
+}
+
+async function uploadChimeAsset(token,file){
+const safeExt=getSafeChimeExtension(file)
+const fileName=`chime-${Date.now()}.${safeExt}`
+const repoPath=`Fan App/media/${fileName}`
+const localPath=`./media/${fileName}`
+const base64=await fileToBase64(file)
+
+await ghPutFile(
+token,
+repoPath,
+undefined,
+base64,
+`BASE chime ${fileName}`
+)
+
+return localPath
+}
+
+async function buildChimeForPublish(token){
+const enabled=el.chimeEnabled.checked===true
+const volumeNumber=Number(el.chimeVolume.value)
+const volume=Number.isNaN(volumeNumber) ? .65 : Math.max(0,Math.min(1,volumeNumber))
+
+if(!enabled){
+el.chimeFile.value=""
+return{
+enabled:false,
+url:"",
+volume
+}
+}
+
+let url=String(el.chimeUrl.value || "").trim()
+const file=el.chimeFile.files[0] || null
+
+if(file){
+log("Chime upload started.")
+url=await uploadChimeAsset(token,file)
+el.chimeUrl.value=url
+el.chimeFile.value=""
+log(`Chime uploaded: ${url}`)
+}
+
+return{
+enabled:true,
+url,
+volume
+}
+}
+
+function previewChime(){
+let src=""
+
+const file=el.chimeFile.files[0] || null
+
+if(file){
+src=URL.createObjectURL(file)
+}else{
+src=String(el.chimeUrl.value || "").trim()
+}
+
+if(!src)return
+
+try{
+const audio=new Audio(src)
+const volumeNumber=Number(el.chimeVolume.value)
+audio.volume=Number.isNaN(volumeNumber) ? .65 : Math.max(0,Math.min(1,volumeNumber))
+audio.play()
+}catch(e){}
+}
+
 function refreshPreview(){
 
 try{
@@ -1790,6 +1958,7 @@ bio:el.bio.value,
 links:linkState,
 backgroundColor:el.backgroundColor.value,
 background:buildBackground(),
+chime:buildChime(),
 pillColor:el.pillColor.value,
 contactEmail:el.contactEmail.value,
 contactLabel:el.contactLabel.value,
@@ -2358,6 +2527,7 @@ el.liveWatchUrl.value=state.live?.watch_url||""
 el.liveDescription.value=state.live?.description||""
 el.backgroundColor.value=state.backgroundColor||"#000000"
 hydrateBackground(state)
+hydrateChime(state)
 el.pillColor.value=state.pillColor||"#caa300"
 linkState=Array.isArray(state.links)?state.links:[]
 hydrateMediaGateway(state)
@@ -2541,6 +2711,7 @@ description:el.liveDescription.value.trim()
 links:linkState,
 backgroundColor:el.backgroundColor.value,
 background:await buildBackgroundForPublish(token),
+chime:await buildChimeForPublish(token),
 pillColor:el.pillColor.value
 }
 
@@ -2692,6 +2863,18 @@ el.backgroundColor.addEventListener("input",markDirty)
 el.backgroundType.addEventListener("change",markDirty)
 el.backgroundFile.addEventListener("change",markDirty)
 el.backgroundUrl.addEventListener("input",markDirty)
+el.chimeEnabled.addEventListener("change",markDirty)
+el.chimeFile.addEventListener("change",markDirty)
+el.chimeUrl.addEventListener("input",markDirty)
+el.chimeVolume.addEventListener("input",markDirty)
+el.btnPreviewChime.onclick=previewChime
+el.btnClearChime.onclick=()=>{
+el.chimeEnabled.checked=false
+el.chimeFile.value=""
+el.chimeUrl.value=""
+el.chimeVolume.value="0.65"
+markDirty()
+}
 el.pillColor.addEventListener("input",markDirty)
 
 el.supporterType.addEventListener("change",()=>{supportersTouched=true;markDirty()})
@@ -2785,6 +2968,7 @@ renderMediaList()
 renderSupporters()
 hydrateCommunity({})
 hydrateBackground({})
+hydrateChime({})
 communityHydrated=false
 communityTouched=false
 setPublishBusy(false)
