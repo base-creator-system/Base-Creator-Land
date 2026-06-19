@@ -562,6 +562,14 @@ height:520px;
 </div>
 </div>
 
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Live Description</label>
+<textarea id="liveDescription" placeholder="Tell fans what the live space is for, what to expect, or when to check in."></textarea>
+<div class="tiny">Appears under the Live player in the Fan App.</div>
+</div>
+</div>
+
 </div>
 
 </div>
@@ -958,6 +966,7 @@ contactLabel:$("contactLabel"),
 liveEnabled:$("liveEnabled"),
 liveStatus:$("liveStatus"),
 liveWatchUrl:$("liveWatchUrl"),
+liveDescription:$("liveDescription"),
 linkLabelInput:$("linkLabelInput"),
 linkUrlInput:$("linkUrlInput"),
 addLinkBtn:$("addLinkBtn"),
@@ -1613,7 +1622,8 @@ contactLabel:el.contactLabel.value,
 live:{
 enabled:el.liveEnabled.checked===true,
 status:el.liveStatus.value==="live" ? "live" : "offline",
-watch_url:el.liveWatchUrl.value.trim()
+watch_url:el.liveWatchUrl.value.trim(),
+description:el.liveDescription.value.trim()
 }
 }
 
@@ -2171,6 +2181,7 @@ el.contactLabel.value=state.contactLabel||""
 el.liveEnabled.checked=state.live?.enabled===true
 el.liveStatus.value=(state.live?.status==="live") ? "live" : "offline"
 el.liveWatchUrl.value=state.live?.watch_url||""
+el.liveDescription.value=state.live?.description||""
 el.backgroundColor.value=state.backgroundColor||"#000000"
 el.pillColor.value=state.pillColor||"#caa300"
 linkState=Array.isArray(state.links)?state.links:[]
@@ -2349,7 +2360,8 @@ contactLabel:el.contactLabel.value.trim(),
 live:{
 enabled:el.liveEnabled.checked===true,
 status:el.liveStatus.value==="live" ? "live" : "offline",
-watch_url:el.liveWatchUrl.value.trim()
+watch_url:el.liveWatchUrl.value.trim(),
+description:el.liveDescription.value.trim()
 },
 links:linkState,
 backgroundColor:el.backgroundColor.value,
@@ -2499,6 +2511,7 @@ el.contactLabel.addEventListener("input",markDirty)
 el.liveEnabled.addEventListener("change",markDirty)
 el.liveStatus.addEventListener("change",markDirty)
 el.liveWatchUrl.addEventListener("input",markDirty)
+el.liveDescription.addEventListener("input",markDirty)
 el.backgroundColor.addEventListener("input",markDirty)
 el.pillColor.addEventListener("input",markDirty)
 
