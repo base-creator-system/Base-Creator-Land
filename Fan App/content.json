@@ -115,5 +115,10 @@
     "buttonText": "Enter Community",
     "url": "",
     "embed": "https://organizations.minnit.chat/274505522146345/c/Main?embed&app"
+  },
+  "background": {
+    "enabled": true,
+    "type": "video",
+    "url": "./media/background-video-1781830965532.mp4"
   }
 }
