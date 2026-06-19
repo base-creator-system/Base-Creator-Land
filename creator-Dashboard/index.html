@@ -508,6 +508,29 @@ height:520px;
 <input id="backgroundColor" type="color">
 </div>
 
+<div style="margin-top:18px;border-top:1px solid #222;padding-top:14px;">
+<label>Wallpaper / Video Background</label>
+<div class="row">
+<div class="col">
+<select id="backgroundType">
+<option value="none">none</option>
+<option value="image">image wallpaper</option>
+<option value="video">video wallpaper</option>
+</select>
+</div>
+<div class="col">
+<input id="backgroundFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm,video/quicktime">
+</div>
+</div>
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Wallpaper / Video URL (legacy/manual optional)</label>
+<input id="backgroundUrl" type="text" placeholder="https://... or ./media/background.mp4">
+<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
+</div>
+</div>
+</div>
+
 <div style="margin-top:14px;">
 <label>Pill Color</label>
 <input id="pillColor" type="color">
@@ -959,6 +982,9 @@ btnResetToken:$("btnResetToken"),
 name:$("name"),
 bio:$("bio"),
 backgroundColor:$("backgroundColor"),
+backgroundType:$("backgroundType"),
+backgroundFile:$("backgroundFile"),
+backgroundUrl:$("backgroundUrl"),
 pillColor:$("pillColor"),
 appIconInput:$("appIconInput"),
 contactEmail:$("contactEmail"),
@@ -1608,6 +1634,153 @@ collections
 
 }
 
+
+function inferBackgroundType(url){
+const clean=String(url || "").toLowerCase().split("?")[0]
+
+if(
+clean.endsWith(".mp4") ||
+clean.endsWith(".webm") ||
+clean.endsWith(".mov") ||
+clean.endsWith(".m4v")
+){
+return "video"
+}
+
+if(
+clean.endsWith(".jpg") ||
+clean.endsWith(".jpeg") ||
+clean.endsWith(".png") ||
+clean.endsWith(".gif") ||
+clean.endsWith(".webp") ||
+clean.endsWith(".svg")
+){
+return "image"
+}
+
+return "none"
+}
+
+function hydrateBackground(state){
+const background=state && typeof state==="object" && state.background && typeof state.background==="object"
+? state.background
+: {}
+
+const url=String(
+background.url ||
+background.image ||
+background.video ||
+state?.backgroundImage ||
+state?.backgroundVideo ||
+""
+).trim()
+
+let type=String(background.type || "").toLowerCase().trim()
+
+if(type!=="image" && type!=="video"){
+type=inferBackgroundType(url)
+}
+
+if(background.enabled===false || !url){
+type="none"
+}
+
+el.backgroundType.value=type
+el.backgroundUrl.value=url
+el.backgroundFile.value=""
+}
+
+function buildBackground(){
+const type=String(el.backgroundType.value || "none").toLowerCase().trim()
+const url=String(el.backgroundUrl.value || "").trim()
+
+if(type!=="image" && type!=="video"){
+return{
+enabled:false,
+type:"none",
+url:""
+}
+}
+
+return{
+enabled:true,
+type,
+url
+}
+}
+
+function getSafeBackgroundExtension(file,type){
+const name=String(file?.name || "")
+const ext=(name.split(".").pop() || "").toLowerCase()
+const mime=String(file?.type || "").toLowerCase()
+
+if(type==="image"){
+if(["png","jpg","jpeg","webp","gif"].includes(ext)) return ext
+if(mime==="image/png") return "png"
+if(mime==="image/jpeg") return "jpg"
+if(mime==="image/webp") return "webp"
+if(mime==="image/gif") return "gif"
+return "png"
+}
+
+if(["mp4","webm","mov","m4v"].includes(ext)) return ext
+if(mime==="video/mp4") return "mp4"
+if(mime==="video/webm") return "webm"
+if(mime==="video/quicktime") return "mov"
+
+return "mp4"
+}
+
+async function uploadBackgroundAsset(token,file,type){
+const safeType=type==="video" ? "video" : "image"
+const safeExt=getSafeBackgroundExtension(file,safeType)
+const fileName=`background-${safeType}-${Date.now()}.${safeExt}`
+const repoPath=`Fan App/media/${fileName}`
+const localPath=`./media/${fileName}`
+const base64=await fileToBase64(file)
+
+await ghPutFile(
+token,
+repoPath,
+undefined,
+base64,
+`BASE background ${safeType} ${fileName}`
+)
+
+return localPath
+}
+
+async function buildBackgroundForPublish(token){
+const type=String(el.backgroundType.value || "none").toLowerCase().trim()
+
+if(type!=="image" && type!=="video"){
+el.backgroundFile.value=""
+el.backgroundUrl.value=""
+return{
+enabled:false,
+type:"none",
+url:""
+}
+}
+
+let url=String(el.backgroundUrl.value || "").trim()
+const file=el.backgroundFile.files[0] || null
+
+if(file){
+log(`Background ${type} upload started.`)
+url=await uploadBackgroundAsset(token,file,type)
+el.backgroundUrl.value=url
+el.backgroundFile.value=""
+log(`Background ${type} uploaded: ${url}`)
+}
+
+return{
+enabled:true,
+type,
+url
+}
+}
+
 function refreshPreview(){
 
 try{
@@ -1616,6 +1789,7 @@ name:el.name.value,
 bio:el.bio.value,
 links:linkState,
 backgroundColor:el.backgroundColor.value,
+background:buildBackground(),
 pillColor:el.pillColor.value,
 contactEmail:el.contactEmail.value,
 contactLabel:el.contactLabel.value,
@@ -2183,6 +2357,7 @@ el.liveStatus.value=(state.live?.status==="live") ? "live" : "offline"
 el.liveWatchUrl.value=state.live?.watch_url||""
 el.liveDescription.value=state.live?.description||""
 el.backgroundColor.value=state.backgroundColor||"#000000"
+hydrateBackground(state)
 el.pillColor.value=state.pillColor||"#caa300"
 linkState=Array.isArray(state.links)?state.links:[]
 hydrateMediaGateway(state)
@@ -2365,6 +2540,7 @@ description:el.liveDescription.value.trim()
 },
 links:linkState,
 backgroundColor:el.backgroundColor.value,
+background:await buildBackgroundForPublish(token),
 pillColor:el.pillColor.value
 }
 
@@ -2513,6 +2689,9 @@ el.liveStatus.addEventListener("change",markDirty)
 el.liveWatchUrl.addEventListener("input",markDirty)
 el.liveDescription.addEventListener("input",markDirty)
 el.backgroundColor.addEventListener("input",markDirty)
+el.backgroundType.addEventListener("change",markDirty)
+el.backgroundFile.addEventListener("change",markDirty)
+el.backgroundUrl.addEventListener("input",markDirty)
 el.pillColor.addEventListener("input",markDirty)
 
 el.supporterType.addEventListener("change",()=>{supportersTouched=true;markDirty()})
@@ -2605,6 +2784,7 @@ renderLinks()
 renderMediaList()
 renderSupporters()
 hydrateCommunity({})
+hydrateBackground({})
 communityHydrated=false
 communityTouched=false
 setPublishBusy(false)
