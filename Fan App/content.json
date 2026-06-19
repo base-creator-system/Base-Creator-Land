@@ -122,8 +122,8 @@
     "url": "./media/background-video-1781830965532.mp4"
   },
   "chime": {
-    "enabled": false,
-    "url": "",
+    "enabled": true,
+    "url": "./media/chime-1781859570791.wav",
     "volume": 0.65
   }
 }
