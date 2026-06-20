@@ -244,12 +244,6 @@ font-size:13px;
 display:none!important
 }
 
-body.collectionOpen .wrap,
-body.mediaRuntimeOpen .wrap,
-body.mediaRuntimeOpen .collectionView{
-visibility:hidden;
-}
-
 .btn{
 display:inline-flex;
 align-items:center;
@@ -337,11 +331,11 @@ font-size:12px;
 }
 
 .pill,.media-btn{
-height:32px;
+height:34px;
 display:inline-flex;
 align-items:center;
 justify-content:center;
-padding:0 12px;
+padding:0 16px;
 border-radius:999px;
 background:var(--pillColor);
 color:#fff;
@@ -353,10 +347,11 @@ cursor:pointer;
 }
 
 .media-btn{
+height:30px;
+padding:0 12px;
+font-size:12px;
 margin-left:auto;
 flex:0 0 auto;
-min-width:58px;
-width:auto;
 }
 
 .media-locked{
@@ -726,7 +721,6 @@ color:#fff;
 font-weight:700;
 font-size:12px;
 flex:0 0 auto;
-min-width:58px;
 }
 
 /* COLLECTION VIEW */
@@ -734,11 +728,18 @@ min-width:58px;
 .collectionView{
 position:fixed;
 inset:0;
-background:#000;
+background:transparent;
 z-index:9998;
 display:none;
 flex-direction:column;
 overflow:hidden;
+}
+
+body.collectionOpen .wrap,
+body.collectionOpen .tabs,
+body.mediaRuntimeOpen .wrap,
+body.mediaRuntimeOpen .tabs{
+visibility:hidden;
 }
 
 .collectionView.active{
@@ -752,7 +753,8 @@ align-items:center;
 justify-content:space-between;
 padding:0 16px;
 border-bottom:1px solid rgba(255,255,255,.08);
-background:#000;
+background:rgba(0,0,0,.72);
+backdrop-filter:blur(12px);
 flex:0 0 auto;
 }
 
@@ -845,7 +847,7 @@ text-overflow:ellipsis;
 .mediaRuntime{
 position:fixed;
 inset:0;
-background:#000;
+background:transparent;
 z-index:9999;
 display:none;
 flex-direction:column;
@@ -862,7 +864,8 @@ align-items:center;
 justify-content:space-between;
 padding:0 16px;
 border-bottom:1px solid rgba(255,255,255,.08);
-background:#000;
+background:rgba(0,0,0,.72);
+backdrop-filter:blur(12px);
 flex:0 0 auto;
 }
 
@@ -893,29 +896,21 @@ display:flex;
 align-items:center;
 justify-content:center;
 overflow:hidden;
-background:#000;
+background:transparent;
 position:relative;
 }
 
 .mediaRuntime video,
-.mediaRuntime iframe,
-.mediaRuntime img{
+.mediaRuntime iframe{
 width:100%;
 height:100%;
 border:none;
-background:#000;
+background:transparent;
 }
 
 .mediaRuntime video{
 object-fit:contain;
 }
-.mediaRuntime img{
-max-width:100%;
-max-height:100%;
-object-fit:contain;
-display:block;
-}
-
 
 .mediaRuntime iframe{
 min-height:100%;
@@ -1695,15 +1690,6 @@ if(!url) return null
 
 const lower=url.toLowerCase()
 
-if(isImageAsset(url)){
-
-return{
-type:"image",
-src:url
-}
-
-}
-
 if(
 lower.endsWith(".mp4") ||
 lower.endsWith(".webm") ||
@@ -1766,9 +1752,9 @@ const mediaRuntimeTitle=document.getElementById("mediaRuntimeTitle")
 function closeMediaRuntime(){
 
 mediaRuntime.classList.remove("active")
-document.body.classList.remove("mediaRuntimeOpen")
 mediaRuntimeBody.innerHTML=""
 
+document.body.classList.remove("mediaRuntimeOpen")
 document.body.style.overflow=""
 
 }
@@ -1799,8 +1785,8 @@ video.src=config.src
 
 mediaRuntimeBody.appendChild(video)
 
-mediaRuntime.classList.add("active")
 document.body.classList.add("mediaRuntimeOpen")
+mediaRuntime.classList.add("active")
 
 return
 
@@ -1821,8 +1807,8 @@ iframe.referrerPolicy="strict-origin-when-cross-origin"
 
 mediaRuntimeBody.appendChild(iframe)
 
-mediaRuntime.classList.add("active")
 document.body.classList.add("mediaRuntimeOpen")
+mediaRuntime.classList.add("active")
 
 return
 
@@ -1844,8 +1830,8 @@ const collectionBack=document.getElementById("collectionBack")
 collectionBack.onclick=()=>{
 
 collectionView.classList.remove("active")
-document.body.classList.remove("collectionOpen")
 
+document.body.classList.remove("collectionOpen")
 document.body.style.overflow=""
 
 }
@@ -1917,7 +1903,7 @@ const safe=safeURL(item.url)
 
 if(!safe) return
 
-if(isVideoUrl(safe) || isImageAsset(safe)){
+if(isVideoUrl(safe)){
 
 openMediaRuntime(item)
 
@@ -1946,8 +1932,8 @@ collectionBody.appendChild(card)
 
 })
 
-collectionView.classList.add("active")
 document.body.classList.add("collectionOpen")
+collectionView.classList.add("active")
 
 }
 
