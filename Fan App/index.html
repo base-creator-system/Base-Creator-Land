@@ -1088,6 +1088,8 @@ const POLL_INTERVAL=15000
 let previewMode=false
 let activeCommunityEmbed=""
 let activeBackgroundAsset=""
+let activeBackgroundVideo=null
+let backgroundVideoRecoveryTimer=null
 let activeChimeAsset=""
 let chimeAudio=null
 let chimePlayed=false
@@ -1416,6 +1418,95 @@ src:src
 
 }
 
+
+function stopBackgroundVideoRecovery(){
+
+if(backgroundVideoRecoveryTimer){
+clearInterval(backgroundVideoRecoveryTimer);
+backgroundVideoRecoveryTimer=null;
+}
+
+activeBackgroundVideo=null;
+
+}
+
+function resumeBackgroundVideo(){
+
+const video=activeBackgroundVideo;
+
+if(!video) return;
+
+if(document.hidden) return;
+
+try{
+
+video.muted=true;
+video.defaultMuted=true;
+video.setAttribute("muted","");
+video.setAttribute("playsinline","");
+video.setAttribute("webkit-playsinline","");
+
+const playPromise=video.play();
+
+if(playPromise && typeof playPromise.catch==="function"){
+playPromise.catch(()=>{});
+}
+
+}catch(e){}
+
+}
+
+function startBackgroundVideoRecovery(video){
+
+stopBackgroundVideoRecovery();
+
+activeBackgroundVideo=video;
+
+video.addEventListener("pause",()=>{
+setTimeout(resumeBackgroundVideo,250);
+});
+
+video.addEventListener("stalled",()=>{
+setTimeout(resumeBackgroundVideo,250);
+});
+
+video.addEventListener("suspend",()=>{
+setTimeout(resumeBackgroundVideo,250);
+});
+
+video.addEventListener("ended",()=>{
+try{
+video.currentTime=0;
+}catch(e){}
+setTimeout(resumeBackgroundVideo,250);
+});
+
+backgroundVideoRecoveryTimer=setInterval(()=>{
+
+if(!activeBackgroundVideo || document.hidden) return;
+
+if(activeBackgroundVideo.paused || activeBackgroundVideo.readyState < 2){
+resumeBackgroundVideo();
+}
+
+},3000);
+
+resumeBackgroundVideo();
+
+}
+
+document.addEventListener("visibilitychange",()=>{
+
+if(!document.hidden){
+setTimeout(resumeBackgroundVideo,250);
+}
+
+});
+
+window.addEventListener("pageshow",()=>{
+setTimeout(resumeBackgroundVideo,250);
+});
+
 function applyBackground(d){
 
 const appBackground=document.getElementById("appBackground");
@@ -1429,6 +1520,7 @@ document.body.style.background="var(--bg)";
 const config=getBackgroundConfig(d);
 
 if(!config){
+stopBackgroundVideoRecovery();
 activeBackgroundAsset="";
 appBackground.innerHTML="";
 appBackground.classList.remove("active");
@@ -1446,6 +1538,8 @@ activeBackgroundAsset=assetKey;
 appBackground.innerHTML="";
 
 if(config.type==="image"){
+
+stopBackgroundVideoRecovery();
 
 const img=document.createElement("img");
 img.src=config.src;
@@ -1465,14 +1559,22 @@ video.src=config.src;
 video.autoplay=true;
 video.loop=true;
 video.muted=true;
+video.defaultMuted=true;
 video.playsInline=true;
+video.controls=false;
+video.disablePictureInPicture=true;
+video.setAttribute("autoplay","");
+video.setAttribute("loop","");
+video.setAttribute("muted","");
+video.setAttribute("playsinline","");
 video.setAttribute("webkit-playsinline","");
+video.setAttribute("aria-hidden","true");
 video.preload="auto";
 
 appBackground.appendChild(video);
 appBackground.classList.add("active");
 
-video.play().catch(()=>{});
+startBackgroundVideoRecovery(video);
 
 }
 
