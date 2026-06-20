@@ -244,6 +244,12 @@ font-size:13px;
 display:none!important
 }
 
+body.collectionOpen .wrap,
+body.mediaRuntimeOpen .wrap,
+body.mediaRuntimeOpen .collectionView{
+visibility:hidden;
+}
+
 .btn{
 display:inline-flex;
 align-items:center;
@@ -331,11 +337,11 @@ font-size:12px;
 }
 
 .pill,.media-btn{
-height:34px;
+height:32px;
 display:inline-flex;
 align-items:center;
 justify-content:center;
-padding:0 16px;
+padding:0 12px;
 border-radius:999px;
 background:var(--pillColor);
 color:#fff;
@@ -349,6 +355,8 @@ cursor:pointer;
 .media-btn{
 margin-left:auto;
 flex:0 0 auto;
+min-width:58px;
+width:auto;
 }
 
 .media-locked{
@@ -707,8 +715,8 @@ margin-top:4px;
 }
 
 .collectionArrow{
-height:38px;
-padding:0 18px;
+height:32px;
+padding:0 12px;
 border-radius:999px;
 display:flex;
 align-items:center;
@@ -716,8 +724,9 @@ justify-content:center;
 background:var(--pillColor);
 color:#fff;
 font-weight:700;
-font-size:13px;
+font-size:12px;
 flex:0 0 auto;
+min-width:58px;
 }
 
 /* COLLECTION VIEW */
@@ -725,7 +734,7 @@ flex:0 0 auto;
 .collectionView{
 position:fixed;
 inset:0;
-background:transparent;
+background:#000;
 z-index:9998;
 display:none;
 flex-direction:column;
@@ -743,8 +752,7 @@ align-items:center;
 justify-content:space-between;
 padding:0 16px;
 border-bottom:1px solid rgba(255,255,255,.08);
-background:rgba(0,0,0,.55);
-backdrop-filter:blur(12px);
+background:#000;
 flex:0 0 auto;
 }
 
@@ -837,7 +845,7 @@ text-overflow:ellipsis;
 .mediaRuntime{
 position:fixed;
 inset:0;
-background:transparent;
+background:#000;
 z-index:9999;
 display:none;
 flex-direction:column;
@@ -854,8 +862,7 @@ align-items:center;
 justify-content:space-between;
 padding:0 16px;
 border-bottom:1px solid rgba(255,255,255,.08);
-background:rgba(0,0,0,.55);
-backdrop-filter:blur(12px);
+background:#000;
 flex:0 0 auto;
 }
 
@@ -886,21 +893,29 @@ display:flex;
 align-items:center;
 justify-content:center;
 overflow:hidden;
-background:transparent;
+background:#000;
 position:relative;
 }
 
 .mediaRuntime video,
-.mediaRuntime iframe{
+.mediaRuntime iframe,
+.mediaRuntime img{
 width:100%;
 height:100%;
 border:none;
-background:transparent;
+background:#000;
 }
 
 .mediaRuntime video{
 object-fit:contain;
 }
+.mediaRuntime img{
+max-width:100%;
+max-height:100%;
+object-fit:contain;
+display:block;
+}
+
 
 .mediaRuntime iframe{
 min-height:100%;
@@ -1680,6 +1695,15 @@ if(!url) return null
 
 const lower=url.toLowerCase()
 
+if(isImageAsset(url)){
+
+return{
+type:"image",
+src:url
+}
+
+}
+
 if(
 lower.endsWith(".mp4") ||
 lower.endsWith(".webm") ||
@@ -1742,6 +1766,7 @@ const mediaRuntimeTitle=document.getElementById("mediaRuntimeTitle")
 function closeMediaRuntime(){
 
 mediaRuntime.classList.remove("active")
+document.body.classList.remove("mediaRuntimeOpen")
 mediaRuntimeBody.innerHTML=""
 
 document.body.style.overflow=""
@@ -1775,6 +1800,7 @@ video.src=config.src
 mediaRuntimeBody.appendChild(video)
 
 mediaRuntime.classList.add("active")
+document.body.classList.add("mediaRuntimeOpen")
 
 return
 
@@ -1796,6 +1822,7 @@ iframe.referrerPolicy="strict-origin-when-cross-origin"
 mediaRuntimeBody.appendChild(iframe)
 
 mediaRuntime.classList.add("active")
+document.body.classList.add("mediaRuntimeOpen")
 
 return
 
@@ -1817,6 +1844,7 @@ const collectionBack=document.getElementById("collectionBack")
 collectionBack.onclick=()=>{
 
 collectionView.classList.remove("active")
+document.body.classList.remove("collectionOpen")
 
 document.body.style.overflow=""
 
@@ -1889,7 +1917,7 @@ const safe=safeURL(item.url)
 
 if(!safe) return
 
-if(isVideoUrl(safe)){
+if(isVideoUrl(safe) || isImageAsset(safe)){
 
 openMediaRuntime(item)
 
@@ -1919,6 +1947,7 @@ collectionBody.appendChild(card)
 })
 
 collectionView.classList.add("active")
+document.body.classList.add("collectionOpen")
 
 }
 
