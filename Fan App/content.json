@@ -118,8 +118,8 @@
   },
   "background": {
     "enabled": true,
-    "type": "video",
-    "url": "./media/background-video-1781964540013.mp4"
+    "type": "image",
+    "url": "./media/background-image-1781993368292.jpeg"
   },
   "chime": {
     "enabled": true,
