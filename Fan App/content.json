@@ -117,13 +117,13 @@
     "embed": "https://organizations.minnit.chat/274505522146345/c/Main?embed&app"
   },
   "background": {
-    "enabled": true,
-    "type": "image",
-    "url": "./media/background-image-1782052322828.png"
+    "enabled": false,
+    "type": "none",
+    "url": ""
   },
   "chime": {
-    "enabled": true,
-    "url": "./media/chime-1781859570791.wav",
+    "enabled": false,
+    "url": "",
     "volume": 0.65
   }
 }
