@@ -117,9 +117,9 @@
     "embed": "https://organizations.minnit.chat/274505522146345/c/Main?embed&app"
   },
   "background": {
-    "enabled": true,
-    "type": "video",
-    "url": "./media/background-video-1782044527943.mov"
+    "enabled": false,
+    "type": "none",
+    "url": ""
   },
   "chime": {
     "enabled": true,
