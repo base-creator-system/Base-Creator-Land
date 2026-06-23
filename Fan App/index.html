@@ -407,19 +407,20 @@ line-height:1.4;
 }
 
 .liveDescriptionToggle{
-display:inline-flex;
+display:flex;
 align-items:center;
 justify-content:center;
-width:100%;
-height:34px;
+width:max-content;
+min-height:26px;
+padding:0 12px;
 border-radius:999px;
 border:1px solid var(--stroke);
-background:var(--pillColor);
-color:#fff;
+background:rgba(255,255,255,0.05);
+color:var(--text);
 font-weight:800;
 font-size:12px;
 cursor:pointer;
-margin-top:12px;
+margin:8px auto 0;
 -webkit-tap-highlight-color:transparent;
 }
 
@@ -1197,7 +1198,7 @@ allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
 allowfullscreen="true">
 </iframe>
 </div>
-<button id="liveDescriptionToggle" class="liveDescriptionToggle hidden" type="button">Expand Description</button>
+<button id="liveDescriptionToggle" class="liveDescriptionToggle hidden" type="button">▼ Description</button>
 <p class="liveDescription hidden" id="liveDescription"></p>
 </section>
 
@@ -2963,11 +2964,11 @@ liveFrame.removeAttribute("src");
 if(String(d.live.description || "").trim()){
 liveDescription.textContent=d.live.description;
 liveDescriptionToggle.classList.remove("hidden");
-liveDescriptionToggle.textContent=liveDescriptionExpanded ? "Collapse Description" : "Expand Description";
+liveDescriptionToggle.textContent=liveDescriptionExpanded ? "▲ Description" : "▼ Description";
 liveDescription.classList.toggle("hidden",!liveDescriptionExpanded);
 liveDescriptionToggle.onclick=()=>{
 liveDescriptionExpanded=!liveDescriptionExpanded;
-liveDescriptionToggle.textContent=liveDescriptionExpanded ? "Collapse Description" : "Expand Description";
+liveDescriptionToggle.textContent=liveDescriptionExpanded ? "▲ Description" : "▼ Description";
 liveDescription.classList.toggle("hidden",!liveDescriptionExpanded);
 };
 }else{
