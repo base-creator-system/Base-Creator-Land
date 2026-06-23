@@ -85,7 +85,14 @@
           }
         ]
       }
-    ]
+    ],
+    "presentation": {
+      "style": "video",
+      "color": "#050505",
+      "url": "./media/media-card-video-1782221130914.mp4",
+      "animation": "float"
+    },
+    "externalMedia": []
   },
   "pillColor": "#e32400",
   "live": {
@@ -125,5 +132,11 @@
     "enabled": true,
     "url": "./media/chime-1782053661232.mp3",
     "volume": 0.45
+  },
+  "heroMedia": {
+    "enabled": true,
+    "type": "video",
+    "url": "./media/hero-video-1782221117463.mp4",
+    "animation": "float"
   }
 }
