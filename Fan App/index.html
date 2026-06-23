@@ -1391,14 +1391,41 @@ const hero=document.querySelector(".hero");
 
 if(!hero) return;
 
+const heroData=d.hero || d.heroMedia || {};
+const heroDisabled=heroData.enabled===false;
 const config=getHeroConfig(d);
 
-if(!config || activeView==="live"){
+if(activeView==="live" || heroDisabled){
 stopHeroVideo();
 activeHeroAsset="";
 hero.innerHTML="";
 hero.classList.add("hidden");
 return;
+}
+
+if(!config){
+
+const fallbackSrc="icons/icon-512-v37.png?v=1782058053694";
+const assetKey="fallback|" + fallbackSrc;
+
+stopHeroVideo();
+hero.classList.remove("hidden");
+
+if(assetKey===activeHeroAsset){
+return;
+}
+
+activeHeroAsset=assetKey;
+hero.innerHTML="";
+
+const img=document.createElement("img");
+img.src=fallbackSrc;
+img.alt="";
+
+hero.appendChild(img);
+
+return;
+
 }
 
 const assetKey=config.type + "|" + config.src;
