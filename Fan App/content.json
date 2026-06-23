@@ -90,16 +90,16 @@
       "style": "color",
       "color": "#d9ec37",
       "url": "./media/media-card-video-1782221130914.mp4",
-      "animation": "none"
+      "animation": "pulse"
     },
     "externalMedia": [
       {
-        "id": "external-1782226397147-cdf8e2756c55e8",
+        "id": "external-1782248587773-6788fb3e47e0e8",
         "provider": "custom",
-        "name": "external test",
+        "name": "TEsTing",
         "url": "",
-        "embed": "https://picflow.com/embed/main.js",
-        "thumbnail": "./media/thumb-external-1782226397147-cdf8e2756c55e8-1782226413615.png",
+        "embed": "<picflow-gallery id=\"gal_CjkXXVJPUq15Ll6R\" tenant=\"tnt_wF010uQK9a411fbe\" lightbox=\"#000000E6\" no-padding=\"true\" no-background=\"true\" show-cover=\"true\"></picflow-gallery>",
+        "thumbnail": "",
         "buttonText": "Testing",
         "enabled": true
       }
