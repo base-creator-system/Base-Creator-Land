@@ -92,7 +92,18 @@
       "url": "./media/media-card-video-1782221130914.mp4",
       "animation": "float"
     },
-    "externalMedia": []
+    "externalMedia": [
+      {
+        "id": "external-1782226397147-cdf8e2756c55e8",
+        "provider": "custom",
+        "name": "external test",
+        "url": "",
+        "embed": "https://picflow.com/embed/main.js",
+        "thumbnail": "./media/thumb-external-1782226397147-cdf8e2756c55e8-1782226413615.png",
+        "buttonText": "Testing",
+        "enabled": true
+      }
+    ]
   },
   "pillColor": "#e32400",
   "live": {
