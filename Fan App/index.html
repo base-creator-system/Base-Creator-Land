@@ -2289,6 +2289,26 @@ const source=firstMediaPresentationSource.apply(null,arguments);
 
 if(!source || source.enabled===false) return null;
 
+const style=String(
+source.style ||
+source.cardStyle ||
+source.type ||
+source.kind ||
+source.mode ||
+source.value ||
+""
+).toLowerCase().trim();
+
+if(
+style==="default" ||
+style==="base" ||
+style==="none" ||
+style==="off" ||
+style==="transparent"
+){
+return null;
+}
+
 const rawColor=String(
 source.color ||
 source.cardColor ||
@@ -2316,14 +2336,6 @@ source.backgroundVideo ||
 
 const video=safeAssetURL(rawVideo);
 const wallpaper=safeAssetURL(rawWallpaper);
-
-const style=String(
-source.style ||
-source.cardStyle ||
-source.type ||
-source.kind ||
-""
-).toLowerCase().trim();
 
 if(video && (style==="video" || isVideoAsset(video) || !rawColor && !wallpaper)){
 return{type:"video",src:video,color:rawColor};
@@ -2358,6 +2370,7 @@ layer.remove();
 });
 
 card.style.background="";
+card.classList.remove("cardPresented","mediaPresented");
 
 if(!config){
 return;
