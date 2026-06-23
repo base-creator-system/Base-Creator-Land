@@ -742,6 +742,11 @@ body.mediaRuntimeOpen .tabs{
 visibility:hidden;
 }
 
+body.mediaRuntimeOpen .collectionView{
+visibility:hidden;
+pointer-events:none;
+}
+
 .collectionView.active{
 display:flex;
 }
@@ -798,6 +803,12 @@ gap:10px;
 width:100%;
 min-width:0;
 overflow:hidden;
+cursor:pointer;
+}
+
+.media-card.selected{
+background:rgba(255,255,255,0.10);
+border-color:rgba(255,255,255,0.28);
 }
 
 .media-thumb{
@@ -1700,29 +1711,11 @@ function getEmbedConfig(url){
 if(!url) return null
 
 const lower=url.toLowerCase()
-const clean=lower.split("?")[0]
 
 if(
-clean.endsWith(".jpg") ||
-clean.endsWith(".jpeg") ||
-clean.endsWith(".png") ||
-clean.endsWith(".gif") ||
-clean.endsWith(".webp") ||
-clean.endsWith(".svg")
-){
-
-return{
-type:"image",
-src:url
-}
-
-}
-
-if(
-clean.endsWith(".mp4") ||
-clean.endsWith(".webm") ||
-clean.endsWith(".mov") ||
-clean.endsWith(".m4v") ||
+lower.endsWith(".mp4") ||
+lower.endsWith(".webm") ||
+lower.endsWith(".mov") ||
 url.includes("./media/")
 ){
 
@@ -1784,7 +1777,12 @@ mediaRuntime.classList.remove("active")
 mediaRuntimeBody.innerHTML=""
 
 document.body.classList.remove("mediaRuntimeOpen")
+
+if(!collectionView.classList.contains("active")){
 document.body.style.overflow=""
+}else{
+document.body.style.overflow="hidden"
+}
 
 }
 
@@ -1909,6 +1907,13 @@ document.body.style.overflow="hidden"
 const card=document.createElement("div")
 card.className="media-card"
 
+card.onclick=()=>{
+collectionBody.querySelectorAll(".media-card.selected").forEach(activeCard=>{
+activeCard.classList.remove("selected")
+})
+card.classList.add("selected")
+}
+
 const thumb=document.createElement("div")
 thumb.className="media-thumb"
 
@@ -1953,9 +1958,14 @@ if(item.url || item.embed || item.embedUrl || item.embedURL || item.embed_url){
 const btn=document.createElement("button")
 
 btn.className="media-btn"
-btn.textContent=item.buttonText || "Open"
+btn.textContent=item.buttonText || "View"
 
-btn.onclick=()=>{
+btn.onclick=(event)=>{
+event.stopPropagation()
+collectionBody.querySelectorAll(".media-card.selected").forEach(activeCard=>{
+activeCard.classList.remove("selected")
+})
+card.classList.add("selected")
 openMediaRuntime(item)
 }
 
