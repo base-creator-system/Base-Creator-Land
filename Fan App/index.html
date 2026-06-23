@@ -449,8 +449,8 @@ width:100%;
 height:30px;
 border-radius:999px;
 border:1px solid var(--stroke);
-background:rgba(255,255,255,0.06);
-color:var(--text);
+background:var(--pillColor);
+color:#fff;
 font-weight:800;
 font-size:12px;
 cursor:pointer;
@@ -730,415 +730,6 @@ flex:0 0 auto;
 }
 
 
-function firstMediaPresentationSource(){
-
-for(let i=0;i<arguments.length;i++){
-const obj=arguments[i];
-if(!obj || typeof obj!=="object") continue;
-
-const direct=obj.mediaPresentation || obj.cardPresentation || obj.presentation || obj.cardStyle || obj.mediaCard || obj.mediaCardPresentation || null;
-
-if(direct && typeof direct==="object") return direct;
-
-if(
-obj.mediaCardColor || obj.cardColor || obj.color ||
-obj.mediaCardWallpaper || obj.cardWallpaper || obj.wallpaper || obj.backgroundImage || obj.image ||
-obj.mediaCardVideo || obj.cardVideo || obj.video || obj.backgroundVideo
-){
-return obj;
-}
-
-}
-
-return null;
-
-}
-
-function getMediaPresentationConfig(){
-
-const source=firstMediaPresentationSource.apply(null,arguments);
-
-if(!source || source.enabled===false) return null;
-
-const rawColor=String(
-source.color ||
-source.cardColor ||
-source.mediaCardColor ||
-source.backgroundColor ||
-""
-).trim();
-
-const rawWallpaper=String(
-source.wallpaper ||
-source.cardWallpaper ||
-source.mediaCardWallpaper ||
-source.backgroundImage ||
-source.image ||
-""
-).trim();
-
-const rawVideo=String(
-source.video ||
-source.cardVideo ||
-source.mediaCardVideo ||
-source.backgroundVideo ||
-""
-).trim();
-
-const video=safeAssetURL(rawVideo);
-const wallpaper=safeAssetURL(rawWallpaper);
-
-const style=String(
-source.style ||
-source.cardStyle ||
-source.type ||
-source.kind ||
-""
-).toLowerCase().trim();
-
-if(video && (style==="video" || isVideoAsset(video) || !rawColor && !wallpaper)){
-return{type:"video",src:video,color:rawColor};
-}
-
-if(wallpaper && (style==="wallpaper" || style==="image" || isImageAsset(wallpaper) || !rawColor)){
-return{type:"wallpaper",src:wallpaper,color:rawColor};
-}
-
-if(rawColor){
-return{type:"color",color:rawColor};
-}
-
-if(video){
-return{type:"video",src:video,color:rawColor};
-}
-
-if(wallpaper){
-return{type:"wallpaper",src:wallpaper,color:rawColor};
-}
-
-return null;
-
-}
-
-function applyMediaPresentation(card,config){
-
-if(!card || !config) return;
-
-card.classList.add("mediaPresented");
-
-if(config.color){
-card.style.background=config.color;
-}
-
-if(config.type==="color"){
-return;
-}
-
-if(config.type==="wallpaper" && config.src){
-
-const layer=document.createElement("div");
-layer.className="mediaPresentationLayer";
-
-const img=document.createElement("img");
-img.src=config.src;
-img.alt="";
-
-layer.appendChild(img);
-card.insertBefore(layer,card.firstChild);
-
-return;
-
-}
-
-if(config.type==="video" && config.src){
-
-const layer=document.createElement("div");
-layer.className="mediaPresentationLayer";
-
-const video=document.createElement("video");
-video.src=config.src;
-video.autoplay=true;
-video.loop=true;
-video.muted=true;
-video.defaultMuted=true;
-video.playsInline=true;
-video.controls=false;
-video.disablePictureInPicture=true;
-video.setAttribute("autoplay","");
-video.setAttribute("loop","");
-video.setAttribute("muted","");
-video.setAttribute("playsinline","");
-video.setAttribute("webkit-playsinline","");
-video.setAttribute("aria-hidden","true");
-video.preload="metadata";
-
-layer.appendChild(video);
-card.insertBefore(layer,card.firstChild);
-
-try{
-const playPromise=video.play();
-if(playPromise && typeof playPromise.catch==="function"){
-playPromise.catch(()=>{});
-}
-}catch(e){}
-
-}
-
-}
-
-function normalizeExternalMediaList(d){
-
-const gateway=d.mediaGateway || {};
-const possible=[
-
-gateway.externalMedia,
-gateway.external,
-gateway.externalItems,
-gateway.externalMediaItems,
-gateway.providers,
-gateway.galleries,
-d.externalMedia,
-d.externalMediaItems,
-d.externalGalleries,
-d.mediaExternal
-
-];
-
-let output=[];
-
-possible.forEach(value=>{
-
-if(!value) return;
-
-if(Array.isArray(value)){
-output=output.concat(value);
-return;
-}
-
-if(Array.isArray(value.items)){
-output=output.concat(value.items);
-return;
-}
-
-if(Array.isArray(value.collections)){
-output=output.concat(value.collections);
-return;
-}
-
-if(typeof value==="object"){
-output.push(value);
-}
-
-});
-
-return output.filter(item=>{
-if(!item || item.enabled===false) return false;
-return Boolean(
-String(item.name||item.title||item.provider||"").trim() ||
-String(item.url||item.embed||item.embedUrl||item.embedURL||item.embed_url||"").trim()
-);
-});
-
-}
-
-function ensurePicflowScript(){
-
-if(window.picflow) return;
-
-window.picflow=true;
-
-const script=document.createElement("script");
-script.src="https://picflow.com/embed/main.js";
-script.type="module";
-script.defer=true;
-document.head.appendChild(script);
-
-}
-
-function renderPicflowEmbed(mount,embedValue){
-
-const idMatch=embedValue.match(/id=["']([^"']+)["']/i);
-const tenantMatch=embedValue.match(/tenant=["']([^"']+)["']/i);
-const lightboxMatch=embedValue.match(/lightbox=["']([^"']+)["']/i);
-
-if(idMatch && tenantMatch){
-ensurePicflowScript();
-
-const gallery=document.createElement("picflow-gallery");
-gallery.setAttribute("id",idMatch[1]);
-gallery.setAttribute("tenant",tenantMatch[1]);
-gallery.setAttribute("no-padding","true");
-gallery.setAttribute("no-background","true");
-gallery.setAttribute("show-cover","true");
-
-if(lightboxMatch){
-gallery.setAttribute("lightbox",lightboxMatch[1]);
-}
-
-mount.appendChild(gallery);
-return true;
-}
-
-if(embedValue.includes("picflow.com/embed/main.js") || embedValue.includes("<picflow-gallery")){
-mount.innerHTML=embedValue;
-ensurePicflowScript();
-return true;
-}
-
-return false;
-
-}
-
-function renderExternalEmbed(mount,item){
-
-mount.innerHTML="";
-
-const embedValue=String(
-item.embed ||
-item.embedUrl ||
-item.embedURL ||
-item.embed_url ||
-""
-).trim();
-
-if(embedValue){
-
-if(renderPicflowEmbed(mount,embedValue)){
-return;
-}
-
-const safeEmbed=safeURL(embedValue);
-
-if(safeEmbed){
-const iframe=document.createElement("iframe");
-iframe.src=safeEmbed;
-iframe.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen";
-iframe.allowFullscreen=true;
-iframe.referrerPolicy="strict-origin-when-cross-origin";
-mount.appendChild(iframe);
-return;
-}
-
-}
-
-const rawUrl=String(item.url || "").trim();
-const safe=safeURL(rawUrl);
-
-if(safe){
-const iframe=document.createElement("iframe");
-iframe.src=safe;
-iframe.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen";
-iframe.allowFullscreen=true;
-iframe.referrerPolicy="strict-origin-when-cross-origin";
-mount.appendChild(iframe);
-}
-
-}
-
-function createMediaSectionLabel(text){
-
-const label=document.createElement("div");
-label.className="mediaSectionLabel";
-label.textContent=text;
-return label;
-
-}
-
-function renderExternalMedia(container,d){
-
-const items=normalizeExternalMediaList(d);
-
-if(items.length===0) return;
-
-container.appendChild(createMediaSectionLabel("Gallery / Archive"));
-
-items.forEach(item=>{
-
-const card=document.createElement("div");
-card.className="externalMediaCard";
-
-const presentation=getMediaPresentationConfig(item,d.mediaGateway || {},d);
-applyMediaPresentation(card,presentation);
-
-const top=document.createElement("div");
-top.className="externalMediaTop";
-
-const thumb=document.createElement("div");
-thumb.className="externalMediaThumb";
-
-if(item.thumbnail || item.thumb || item.image){
-const img=document.createElement("img");
-img.src=normalizeURL(item.thumbnail || item.thumb || item.image);
-thumb.appendChild(img);
-}else{
-thumb.textContent="↗";
-}
-
-const body=document.createElement("div");
-body.className="externalMediaBody";
-
-const provider=document.createElement("div");
-provider.className="externalMediaProvider";
-provider.textContent=item.provider || "External Media";
-
-const title=document.createElement("div");
-title.className="externalMediaTitle";
-title.textContent=item.name || item.title || item.provider || "Gallery";
-
-body.appendChild(provider);
-body.appendChild(title);
-
-if(item.description || item.desc){
-const desc=document.createElement("div");
-desc.className="externalMediaDescription";
-desc.textContent=item.description || item.desc;
-body.appendChild(desc);
-}
-
-const btn=document.createElement("button");
-btn.className="externalMediaExpandBtn";
-btn.type="button";
-btn.textContent=item.buttonText || "Expand";
-
-const mount=document.createElement("div");
-mount.className="externalMediaEmbedMount";
-
-let rendered=false;
-let expanded=false;
-
-btn.onclick=()=>{
-expanded=!expanded;
-mount.classList.toggle("expanded",expanded);
-btn.textContent=expanded ? "Collapse" : (item.buttonText || "Expand");
-
-if(expanded && !rendered){
-renderExternalEmbed(mount,item);
-rendered=true;
-}
-};
-
-const hasEmbed=Boolean(item.embed || item.embedUrl || item.embedURL || item.embed_url);
-const hasUrl=Boolean(safeURL(String(item.url || "").trim()));
-
-if(!hasEmbed && hasUrl){
-btn.textContent=item.buttonText || "Open";
-btn.onclick=()=>{
-window.open(safeURL(String(item.url || "").trim()),"_blank","noopener");
-};
-}
-
-top.appendChild(thumb);
-top.appendChild(body);
-top.appendChild(btn);
-
-card.appendChild(top);
-card.appendChild(mount);
-
-container.appendChild(card);
-
-});
-
-}
 
 /* COLLECTION VIEW */
 
@@ -1273,17 +864,25 @@ text-overflow:ellipsis;
 
 /* MEDIA PRESENTATION */
 
+.card.cardPresented,
+.supportersCard.cardPresented,
+.supporterCard.cardPresented,
+.row.cardPresented,
 .collectionCard.mediaPresented,
 .media-card.mediaPresented,
-.externalMediaCard{
+.externalMediaCard.mediaPresented{
 position:relative;
 isolation:isolate;
 overflow:hidden;
 }
 
+.card.cardPresented > *:not(.mediaPresentationLayer),
+.supportersCard.cardPresented > *:not(.mediaPresentationLayer),
+.supporterCard.cardPresented > *:not(.mediaPresentationLayer),
+.row.cardPresented > *:not(.mediaPresentationLayer),
 .collectionCard.mediaPresented > *:not(.mediaPresentationLayer),
 .media-card.mediaPresented > *:not(.mediaPresentationLayer),
-.externalMediaCard > *:not(.mediaPresentationLayer){
+.externalMediaCard.mediaPresented > *:not(.mediaPresentationLayer){
 position:relative;
 z-index:2;
 }
@@ -1531,9 +1130,7 @@ i
 </button>
 </div>
 
-<div class="hero">
-<img id="heroImg" src="icons/icon-512-v37.png?v=1782058053694">
-</div>
+<div class="hero"></div>
 
 <section id="communitySection" class="hidden">
 <div class="card">
@@ -2752,11 +2349,25 @@ return null;
 
 }
 
-function applyMediaPresentation(card,config){
+function applyMediaPresentation(card,config,scope){
 
-if(!card || !config) return;
+if(!card) return;
 
+card.querySelectorAll(":scope > .mediaPresentationLayer").forEach(layer=>{
+layer.remove();
+});
+
+card.style.background="";
+
+if(!config){
+return;
+}
+
+if(scope==="global"){
+card.classList.add("cardPresented");
+}else{
 card.classList.add("mediaPresented");
+}
 
 if(config.color){
 card.style.background=config.color;
@@ -2815,6 +2426,42 @@ playPromise.catch(()=>{});
 }catch(e){}
 
 }
+
+}
+
+function getGlobalCardPresentationConfig(d){
+
+if(!d) return null;
+
+const gateway=d.mediaGateway || {};
+
+return getMediaPresentationConfig(
+d.cardPresentation,
+d.mediaPresentation,
+d.mediaCardPresentation,
+d.cardStyle,
+gateway.cardPresentation,
+gateway.mediaPresentation,
+gateway.mediaCardPresentation,
+gateway.cardStyle
+);
+
+}
+
+function applyGlobalCardPresentation(d){
+
+const config=getGlobalCardPresentationConfig(d);
+
+const selector=[
+".card",
+".supportersCard",
+".supporterCard",
+".row"
+].join(",");
+
+document.querySelectorAll(selector).forEach(card=>{
+applyMediaPresentation(card,config,"global");
+});
 
 }
 
@@ -2989,7 +2636,7 @@ items.forEach(item=>{
 const card=document.createElement("div");
 card.className="externalMediaCard";
 
-const presentation=getMediaPresentationConfig(item,d.mediaGateway || {},d);
+const presentation=getMediaPresentationConfig(item,d.mediaGateway || {}) || getGlobalCardPresentationConfig(d);
 applyMediaPresentation(card,presentation);
 
 const top=document.createElement("div");
@@ -3094,7 +2741,8 @@ if(!collection) return
 
 const rootState=currentState || {};
 const gateway=rootState.mediaGateway || {};
-const collectionPresentation=getMediaPresentationConfig(collection,gateway,rootState);
+const appPresentation=getGlobalCardPresentationConfig(rootState);
+const collectionPresentation=getMediaPresentationConfig(collection,gateway) || appPresentation;
 
 collectionHeaderTitle.textContent=collection.title || "Collection"
 
@@ -3106,7 +2754,7 @@ document.body.style.overflow="hidden"
 
 const card=document.createElement("div")
 card.className="media-card"
-applyMediaPresentation(card,getMediaPresentationConfig(item,collection,gateway,rootState) || collectionPresentation)
+applyMediaPresentation(card,getMediaPresentationConfig(item,collection,gateway) || collectionPresentation)
 
 card.onclick=()=>{
 collectionBody.querySelectorAll(".media-card.selected").forEach(activeCard=>{
@@ -3410,6 +3058,7 @@ communitySection.classList.add("hidden");
 renderSupporters(d);
 renderLinks(d);
 renderMedia(d);
+applyGlobalCardPresentation(d);
 
 }
 
@@ -3616,7 +3265,7 @@ collections.forEach(collection=>{
 const card=document.createElement("div")
 card.className="collectionCard"
 
-applyMediaPresentation(card,getMediaPresentationConfig(collection,gateway,d))
+applyMediaPresentation(card,getMediaPresentationConfig(collection,gateway) || getGlobalCardPresentationConfig(d))
 
 card.onclick=()=>openCollection(collection)
 
