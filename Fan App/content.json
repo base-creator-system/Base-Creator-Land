@@ -87,8 +87,8 @@
       }
     ],
     "presentation": {
-      "style": "video",
-      "color": "#050505",
+      "style": "color",
+      "color": "#77bb41",
       "url": "./media/media-card-video-1782221130914.mp4",
       "animation": "float"
     },
