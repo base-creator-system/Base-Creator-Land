@@ -123,9 +123,15 @@ background:rgba(255,255,255,0.03);
 overflow:hidden;
 }
 
-.hero img{
+.hero img,
+.hero video{
 width:100%;
 display:block;
+}
+
+.hero video{
+height:auto;
+background:#000;
 }
 
 body.liveActive .wrap{
@@ -1131,6 +1137,8 @@ let chimePending=false
 let communityExpanded=false
 let activeView="home"
 let currentState=null
+let activeHeroAsset=""
+let activeHeroVideo=null
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -1276,6 +1284,173 @@ clean.endsWith(".ogg") ||
 clean.endsWith(".aac") ||
 clean.endsWith(".webm")
 );
+
+}
+
+
+function getAppIconSource(d){
+
+const rawUrl=String(
+(d.appIcon && (d.appIcon.url || d.appIcon.image || d.appIcon.src)) ||
+d.appIcon ||
+d.icon ||
+d.logo ||
+d.icon192 ||
+d.icon512 ||
+""
+).trim();
+
+return safeAssetURL(rawUrl);
+
+}
+
+function applyAppIcon(d){
+
+const logo=document.getElementById("logo");
+const iconSource=getAppIconSource(d);
+
+if(iconSource){
+logo.src=iconSource;
+}
+
+}
+
+function getHeroConfig(d){
+
+const hero=d.hero || d.heroMedia || {};
+
+if(hero.enabled===false) return null;
+
+const rawImage=String(
+hero.image ||
+hero.url ||
+hero.src ||
+d.heroImage ||
+d.heroImageUrl ||
+d.hero_media_image ||
+""
+).trim();
+
+const rawVideo=String(
+hero.video ||
+d.heroVideo ||
+d.heroVideoUrl ||
+d.hero_media_video ||
+""
+).trim();
+
+let type=String(hero.type || hero.kind || "").toLowerCase().trim();
+let src="";
+
+if(type==="video"){
+src=safeAssetURL(rawVideo || rawImage);
+}else if(type==="image"){
+src=safeAssetURL(rawImage || rawVideo);
+}else if(rawVideo){
+src=safeAssetURL(rawVideo);
+type="video";
+}else if(rawImage){
+src=safeAssetURL(rawImage);
+type="image";
+}
+
+if(!src) return null;
+
+if(type!=="video" && type!=="image"){
+if(isVideoAsset(src)){
+type="video";
+}else if(isImageAsset(src)){
+type="image";
+}else{
+type="image";
+}
+}
+
+return{
+type:type,
+src:src
+};
+
+}
+
+function stopHeroVideo(){
+
+if(activeHeroVideo){
+try{
+activeHeroVideo.pause();
+}catch(e){}
+}
+
+activeHeroVideo=null;
+
+}
+
+function applyHero(d){
+
+const hero=document.querySelector(".hero");
+
+if(!hero) return;
+
+const config=getHeroConfig(d);
+
+if(!config || activeView==="live"){
+stopHeroVideo();
+activeHeroAsset="";
+hero.innerHTML="";
+hero.classList.add("hidden");
+return;
+}
+
+const assetKey=config.type + "|" + config.src;
+
+hero.classList.remove("hidden");
+
+if(assetKey===activeHeroAsset){
+return;
+}
+
+activeHeroAsset=assetKey;
+hero.innerHTML="";
+
+if(config.type==="video"){
+
+const video=document.createElement("video");
+video.src=config.src;
+video.autoplay=true;
+video.loop=true;
+video.muted=true;
+video.defaultMuted=true;
+video.playsInline=true;
+video.controls=false;
+video.disablePictureInPicture=true;
+video.setAttribute("autoplay","");
+video.setAttribute("loop","");
+video.setAttribute("muted","");
+video.setAttribute("playsinline","");
+video.setAttribute("webkit-playsinline","");
+video.preload="auto";
+
+hero.appendChild(video);
+activeHeroVideo=video;
+
+try{
+const playPromise=video.play();
+if(playPromise && typeof playPromise.catch==="function"){
+playPromise.catch(()=>{});
+}
+}catch(e){}
+
+return;
+
+}
+
+stopHeroVideo();
+
+const img=document.createElement("img");
+img.src=config.src;
+img.alt="";
+
+hero.appendChild(img);
 
 }
 
@@ -2031,10 +2206,6 @@ if(id==="live"){
 hero.classList.add("hidden")
 supportersSection.classList.add("hidden")
 
-}else{
-
-hero.classList.remove("hidden")
-
 }
 
 if(currentState){
@@ -2054,6 +2225,8 @@ document.getElementById("bio").textContent=d.bio||"";
 
 document.documentElement.style.setProperty('--pillColor',d.pillColor||"#000");
 
+applyAppIcon(d);
+applyHero(d);
 applyBackground(d);
 applyChime(d);
 applyCardAnimation(d);
