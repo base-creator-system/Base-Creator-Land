@@ -443,7 +443,21 @@ height:520px;
 
 <div class="card">
 
-<div class="row">
+<div class="moduleBlock" data-module="system-control" style="border-top:none;margin-top:0;padding-top:0;">
+
+<button type="button" class="moduleToggle">
+<div>
+<div class="moduleTitle">System Control</div>
+<div class="moduleHint">Creator key, content source, and loading controls.</div>
+</div>
+<div class="moduleArrow">›</div>
+</button>
+
+<div class="moduleContent">
+
+<div class="tiny">Use this when you need to load current state or reset the creator key.</div>
+
+<div class="row" style="margin-top:12px;">
 <div class="col">
 <label>Creator Key</label>
 <input id="token" type="password">
@@ -460,6 +474,10 @@ height:520px;
 </div>
 
 <div class="tiny" id="lastSha">sha: —</div>
+
+</div>
+
+</div>
 
 </div>
 
@@ -845,6 +863,19 @@ height:520px;
 <div class="card">
 
 <h3>Media Gateway</h3>
+<div class="tiny">Manage media access, collections, uploads, thumbnails, and the current media list without one long scrolling form.</div>
+
+<div class="moduleBlock open" data-module="media-gateway" style="border-top:none;margin-top:14px;padding-top:0;">
+
+<button type="button" class="moduleToggle">
+<div>
+<div class="moduleTitle">Media Access</div>
+<div class="moduleHint">Turn the Media tab on or off.</div>
+</div>
+<div class="moduleArrow">›</div>
+</button>
+
+<div class="moduleContent">
 
 <div class="toggleRow">
 <div class="tiny">Controls what fans can access from the Media tab.</div>
@@ -853,6 +884,22 @@ height:520px;
 <input id="mediaEnabled" type="checkbox" style="width:auto;height:auto;">
 </label>
 </div>
+
+</div>
+
+</div>
+
+<div class="moduleBlock" data-module="media-collections">
+
+<button type="button" class="moduleToggle">
+<div>
+<div class="moduleTitle">Collections</div>
+<div class="moduleHint">Choose, add, or remove lightweight media groups.</div>
+</div>
+<div class="moduleArrow">›</div>
+</button>
+
+<div class="moduleContent">
 
 <div class="row" style="margin-top:12px;">
 <div class="col">
@@ -872,6 +919,22 @@ height:520px;
 <button id="btnAddCollection">Add Collection</button>
 <button id="btnRemoveCollection" class="danger">Remove Selected Collection</button>
 </div>
+
+</div>
+
+</div>
+
+<div class="moduleBlock" data-module="media-item">
+
+<button type="button" class="moduleToggle">
+<div>
+<div class="moduleTitle">Add Media Item</div>
+<div class="moduleHint">Add one image, video, URL, thumbnail, and description.</div>
+</div>
+<div class="moduleArrow">›</div>
+</button>
+
+<div class="moduleContent">
 
 <div class="row" style="margin-top:12px;">
 <div class="col">
@@ -930,7 +993,114 @@ height:520px;
 <button id="btnClearMedia" class="danger">Clear Media</button>
 </div>
 
+</div>
+
+</div>
+
+<div class="moduleBlock" data-module="media-external">
+
+<button type="button" class="moduleToggle">
+<div>
+<div class="moduleTitle">External Media</div>
+<div class="moduleHint">Add embedded photo, video, gallery, or future provider media experiences.</div>
+</div>
+<div class="moduleArrow">›</div>
+</button>
+
+<div class="moduleContent">
+
+<div class="toggleRow" style="margin-top:12px;">
+<div class="tiny">Only enabled external media appears in the Fan App when supported by the Fan App runtime.</div>
+<label style="display:flex;align-items:center;gap:10px;margin:0;">
+<span class="tiny">Enabled</span>
+<input id="externalMediaEnabled" type="checkbox" checked style="width:auto;height:auto;">
+</label>
+</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Provider</label>
+<select id="externalMediaProvider">
+<option value="custom">Custom</option>
+<option value="vimeo">Vimeo</option>
+<option value="pixieset">Pixieset</option>
+<option value="flickr">Flickr</option>
+<option value="future">Future Provider</option>
+</select>
+</div>
+
+<div class="col">
+<label>External Media Name</label>
+<input id="externalMediaName" type="text" placeholder="Summer Photos, Behind The Scenes, Live Archive">
+</div>
+</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>External Media URL</label>
+<input id="externalMediaUrl" type="text" placeholder="https://...">
+<div class="tiny">Use this for the external doorway or fallback link.</div>
+</div>
+</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>External Media Embed URL</label>
+<input id="externalMediaEmbed" type="text" placeholder="https://...">
+<div class="tiny">Use this for embedded media experiences when the provider supports embeds.</div>
+</div>
+</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Thumbnail Upload (optional)</label>
+<input id="externalMediaThumbFile" type="file" accept="image/png,image/jpeg,image/webp">
+<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
+</div>
+</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Thumbnail URL (legacy/manual optional)</label>
+<input id="externalMediaThumbnail" type="text" placeholder="https://.../thumb.jpg">
+</div>
+</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Button Text</label>
+<input id="externalMediaButtonText" type="text" placeholder="Open Gallery">
+</div>
+</div>
+
+<div class="btnRow">
+<button id="btnAddExternalMedia">Add External Media</button>
+<button id="btnClearExternalMedia" class="danger">Remove External Media</button>
+</div>
+
+<div id="externalMediaList" class="mediaList"></div>
+
+</div>
+
+</div>
+
+<div class="moduleBlock open" data-module="media-current">
+
+<button type="button" class="moduleToggle">
+<div>
+<div class="moduleTitle">Current Media</div>
+<div class="moduleHint">Review and remove existing media items.</div>
+</div>
+<div class="moduleArrow">›</div>
+</button>
+
+<div class="moduleContent">
+
 <div id="mediaList" class="mediaList"></div>
+
+</div>
+
+</div>
 
 </div>
 
@@ -1051,6 +1221,17 @@ mediaThumbFile:$("mediaThumbFile"),
 mediaDesc:$("mediaDesc"),
 btnAddMedia:$("btnAddMedia"),
 btnClearMedia:$("btnClearMedia"),
+externalMediaEnabled:$("externalMediaEnabled"),
+externalMediaProvider:$("externalMediaProvider"),
+externalMediaName:$("externalMediaName"),
+externalMediaUrl:$("externalMediaUrl"),
+externalMediaEmbed:$("externalMediaEmbed"),
+externalMediaThumbFile:$("externalMediaThumbFile"),
+externalMediaThumbnail:$("externalMediaThumbnail"),
+externalMediaButtonText:$("externalMediaButtonText"),
+btnAddExternalMedia:$("btnAddExternalMedia"),
+btnClearExternalMedia:$("btnClearExternalMedia"),
+externalMediaList:$("externalMediaList"),
 mediaList:$("mediaList"),
 supporterType:$("supporterType"),
 supporterName:$("supporterName"),
@@ -1085,6 +1266,7 @@ let hasLoadedState=false
 let linkState=[]
 let mediaItems=[]
 let mediaCollections=[]
+let externalMediaState=[]
 let mediaHydrated=false
 let mediaTouched=false
 let supporterState=[]
@@ -1586,6 +1768,56 @@ el.mediaList.appendChild(block)
 
 }
 
+
+function renderExternalMediaList(){
+
+if(!el.externalMediaList)return
+
+el.externalMediaList.innerHTML=""
+
+const total=document.createElement("div")
+total.className="tiny"
+total.textContent=`External Media: ${externalMediaState.length}`
+el.externalMediaList.appendChild(total)
+
+externalMediaState.forEach((item,i)=>{
+
+const row=document.createElement("div")
+row.className="mediaItemRow"
+
+const left=document.createElement("div")
+left.className="mediaMeta"
+
+const t=document.createElement("div")
+t.className="mediaTitle"
+t.textContent=item.name || "(unnamed external media)"
+
+const sub=document.createElement("div")
+sub.className="mediaSub"
+sub.textContent=`${item.provider || "custom"} · ${item.enabled===false ? "disabled" : "enabled"} · ${item.embed ? item.embed : (item.url || "(no url)")}`
+
+left.appendChild(t)
+left.appendChild(sub)
+
+const remove=document.createElement("button")
+remove.textContent="Remove"
+
+remove.onclick=()=>{
+externalMediaState.splice(i,1)
+mediaTouched=true
+renderExternalMediaList()
+markDirty()
+}
+
+row.appendChild(left)
+row.appendChild(remove)
+
+el.externalMediaList.appendChild(row)
+
+})
+
+}
+
 function hydrateMediaGateway(state){
 
 const mg=state && typeof state==="object" ? state.mediaGateway : null
@@ -1596,11 +1828,23 @@ if(!mg || typeof mg!=="object"){
 el.mediaEnabled.checked=false
 mediaCollections=[{id:"collection-default",title:"Latest"}]
 mediaItems=[]
+externalMediaState=[]
 renderMediaList()
+renderExternalMediaList()
 return
 }
 
 el.mediaEnabled.checked=mg.enabled===true
+externalMediaState=Array.isArray(mg.externalMedia) ? mg.externalMedia.map(x=>({
+id:x?.id || `external-${Math.random().toString(16).slice(2)}`,
+provider:String(x?.provider || "custom"),
+name:String(x?.name || ""),
+url:String(x?.url || ""),
+embed:String(x?.embed || ""),
+thumbnail:String(x?.thumbnail || ""),
+buttonText:String(x?.buttonText || "Open Media"),
+enabled:x?.enabled===false ? false : true
+})) : []
 
 const collections=Array.isArray(mg.collections)?mg.collections:[]
 
@@ -1608,6 +1852,7 @@ if(collections.length===0){
 mediaCollections=[{id:"collection-default",title:"Latest"}]
 mediaItems=[]
 renderMediaList()
+renderExternalMediaList()
 return
 }
 
@@ -1637,6 +1882,7 @@ access:x?.access==="paid" ? "paid" : "public"
 
 ensureDefaultCollection()
 renderMediaList()
+renderExternalMediaList()
 
 }
 
@@ -1668,7 +1914,17 @@ items
 
 return{
 enabled:el.mediaEnabled.checked===true,
-collections
+collections,
+externalMedia:externalMediaState.map(item=>({
+id:item.id || `external-${Math.random().toString(16).slice(2)}`,
+provider:(item.provider || "custom").trim() || "custom",
+name:(item.name || "").trim(),
+url:(item.url || "").trim(),
+embed:(item.embed || "").trim(),
+thumbnail:(item.thumbnail || "").trim(),
+buttonText:(item.buttonText || "Open Media").trim() || "Open Media",
+enabled:item.enabled===false ? false : true
+}))
 }
 
 }
@@ -2148,9 +2404,37 @@ items
 
 }
 
+const externalMedia=[]
+
+for(const item of externalMediaState){
+
+let thumbnail=(item.thumbnail || "").trim()
+
+if(item.thumbnailFile instanceof File){
+log(`External media thumbnail upload started: ${item.name || "external media"}`)
+thumbnail=await uploadMediaThumbnail(token,item.thumbnailFile,item.id)
+item.thumbnail=thumbnail
+delete item.thumbnailFile
+log(`External media thumbnail uploaded: ${thumbnail}`)
+}
+
+externalMedia.push({
+id:item.id || `external-${Math.random().toString(16).slice(2)}`,
+provider:(item.provider || "custom").trim() || "custom",
+name:(item.name || "").trim(),
+url:(item.url || "").trim(),
+embed:(item.embed || "").trim(),
+thumbnail,
+buttonText:(item.buttonText || "Open Media").trim() || "Open Media",
+enabled:item.enabled===false ? false : true
+})
+
+}
+
 return{
 enabled:el.mediaEnabled.checked===true,
-collections
+collections,
+externalMedia
 }
 
 }
@@ -2506,6 +2790,52 @@ el.btnClearMedia.onclick=()=>{
 mediaItems=[]
 mediaTouched=true
 renderMediaList()
+markDirty()
+}
+
+el.btnAddExternalMedia.onclick=()=>{
+const provider=(el.externalMediaProvider.value || "custom").trim() || "custom"
+const name=(el.externalMediaName.value || "").trim()
+const url=(el.externalMediaUrl.value || "").trim()
+const embed=(el.externalMediaEmbed.value || "").trim()
+const thumbnail=(el.externalMediaThumbnail.value || "").trim()
+const thumbnailFile=el.externalMediaThumbFile.files[0] || null
+const buttonText=(el.externalMediaButtonText.value || "").trim() || "Open Media"
+const enabled=el.externalMediaEnabled.checked===true
+
+if(!name && !url && !embed)return
+
+externalMediaState.push({
+id:`external-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+provider,
+name,
+url,
+embed,
+thumbnail,
+thumbnailFile,
+buttonText,
+enabled
+})
+
+mediaTouched=true
+
+el.externalMediaProvider.value="custom"
+el.externalMediaName.value=""
+el.externalMediaUrl.value=""
+el.externalMediaEmbed.value=""
+el.externalMediaThumbFile.value=""
+el.externalMediaThumbnail.value=""
+el.externalMediaButtonText.value=""
+el.externalMediaEnabled.checked=true
+
+renderExternalMediaList()
+markDirty()
+}
+
+el.btnClearExternalMedia.onclick=()=>{
+externalMediaState=[]
+mediaTouched=true
+renderExternalMediaList()
 markDirty()
 }
 
@@ -2930,6 +3260,15 @@ mediaTouched=true
 markDirty()
 })
 
+el.externalMediaEnabled.addEventListener("change",()=>{mediaTouched=true;markDirty()})
+el.externalMediaProvider.addEventListener("change",()=>{mediaTouched=true;markDirty()})
+el.externalMediaName.addEventListener("input",()=>{mediaTouched=true;markDirty()})
+el.externalMediaUrl.addEventListener("input",()=>{mediaTouched=true;markDirty()})
+el.externalMediaEmbed.addEventListener("input",()=>{mediaTouched=true;markDirty()})
+el.externalMediaThumbFile.addEventListener("change",()=>{mediaTouched=true;markDirty()})
+el.externalMediaThumbnail.addEventListener("input",()=>{mediaTouched=true;markDirty()})
+el.externalMediaButtonText.addEventListener("input",()=>{mediaTouched=true;markDirty()})
+
 el.previewFrame.addEventListener("load",()=>{
 refreshPreview()
 })
@@ -2965,6 +3304,7 @@ localStorage.removeItem(LS_TOKEN)
 ensureDefaultCollection()
 renderLinks()
 renderMediaList()
+renderExternalMediaList()
 renderSupporters()
 hydrateCommunity({})
 hydrateBackground({})
