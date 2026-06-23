@@ -592,6 +592,43 @@ height:520px;
 <input id="appIconInput" type="file" accept="image/png,image/jpeg">
 </div>
 
+<div style="margin-top:18px;border-top:1px solid #222;padding-top:14px;">
+<label>Hero Media</label>
+<div class="tiny">Separate from the app icon. Use this for the creator presence layer.</div>
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Hero Type</label>
+<select id="heroMediaType">
+<option value="none">none</option>
+<option value="image">image</option>
+<option value="video">video</option>
+</select>
+</div>
+<div class="col">
+<label>Hero Animation</label>
+<select id="heroMediaAnimation">
+<option value="none">none</option>
+<option value="float">float</option>
+<option value="pulse">pulse</option>
+<option value="drift">slow drift</option>
+</select>
+</div>
+</div>
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Hero Media Upload</label>
+<input id="heroMediaFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm,video/quicktime">
+<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
+</div>
+</div>
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Hero Media URL (legacy/manual optional)</label>
+<input id="heroMediaUrl" type="text" placeholder="https://... or ./media/hero.png">
+</div>
+</div>
+</div>
+
 </div>
 
 </div>
@@ -941,20 +978,13 @@ height:520px;
 <label>Item Title</label>
 <input id="mediaTitle" type="text" placeholder="Clip title">
 </div>
-<div class="col">
-<label>Access</label>
-<select id="mediaAccess">
-<option value="public">public</option>
-<option value="paid">paid</option>
-</select>
-</div>
 </div>
 
 <div class="row" style="margin-top:12px;">
 <div class="col">
-<label>URL (public only)</label>
+<label>URL (optional)</label>
 <input id="mediaUrl" type="text" placeholder="https://...">
-<div class="tiny">If access=paid, URL is saved empty.</div>
+<div class="tiny">Use this only when the item should open an external media link.</div>
 </div>
 </div>
 
@@ -1084,6 +1114,70 @@ height:520px;
 
 </div>
 
+<div class="moduleBlock" data-module="media-presentation">
+
+<button type="button" class="moduleToggle">
+<div>
+<div class="moduleTitle">Media Presentation</div>
+<div class="moduleHint">Control the global media card look with color, wallpaper, video, and motion.</div>
+</div>
+<div class="moduleArrow">›</div>
+</button>
+
+<div class="moduleContent">
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Media Card Style</label>
+<select id="mediaCardStyle">
+<option value="default">default</option>
+<option value="color">color</option>
+<option value="image">wallpaper</option>
+<option value="video">video</option>
+</select>
+<div class="tiny">Choose how the media card background should render in the Fan App.</div>
+</div>
+
+<div class="col">
+<label>Media Card Animation</label>
+<select id="mediaCardAnimation">
+<option value="none">none</option>
+<option value="float">float</option>
+<option value="pulse">pulse</option>
+<option value="drift">slow drift</option>
+</select>
+<div class="tiny">Applies to the media card presentation layer when supported by the Fan App runtime.</div>
+</div>
+</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Media Card Color</label>
+<input id="mediaCardColor" type="color" value="#050505">
+<div class="tiny">Used when Media Card Style is color.</div>
+</div>
+</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Media Card Asset Upload</label>
+<input id="mediaCardFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm,video/quicktime">
+<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
+</div>
+</div>
+
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Media Card Asset URL (legacy/manual optional)</label>
+<input id="mediaCardUrl" type="text" placeholder="https://... or ./media/media-card.mp4">
+<div class="tiny">Use only when you need a manual URL instead of a file upload.</div>
+</div>
+</div>
+
+</div>
+
+</div>
+
 <div class="moduleBlock open" data-module="media-current">
 
 <button type="button" class="moduleToggle">
@@ -1196,6 +1290,10 @@ btnPreviewChime:$("btnPreviewChime"),
 btnClearChime:$("btnClearChime"),
 pillColor:$("pillColor"),
 appIconInput:$("appIconInput"),
+heroMediaType:$("heroMediaType"),
+heroMediaFile:$("heroMediaFile"),
+heroMediaUrl:$("heroMediaUrl"),
+heroMediaAnimation:$("heroMediaAnimation"),
 contactEmail:$("contactEmail"),
 contactLabel:$("contactLabel"),
 liveEnabled:$("liveEnabled"),
@@ -1213,7 +1311,6 @@ mediaCollectionTitle:$("mediaCollectionTitle"),
 btnAddCollection:$("btnAddCollection"),
 btnRemoveCollection:$("btnRemoveCollection"),
 mediaTitle:$("mediaTitle"),
-mediaAccess:$("mediaAccess"),
 mediaUrl:$("mediaUrl"),
 mediaFile:$("mediaFile"),
 mediaThumb:$("mediaThumb"),
@@ -1232,6 +1329,11 @@ externalMediaButtonText:$("externalMediaButtonText"),
 btnAddExternalMedia:$("btnAddExternalMedia"),
 btnClearExternalMedia:$("btnClearExternalMedia"),
 externalMediaList:$("externalMediaList"),
+mediaCardStyle:$("mediaCardStyle"),
+mediaCardColor:$("mediaCardColor"),
+mediaCardFile:$("mediaCardFile"),
+mediaCardUrl:$("mediaCardUrl"),
+mediaCardAnimation:$("mediaCardAnimation"),
 mediaList:$("mediaList"),
 supporterType:$("supporterType"),
 supporterName:$("supporterName"),
@@ -1829,12 +1931,14 @@ el.mediaEnabled.checked=false
 mediaCollections=[{id:"collection-default",title:"Latest"}]
 mediaItems=[]
 externalMediaState=[]
+hydrateMediaPresentation({})
 renderMediaList()
 renderExternalMediaList()
 return
 }
 
 el.mediaEnabled.checked=mg.enabled===true
+hydrateMediaPresentation(mg)
 externalMediaState=Array.isArray(mg.externalMedia) ? mg.externalMedia.map(x=>({
 id:x?.id || `external-${Math.random().toString(16).slice(2)}`,
 provider:String(x?.provider || "custom"),
@@ -1851,6 +1955,7 @@ const collections=Array.isArray(mg.collections)?mg.collections:[]
 if(collections.length===0){
 mediaCollections=[{id:"collection-default",title:"Latest"}]
 mediaItems=[]
+hydrateMediaPresentation(mg)
 renderMediaList()
 renderExternalMediaList()
 return
@@ -1875,7 +1980,7 @@ title:String(x?.title || ""),
 description:String(x?.description || ""),
 thumbnail:String(x?.thumbnail || ""),
 url:String(x?.url || ""),
-access:x?.access==="paid" ? "paid" : "public"
+access:"public"
 })
 })
 })
@@ -1900,8 +2005,8 @@ id:it.id || `item-${Math.random().toString(16).slice(2)}`,
 title:(it.title||"").trim(),
 description:(it.description||"").trim(),
 thumbnail:(it.thumbnail||"").trim(),
-url:it.access==="paid" ? "" : (it.url||"").trim(),
-access:it.access==="paid" ? "paid" : "public"
+url:(it.url||"").trim(),
+access:"public"
 }))
 
 return{
@@ -1915,6 +2020,7 @@ items
 return{
 enabled:el.mediaEnabled.checked===true,
 collections,
+presentation:buildMediaPresentation(),
 externalMedia:externalMediaState.map(item=>({
 id:item.id || `external-${Math.random().toString(16).slice(2)}`,
 provider:(item.provider || "custom").trim() || "custom",
@@ -2077,6 +2183,183 @@ url
 }
 
 
+
+function hydrateHeroMedia(state){
+const hero=state && typeof state==="object" && state.heroMedia && typeof state.heroMedia==="object"
+? state.heroMedia
+: {}
+
+let type=String(hero.type || "").toLowerCase().trim()
+const url=String(hero.url || hero.src || hero.file || "").trim()
+
+if(type!=="image" && type!=="video"){
+type=inferBackgroundType(url)
+}
+
+if(hero.enabled===false || !url){
+type="none"
+}
+
+el.heroMediaType.value=type
+el.heroMediaUrl.value=url
+el.heroMediaFile.value=""
+
+const animation=String(hero.animation || "none").toLowerCase().trim()
+el.heroMediaAnimation.value=["float","pulse","drift"].includes(animation) ? animation : "none"
+}
+
+function buildHeroMedia(){
+const type=String(el.heroMediaType.value || "none").toLowerCase().trim()
+const url=String(el.heroMediaUrl.value || "").trim()
+const animation=String(el.heroMediaAnimation.value || "none").toLowerCase().trim()
+
+if(type!=="image" && type!=="video"){
+return{
+enabled:false,
+type:"none",
+url:"",
+animation:["float","pulse","drift"].includes(animation) ? animation : "none"
+}
+}
+
+return{
+enabled:true,
+type,
+url,
+animation:["float","pulse","drift"].includes(animation) ? animation : "none"
+}
+}
+
+async function uploadHeroMediaAsset(token,file,type){
+const safeType=type==="video" ? "video" : "image"
+const safeExt=getSafeBackgroundExtension(file,safeType)
+const fileName=`hero-${safeType}-${Date.now()}.${safeExt}`
+const repoPath=`Fan App/media/${fileName}`
+const localPath=`./media/${fileName}`
+const base64=await fileToBase64(file)
+
+await ghPutFile(
+token,
+repoPath,
+undefined,
+base64,
+`BASE hero ${safeType} ${fileName}`
+)
+
+return localPath
+}
+
+async function buildHeroMediaForPublish(token){
+const type=String(el.heroMediaType.value || "none").toLowerCase().trim()
+const animation=String(el.heroMediaAnimation.value || "none").toLowerCase().trim()
+const safeAnimation=["float","pulse","drift"].includes(animation) ? animation : "none"
+
+if(type!=="image" && type!=="video"){
+el.heroMediaFile.value=""
+el.heroMediaUrl.value=""
+return{
+enabled:false,
+type:"none",
+url:"",
+animation:safeAnimation
+}
+}
+
+let url=String(el.heroMediaUrl.value || "").trim()
+const file=el.heroMediaFile.files[0] || null
+
+if(file){
+log(`Hero ${type} upload started.`)
+url=await uploadHeroMediaAsset(token,file,type)
+el.heroMediaUrl.value=url
+el.heroMediaFile.value=""
+log(`Hero ${type} uploaded: ${url}`)
+}
+
+return{
+enabled:true,
+type,
+url,
+animation:safeAnimation
+}
+}
+
+function hydrateMediaPresentation(mg){
+const presentation=mg && typeof mg==="object" && mg.presentation && typeof mg.presentation==="object"
+? mg.presentation
+: {}
+
+const style=String(presentation.style || "default").toLowerCase().trim()
+el.mediaCardStyle.value=["color","image","video"].includes(style) ? style : "default"
+el.mediaCardColor.value=presentation.color || "#050505"
+el.mediaCardUrl.value=String(presentation.url || "").trim()
+el.mediaCardFile.value=""
+
+const animation=String(presentation.animation || "none").toLowerCase().trim()
+el.mediaCardAnimation.value=["float","pulse","drift"].includes(animation) ? animation : "none"
+}
+
+function buildMediaPresentation(){
+const style=String(el.mediaCardStyle.value || "default").toLowerCase().trim()
+const safeStyle=["color","image","video"].includes(style) ? style : "default"
+const animation=String(el.mediaCardAnimation.value || "none").toLowerCase().trim()
+
+return{
+style:safeStyle,
+color:el.mediaCardColor.value || "#050505",
+url:String(el.mediaCardUrl.value || "").trim(),
+animation:["float","pulse","drift"].includes(animation) ? animation : "none"
+}
+}
+
+async function uploadMediaCardAsset(token,file,style){
+const safeType=style==="video" ? "video" : "image"
+const safeExt=getSafeBackgroundExtension(file,safeType)
+const fileName=`media-card-${safeType}-${Date.now()}.${safeExt}`
+const repoPath=`Fan App/media/${fileName}`
+const localPath=`./media/${fileName}`
+const base64=await fileToBase64(file)
+
+await ghPutFile(
+token,
+repoPath,
+undefined,
+base64,
+`BASE media card ${safeType} ${fileName}`
+)
+
+return localPath
+}
+
+async function buildMediaPresentationForPublish(token){
+const style=String(el.mediaCardStyle.value || "default").toLowerCase().trim()
+const safeStyle=["color","image","video"].includes(style) ? style : "default"
+const animation=String(el.mediaCardAnimation.value || "none").toLowerCase().trim()
+
+let url=String(el.mediaCardUrl.value || "").trim()
+const file=el.mediaCardFile.files[0] || null
+
+if((safeStyle==="image" || safeStyle==="video") && file){
+log(`Media card ${safeStyle} upload started.`)
+url=await uploadMediaCardAsset(token,file,safeStyle)
+el.mediaCardUrl.value=url
+el.mediaCardFile.value=""
+log(`Media card ${safeStyle} uploaded: ${url}`)
+}
+
+if(safeStyle==="default" || safeStyle==="color"){
+el.mediaCardFile.value=""
+if(safeStyle==="default") url=""
+}
+
+return{
+style:safeStyle,
+color:el.mediaCardColor.value || "#050505",
+url,
+animation:["float","pulse","drift"].includes(animation) ? animation : "none"
+}
+}
+
 function hydrateChime(state){
 const chime=state && typeof state==="object" && state.chime && typeof state.chime==="object"
 ? state.chime
@@ -2214,6 +2497,7 @@ bio:el.bio.value,
 links:linkState,
 backgroundColor:el.backgroundColor.value,
 background:buildBackground(),
+heroMedia:buildHeroMedia(),
 chime:buildChime(),
 pillColor:el.pillColor.value,
 contactEmail:el.contactEmail.value,
@@ -2367,7 +2651,7 @@ const scopedItems=mediaItems.filter(it=>(it.collectionId || mediaCollections[0].
 for(const it of scopedItems){
 
 let thumbnail=(it.thumbnail||"").trim()
-let url=it.access==="paid" ? "" : (it.url||"").trim()
+let url=(it.url||"").trim()
 
 if(it.mediaFile instanceof File){
 log(`Media upload started: ${it.title || "media item"}`)
@@ -2391,7 +2675,7 @@ title:(it.title||"").trim(),
 description:(it.description||"").trim(),
 thumbnail,
 url,
-access:it.access==="paid" ? "paid" : "public"
+access:"public"
 })
 
 }
@@ -2434,6 +2718,7 @@ enabled:item.enabled===false ? false : true
 return{
 enabled:el.mediaEnabled.checked===true,
 collections,
+presentation:await buildMediaPresentationForPublish(token),
 externalMedia
 }
 
@@ -2599,11 +2884,6 @@ fanIndexHtml=fanIndexHtml.replace(
 `<img id="logo" src="icons/${new192Name}">`
 )
 
-fanIndexHtml=fanIndexHtml.replace(
-/<img id="heroImg" src="icons\/icon-512-v\d+\.png(?:\?v=\d+)?">/g,
-`<img id="heroImg" src="icons/${new512Name}">`
-)
-
 await ghPutFile(
 token,
 fanIndexPath,
@@ -2750,7 +3030,6 @@ el.btnAddMedia.onclick=()=>{
 ensureDefaultCollection()
 
 const title=(el.mediaTitle.value||"").trim()
-const access=el.mediaAccess.value==="paid" ? "paid" : "public"
 const url=(el.mediaUrl.value||"").trim()
 const mediaFile=el.mediaFile.files[0] || null
 const thumbnail=(el.mediaThumb.value||"").trim()
@@ -2768,8 +3047,8 @@ description,
 thumbnail,
 thumbnailFile,
 mediaFile,
-url:access==="paid" ? "" : url,
-access
+url,
+access:"public"
 })
 
 mediaTouched=true
@@ -2857,6 +3136,7 @@ el.liveWatchUrl.value=state.live?.watch_url||""
 el.liveDescription.value=state.live?.description||""
 el.backgroundColor.value=state.backgroundColor||"#000000"
 hydrateBackground(state)
+hydrateHeroMedia(state)
 hydrateChime(state)
 el.pillColor.value=state.pillColor||"#caa300"
 linkState=Array.isArray(state.links)?state.links:[]
@@ -3041,6 +3321,7 @@ description:el.liveDescription.value.trim()
 links:linkState,
 backgroundColor:el.backgroundColor.value,
 background:await buildBackgroundForPublish(token),
+heroMedia:await buildHeroMediaForPublish(token),
 chime:await buildChimeForPublish(token),
 pillColor:el.pillColor.value
 }
@@ -3113,11 +3394,6 @@ fanIndexHtml=fanIndexHtml.replace(
 fanIndexHtml=fanIndexHtml.replace(
 /<img id="logo" src="icons\/icon-192-v\d+\.png(?:\?v=\d+)?">/g,
 `<img id="logo" src="icons/${icon192Name}?v=${cacheVersion}">`
-)
-
-fanIndexHtml=fanIndexHtml.replace(
-/<img id="heroImg" src="icons\/icon-512-v\d+\.png(?:\?v=\d+)?">/g,
-`<img id="heroImg" src="icons/${icon512Name}?v=${cacheVersion}">`
 )
 
 await ghPutFile(
@@ -3206,6 +3482,10 @@ el.chimeVolume.value="0.65"
 markDirty()
 }
 el.pillColor.addEventListener("input",markDirty)
+el.heroMediaType.addEventListener("change",markDirty)
+el.heroMediaFile.addEventListener("change",markDirty)
+el.heroMediaUrl.addEventListener("input",markDirty)
+el.heroMediaAnimation.addEventListener("change",markDirty)
 
 el.supporterType.addEventListener("change",()=>{supportersTouched=true;markDirty()})
 el.supporterName.addEventListener("input",()=>{supportersTouched=true;markDirty()})
@@ -3268,6 +3548,11 @@ el.externalMediaEmbed.addEventListener("input",()=>{mediaTouched=true;markDirty(
 el.externalMediaThumbFile.addEventListener("change",()=>{mediaTouched=true;markDirty()})
 el.externalMediaThumbnail.addEventListener("input",()=>{mediaTouched=true;markDirty()})
 el.externalMediaButtonText.addEventListener("input",()=>{mediaTouched=true;markDirty()})
+el.mediaCardStyle.addEventListener("change",()=>{mediaTouched=true;markDirty()})
+el.mediaCardColor.addEventListener("input",()=>{mediaTouched=true;markDirty()})
+el.mediaCardFile.addEventListener("change",()=>{mediaTouched=true;markDirty()})
+el.mediaCardUrl.addEventListener("input",()=>{mediaTouched=true;markDirty()})
+el.mediaCardAnimation.addEventListener("change",()=>{mediaTouched=true;markDirty()})
 
 el.previewFrame.addEventListener("load",()=>{
 refreshPreview()
