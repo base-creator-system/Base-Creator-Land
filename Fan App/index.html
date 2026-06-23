@@ -901,15 +901,26 @@ position:relative;
 }
 
 .mediaRuntime video,
-.mediaRuntime iframe{
+.mediaRuntime iframe,
+.mediaRuntime img{
 width:100%;
 height:100%;
 border:none;
 background:transparent;
 }
 
-.mediaRuntime video{
+.mediaRuntime video,
+.mediaRuntime img{
 object-fit:contain;
+}
+
+.mediaRuntime img{
+max-width:100%;
+max-height:100%;
+width:auto;
+height:auto;
+display:block;
+border-radius:18px;
 }
 
 .mediaRuntime iframe{
@@ -1689,11 +1700,29 @@ function getEmbedConfig(url){
 if(!url) return null
 
 const lower=url.toLowerCase()
+const clean=lower.split("?")[0]
 
 if(
-lower.endsWith(".mp4") ||
-lower.endsWith(".webm") ||
-lower.endsWith(".mov") ||
+clean.endsWith(".jpg") ||
+clean.endsWith(".jpeg") ||
+clean.endsWith(".png") ||
+clean.endsWith(".gif") ||
+clean.endsWith(".webp") ||
+clean.endsWith(".svg")
+){
+
+return{
+type:"image",
+src:url
+}
+
+}
+
+if(
+clean.endsWith(".mp4") ||
+clean.endsWith(".webm") ||
+clean.endsWith(".mov") ||
+clean.endsWith(".m4v") ||
 url.includes("./media/")
 ){
 
@@ -1761,17 +1790,46 @@ document.body.style.overflow=""
 
 function openMediaRuntime(item){
 
-if(!item || !item.url) return
+if(!item) return
+
+const rawSource=String(
+item.embedUrl ||
+item.embedURL ||
+item.embed_url ||
+item.embed ||
+item.url ||
+""
+).trim()
+
+const source=safeAssetURL(rawSource)
+
+if(!source) return
 
 mediaRuntimeBody.innerHTML=""
 
 document.body.style.overflow="hidden"
 
-mediaRuntimeTitle.textContent=item.title || "Media"
+mediaRuntimeTitle.textContent=item.title || item.name || "Media"
 
-const config=getEmbedConfig(item.url)
+const config=getEmbedConfig(source)
 
 if(!config) return
+
+if(config.type==="image"){
+
+const img=document.createElement("img")
+
+img.src=config.src
+img.alt=item.title || item.name || "Media"
+
+mediaRuntimeBody.appendChild(img)
+
+document.body.classList.add("mediaRuntimeOpen")
+mediaRuntime.classList.add("active")
+
+return
+
+}
 
 if(config.type==="video"){
 
@@ -1890,41 +1948,18 @@ body.appendChild(desc)
 card.appendChild(thumb)
 card.appendChild(body)
 
-if(item.access==="public" && item.url){
+if(item.url || item.embed || item.embedUrl || item.embedURL || item.embed_url){
 
 const btn=document.createElement("button")
 
 btn.className="media-btn"
-btn.textContent="Open"
+btn.textContent=item.buttonText || "Open"
 
 btn.onclick=()=>{
-
-const safe=safeURL(item.url)
-
-if(!safe) return
-
-if(isVideoUrl(safe)){
-
 openMediaRuntime(item)
-
-}else{
-
-window.open(safe,"_blank","noopener")
-
-}
-
 }
 
 card.appendChild(btn)
-
-}else{
-
-const locked=document.createElement("div")
-
-locked.className="media-btn media-locked"
-locked.textContent="Locked"
-
-card.appendChild(locked)
 
 }
 
