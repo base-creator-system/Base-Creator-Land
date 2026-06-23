@@ -302,7 +302,7 @@ color:var(--text);
 background:rgba(255,255,255,0.12);
 }
 
-.card,.media-card,.row,.pill,.media-btn,.btn,.tab{
+.card,.media-card,.row,.pill,.media-btn,.btn,.tab,.liveDescriptionToggle{
 -webkit-tap-highlight-color:transparent;
 }
 
@@ -404,6 +404,23 @@ margin-top:12px;
 color:var(--muted);
 font-size:13px;
 line-height:1.4;
+}
+
+.liveDescriptionToggle{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+width:100%;
+height:34px;
+border-radius:999px;
+border:1px solid var(--stroke);
+background:var(--pillColor);
+color:#fff;
+font-weight:800;
+font-size:12px;
+cursor:pointer;
+margin-top:12px;
+-webkit-tap-highlight-color:transparent;
 }
 
 /* COMMUNITY */
@@ -1180,6 +1197,7 @@ allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
 allowfullscreen="true">
 </iframe>
 </div>
+<button id="liveDescriptionToggle" class="liveDescriptionToggle hidden" type="button">Expand Description</button>
 <p class="liveDescription hidden" id="liveDescription"></p>
 </section>
 
@@ -1299,6 +1317,7 @@ let chimeAudio=null
 let chimePlayed=false
 let chimePending=false
 let communityExpanded=false
+let liveDescriptionExpanded=false
 let activeView="home"
 let currentState=null
 let activeHeroAsset=""
@@ -2922,6 +2941,7 @@ const liveStatus=document.getElementById("liveStatus");
 const livePlayer=document.getElementById("livePlayer");
 const liveFrame=document.getElementById("liveFrame");
 const liveDescription=document.getElementById("liveDescription");
+const liveDescriptionToggle=document.getElementById("liveDescriptionToggle");
 
 if(d.live && d.live.enabled){
 liveStatus.textContent=d.live.status==="live"?"Live now":"Offline";
@@ -2942,18 +2962,31 @@ liveFrame.removeAttribute("src");
 
 if(String(d.live.description || "").trim()){
 liveDescription.textContent=d.live.description;
-liveDescription.classList.remove("hidden");
+liveDescriptionToggle.classList.remove("hidden");
+liveDescriptionToggle.textContent=liveDescriptionExpanded ? "Collapse Description" : "Expand Description";
+liveDescription.classList.toggle("hidden",!liveDescriptionExpanded);
+liveDescriptionToggle.onclick=()=>{
+liveDescriptionExpanded=!liveDescriptionExpanded;
+liveDescriptionToggle.textContent=liveDescriptionExpanded ? "Collapse Description" : "Expand Description";
+liveDescription.classList.toggle("hidden",!liveDescriptionExpanded);
+};
 }else{
+liveDescriptionExpanded=false;
 liveDescription.textContent="";
 liveDescription.classList.add("hidden");
+liveDescriptionToggle.classList.add("hidden");
+liveDescriptionToggle.onclick=null;
 }
 
 }else{
 liveStatus.textContent="Unavailable";
 livePlayer.classList.add("hidden");
 liveFrame.removeAttribute("src");
+liveDescriptionExpanded=false;
 liveDescription.textContent="";
 liveDescription.classList.add("hidden");
+liveDescriptionToggle.classList.add("hidden");
+liveDescriptionToggle.onclick=null;
 }
 
 
