@@ -1710,13 +1710,29 @@ function getEmbedConfig(url){
 
 if(!url) return null
 
-const lower=url.toLowerCase()
+const lower=url.toLowerCase().split("?")[0]
+
+if(
+lower.endsWith(".jpg") ||
+lower.endsWith(".jpeg") ||
+lower.endsWith(".png") ||
+lower.endsWith(".gif") ||
+lower.endsWith(".webp") ||
+lower.endsWith(".svg")
+){
+
+return{
+type:"image",
+src:url
+}
+
+}
 
 if(
 lower.endsWith(".mp4") ||
 lower.endsWith(".webm") ||
 lower.endsWith(".mov") ||
-url.includes("./media/")
+lower.endsWith(".m4v")
 ){
 
 return{
