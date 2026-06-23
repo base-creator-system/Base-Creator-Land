@@ -87,10 +87,10 @@
       }
     ],
     "presentation": {
-      "style": "color",
+      "style": "default",
       "color": "#d9ec37",
-      "url": "./media/media-card-video-1782221130914.mp4",
-      "animation": "pulse"
+      "url": "",
+      "animation": "none"
     },
     "externalMedia": [
       {
