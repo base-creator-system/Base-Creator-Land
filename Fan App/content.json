@@ -90,7 +90,7 @@
       "style": "color",
       "color": "#77bb41",
       "url": "./media/media-card-video-1782221130914.mp4",
-      "animation": "none"
+      "animation": "float"
     },
     "externalMedia": []
   },
@@ -136,7 +136,7 @@
   "heroMedia": {
     "enabled": true,
     "type": "video",
-    "url": "./media/hero-video-1782221117463.mp4",
+    "url": "./media/hero-video-1782222830582.mp4",
     "animation": "float"
   }
 }
