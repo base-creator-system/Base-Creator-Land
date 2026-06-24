@@ -588,6 +588,42 @@ height:520px;
 </div>
 
 <div style="margin-top:18px;border-top:1px solid #222;padding-top:14px;">
+<label>Inner Surface</label>
+<div class="tiny">Controls content container presentation separate from the outer background and action pill color.</div>
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Inner Surface Style</label>
+<select id="innerSurfaceStyle">
+<option value="default">default glass</option>
+<option value="color">color</option>
+<option value="image">wallpaper</option>
+<option value="video">video</option>
+</select>
+<div class="tiny">Default restores the BASE transparent glass presentation.</div>
+</div>
+<div class="col">
+<label>Inner Surface Color</label>
+<input id="innerSurfaceColor" type="color" value="#050505">
+<div class="tiny">Used when Inner Surface Style is color.</div>
+</div>
+</div>
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Inner Surface Asset Upload</label>
+<input id="innerSurfaceFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm,video/quicktime">
+<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
+</div>
+</div>
+<div class="row" style="margin-top:12px;">
+<div class="col">
+<label>Inner Surface Asset URL (legacy/manual optional)</label>
+<input id="innerSurfaceUrl" type="text" placeholder="https://... or ./media/inner-surface.mp4">
+<div class="tiny">Use only when you need a manual URL instead of a file upload.</div>
+</div>
+</div>
+</div>
+
+<div style="margin-top:18px;border-top:1px solid #222;padding-top:14px;">
 <label>App Icon</label>
 <input id="appIconInput" type="file" accept="image/png,image/jpeg">
 </div>
@@ -611,6 +647,7 @@ height:520px;
 <option value="float">float</option>
 <option value="pulse">pulse</option>
 <option value="drift">slow drift</option>
+<option value="spin">spin</option>
 </select>
 </div>
 </div>
@@ -1289,6 +1326,10 @@ chimeVolume:$("chimeVolume"),
 btnPreviewChime:$("btnPreviewChime"),
 btnClearChime:$("btnClearChime"),
 pillColor:$("pillColor"),
+innerSurfaceStyle:$("innerSurfaceStyle"),
+innerSurfaceColor:$("innerSurfaceColor"),
+innerSurfaceFile:$("innerSurfaceFile"),
+innerSurfaceUrl:$("innerSurfaceUrl"),
 appIconInput:$("appIconInput"),
 heroMediaType:$("heroMediaType"),
 heroMediaFile:$("heroMediaFile"),
@@ -2205,7 +2246,7 @@ el.heroMediaUrl.value=url
 el.heroMediaFile.value=""
 
 const animation=String(hero.animation || "none").toLowerCase().trim()
-el.heroMediaAnimation.value=["float","pulse","drift"].includes(animation) ? animation : "none"
+el.heroMediaAnimation.value=["float","pulse","drift","spin"].includes(animation) ? animation : "none"
 }
 
 function buildHeroMedia(){
@@ -2218,7 +2259,7 @@ return{
 enabled:false,
 type:"none",
 url:"",
-animation:["float","pulse","drift"].includes(animation) ? animation : "none"
+animation:["float","pulse","drift","spin"].includes(animation) ? animation : "none"
 }
 }
 
@@ -2226,7 +2267,7 @@ return{
 enabled:true,
 type,
 url,
-animation:["float","pulse","drift"].includes(animation) ? animation : "none"
+animation:["float","pulse","drift","spin"].includes(animation) ? animation : "none"
 }
 }
 
@@ -2252,7 +2293,7 @@ return localPath
 async function buildHeroMediaForPublish(token){
 const type=String(el.heroMediaType.value || "none").toLowerCase().trim()
 const animation=String(el.heroMediaAnimation.value || "none").toLowerCase().trim()
-const safeAnimation=["float","pulse","drift"].includes(animation) ? animation : "none"
+const safeAnimation=["float","pulse","drift","spin"].includes(animation) ? animation : "none"
 
 if(type!=="image" && type!=="video"){
 el.heroMediaFile.value=""
@@ -2358,6 +2399,132 @@ color:el.mediaCardColor.value || "#050505",
 url,
 animation:["float","pulse","drift"].includes(animation) ? animation : "none"
 }
+}
+
+function getPresentationSourceUrl(presentation){
+const style=String(presentation?.style || "default").toLowerCase().trim()
+
+if(style==="video"){
+return String(
+presentation?.video ||
+presentation?.backgroundVideo ||
+presentation?.url ||
+""
+).trim()
+}
+
+if(style==="image"){
+return String(
+presentation?.image ||
+presentation?.wallpaper ||
+presentation?.backgroundImage ||
+presentation?.url ||
+""
+).trim()
+}
+
+return String(presentation?.url || "").trim()
+}
+
+function hydrateInnerSurface(state){
+const source=(state && typeof state==="object" && state.innerSurface && typeof state.innerSurface==="object")
+? state.innerSurface
+: ((state && typeof state==="object" && state.innerSurfacePresentation && typeof state.innerSurfacePresentation==="object")
+? state.innerSurfacePresentation
+: {})
+
+const style=String(source.style || source.type || "default").toLowerCase().trim()
+el.innerSurfaceStyle.value=["color","image","video"].includes(style) ? style : "default"
+el.innerSurfaceColor.value=source.color || source.backgroundColor || "#050505"
+el.innerSurfaceUrl.value=getPresentationSourceUrl({
+...source,
+style:el.innerSurfaceStyle.value
+})
+el.innerSurfaceFile.value=""
+}
+
+function buildInnerSurface(){
+const style=String(el.innerSurfaceStyle.value || "default").toLowerCase().trim()
+const safeStyle=["color","image","video"].includes(style) ? style : "default"
+const color=el.innerSurfaceColor.value || "#050505"
+const url=String(el.innerSurfaceUrl.value || "").trim()
+
+const output={
+style:safeStyle,
+color:safeStyle==="default" ? "" : color,
+url:safeStyle==="default" ? "" : url
+}
+
+if(safeStyle==="image"){
+output.image=url
+output.wallpaper=url
+output.backgroundImage=url
+}
+
+if(safeStyle==="video"){
+output.video=url
+output.backgroundVideo=url
+}
+
+return output
+}
+
+async function uploadInnerSurfaceAsset(token,file,style){
+const safeType=style==="video" ? "video" : "image"
+const safeExt=getSafeBackgroundExtension(file,safeType)
+const fileName=`inner-surface-${safeType}-${Date.now()}.${safeExt}`
+const repoPath=`Fan App/media/${fileName}`
+const localPath=`./media/${fileName}`
+const base64=await fileToBase64(file)
+
+await ghPutFile(
+token,
+repoPath,
+undefined,
+base64,
+`BASE inner surface ${safeType} ${fileName}`
+)
+
+return localPath
+}
+
+async function buildInnerSurfaceForPublish(token){
+const style=String(el.innerSurfaceStyle.value || "default").toLowerCase().trim()
+const safeStyle=["color","image","video"].includes(style) ? style : "default"
+let url=String(el.innerSurfaceUrl.value || "").trim()
+const file=el.innerSurfaceFile.files[0] || null
+
+if((safeStyle==="image" || safeStyle==="video") && file){
+log(`Inner surface ${safeStyle} upload started.`)
+url=await uploadInnerSurfaceAsset(token,file,safeStyle)
+el.innerSurfaceUrl.value=url
+el.innerSurfaceFile.value=""
+log(`Inner surface ${safeStyle} uploaded: ${url}`)
+}
+
+if(safeStyle==="default" || safeStyle==="color"){
+el.innerSurfaceFile.value=""
+if(safeStyle==="default") url=""
+}
+
+const output={
+style:safeStyle,
+color:safeStyle==="default" ? "" : (el.innerSurfaceColor.value || "#050505"),
+url
+}
+
+if(safeStyle==="image"){
+output.image=url
+output.wallpaper=url
+output.backgroundImage=url
+}
+
+if(safeStyle==="video"){
+output.video=url
+output.backgroundVideo=url
+}
+
+return output
 }
 
 function hydrateChime(state){
@@ -2500,6 +2667,7 @@ background:buildBackground(),
 heroMedia:buildHeroMedia(),
 chime:buildChime(),
 pillColor:el.pillColor.value,
+innerSurface:buildInnerSurface(),
 contactEmail:el.contactEmail.value,
 contactLabel:el.contactLabel.value,
 live:{
@@ -3139,6 +3307,7 @@ hydrateBackground(state)
 hydrateHeroMedia(state)
 hydrateChime(state)
 el.pillColor.value=state.pillColor||"#caa300"
+hydrateInnerSurface(state)
 linkState=Array.isArray(state.links)?state.links:[]
 hydrateMediaGateway(state)
 hydrateSupporters(state)
@@ -3323,7 +3492,8 @@ backgroundColor:el.backgroundColor.value,
 background:await buildBackgroundForPublish(token),
 heroMedia:await buildHeroMediaForPublish(token),
 chime:await buildChimeForPublish(token),
-pillColor:el.pillColor.value
+pillColor:el.pillColor.value,
+innerSurface:await buildInnerSurfaceForPublish(token)
 }
 
 const mg=await buildMediaGatewayForPublish(token)
@@ -3482,6 +3652,10 @@ el.chimeVolume.value="0.65"
 markDirty()
 }
 el.pillColor.addEventListener("input",markDirty)
+el.innerSurfaceStyle.addEventListener("change",markDirty)
+el.innerSurfaceColor.addEventListener("input",markDirty)
+el.innerSurfaceFile.addEventListener("change",markDirty)
+el.innerSurfaceUrl.addEventListener("input",markDirty)
 el.heroMediaType.addEventListener("change",markDirty)
 el.heroMediaFile.addEventListener("change",markDirty)
 el.heroMediaUrl.addEventListener("input",markDirty)
