@@ -302,7 +302,7 @@ color:var(--text);
 background:rgba(255,255,255,0.12);
 }
 
-.card,.media-card,.row,.pill,.media-btn,.btn,.tab,.liveDescriptionToggle{
+.card,.media-card,.row,.innerSurface,.pill,.media-btn,.btn,.tab,.liveDescriptionToggle{
 -webkit-tap-highlight-color:transparent;
 }
 
@@ -886,6 +886,7 @@ text-overflow:ellipsis;
 .supportersCard.cardPresented,
 .supporterCard.cardPresented,
 .row.cardPresented,
+.innerSurface.innerPresented,
 .collectionCard.mediaPresented,
 .media-card.mediaPresented,
 .externalMediaCard.mediaPresented{
@@ -898,6 +899,7 @@ overflow:hidden;
 .supportersCard.cardPresented > *:not(.mediaPresentationLayer),
 .supporterCard.cardPresented > *:not(.mediaPresentationLayer),
 .row.cardPresented > *:not(.mediaPresentationLayer),
+.innerSurface.innerPresented > *:not(.mediaPresentationLayer),
 .collectionCard.mediaPresented > *:not(.mediaPresentationLayer),
 .media-card.mediaPresented > *:not(.mediaPresentationLayer),
 .externalMediaCard.mediaPresented > *:not(.mediaPresentationLayer){
@@ -2390,7 +2392,7 @@ layer.remove();
 });
 
 card.style.background="";
-card.classList.remove("cardPresented","mediaPresented");
+card.classList.remove("cardPresented","mediaPresented","innerPresented");
 
 if(!config){
 return;
@@ -2398,6 +2400,8 @@ return;
 
 if(scope==="global"){
 card.classList.add("cardPresented");
+}else if(scope==="inner"){
+card.classList.add("innerPresented");
 }else{
 card.classList.add("mediaPresented");
 }
@@ -2481,15 +2485,46 @@ gateway.cardStyle
 
 }
 
+function getInnerSurfacePresentationConfig(d){
+
+if(!d) return null;
+
+const gateway=d.mediaGateway || {};
+
+return getMediaPresentationConfig(
+d.innerSurfacePresentation,
+d.innerSurface,
+d.innerCardPresentation,
+d.innerCardStyle,
+d.contentSurfacePresentation,
+d.contentSurface,
+gateway.innerSurfacePresentation,
+gateway.innerSurface,
+gateway.innerCardPresentation,
+gateway.innerCardStyle,
+gateway.contentSurfacePresentation,
+gateway.contentSurface
+);
+
+}
+
+function applyInnerSurfacePresentation(d){
+
+const config=getInnerSurfacePresentationConfig(d);
+
+document.querySelectorAll(".innerSurface").forEach(surface=>{
+applyMediaPresentation(surface,config,"inner");
+});
+
+}
+
 function applyGlobalCardPresentation(d){
 
 const config=getGlobalCardPresentationConfig(d);
 
 const selector=[
 ".card",
-".supportersCard",
-".supporterCard",
-".row"
+".supportersCard"
 ].join(",");
 
 document.querySelectorAll(selector).forEach(card=>{
@@ -2673,7 +2708,7 @@ const presentation=getMediaPresentationConfig(item,d.mediaGateway || {}) || getG
 applyMediaPresentation(card,presentation);
 
 const top=document.createElement("div");
-top.className="externalMediaTop";
+top.className="externalMediaTop innerSurface";
 
 const thumb=document.createElement("div");
 thumb.className="externalMediaThumb";
@@ -2786,7 +2821,7 @@ document.body.style.overflow="hidden"
 ;(collection.items || []).forEach(item=>{
 
 const card=document.createElement("div")
-card.className="media-card"
+card.className="media-card innerSurface"
 applyMediaPresentation(card,getMediaPresentationConfig(item,collection,gateway) || collectionPresentation)
 
 card.onclick=()=>{
@@ -3106,6 +3141,7 @@ renderSupporters(d);
 renderLinks(d);
 renderMedia(d);
 applyGlobalCardPresentation(d);
+applyInnerSurfacePresentation(d);
 
 }
 
@@ -3160,7 +3196,7 @@ const url=safeURL(rawUrl);
 const clickable=Boolean(url);
 
 const card=document.createElement(clickable ? "a" : "div");
-card.className="supporterCard";
+card.className="supporterCard innerSurface";
 
 if(clickable){
 card.href=url;
@@ -3252,7 +3288,7 @@ if(!url)return;
 
 const a=document.createElement("a");
 
-a.className="row";
+a.className="row innerSurface";
 a.href=url;
 a.target="_blank";
 a.rel="noopener";
