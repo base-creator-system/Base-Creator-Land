@@ -134,6 +134,16 @@ height:auto;
 background:#000;
 }
 
+.heroSpin{
+animation:heroSpin 18s linear infinite;
+transform-origin:center center;
+}
+
+@keyframes heroSpin{
+0%{transform:rotate(0deg)}
+100%{transform:rotate(360deg)}
+}
+
 body.liveActive .wrap{
 display:flex;
 flex-direction:column;
@@ -225,6 +235,13 @@ body.cardAnimGlow .supporterCard,
 body.cardAnimGlow .collectionCard,
 body.cardAnimGlow .media-card,
 body.cardAnimGlow .row{
+animation:none;
+}
+}
+
+
+@media (prefers-reduced-motion: reduce){
+.heroSpin{
 animation:none;
 }
 }
@@ -1559,6 +1576,34 @@ src:src
 
 }
 
+function getHeroAnimationName(d,heroData){
+
+const raw=String(
+(heroData && (heroData.animation || heroData.animationType || heroData.motion || heroData.effect)) ||
+(d && (d.heroAnimation || d.heroAnimationType || d.heroMotion || d.heroEffect)) ||
+""
+).toLowerCase().trim();
+
+if(raw==="spin" || raw==="rotate"){
+return "spin";
+}
+
+return "";
+
+}
+
+function applyHeroAnimation(element,animationName){
+
+if(!element) return;
+
+element.classList.remove("heroSpin");
+
+if(animationName==="spin"){
+element.classList.add("heroSpin");
+}
+
+}
+
 function stopHeroVideo(){
 
 if(activeHeroVideo){
@@ -1578,6 +1623,7 @@ const hero=document.querySelector(".hero");
 if(!hero) return;
 
 const heroData=d.hero || d.heroMedia || {};
+const heroAnimation=getHeroAnimationName(d,heroData);
 const heroDisabled=heroData.enabled===false;
 const config=getHeroConfig(d);
 
@@ -1592,7 +1638,7 @@ return;
 if(!config){
 
 const fallbackSrc="icons/icon-512-v37.png?v=1782058053694";
-const assetKey="fallback|" + fallbackSrc;
+const assetKey="fallback|" + fallbackSrc + "|" + heroAnimation;
 
 stopHeroVideo();
 hero.classList.remove("hidden");
@@ -1608,13 +1654,15 @@ const img=document.createElement("img");
 img.src=fallbackSrc;
 img.alt="";
 
+applyHeroAnimation(img,heroAnimation);
+
 hero.appendChild(img);
 
 return;
 
 }
 
-const assetKey=config.type + "|" + config.src;
+const assetKey=config.type + "|" + config.src + "|" + heroAnimation;
 
 hero.classList.remove("hidden");
 
@@ -1643,6 +1691,8 @@ video.setAttribute("playsinline","");
 video.setAttribute("webkit-playsinline","");
 video.preload="auto";
 
+applyHeroAnimation(video,heroAnimation);
+
 hero.appendChild(video);
 activeHeroVideo=video;
 
@@ -1662,6 +1712,8 @@ stopHeroVideo();
 const img=document.createElement("img");
 img.src=config.src;
 img.alt="";
+
+applyHeroAnimation(img,heroAnimation);
 
 hero.appendChild(img);
 
