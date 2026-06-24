@@ -148,6 +148,11 @@
     "enabled": true,
     "type": "image",
     "url": "./media/hero-image-1782263714981.png",
-    "animation": "none"
+    "animation": "spin"
+  },
+  "innerSurface": {
+    "style": "default",
+    "color": "",
+    "url": ""
   }
 }
