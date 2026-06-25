@@ -567,11 +567,12 @@ margin-top:12px;
 }
 
 .supporterCard{
-border:1px solid var(--stroke);
-background:var(--card);
-border-radius:18px;
-padding:16px;
-display:block;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:14px;
+width:100%;
+min-width:0;
 text-decoration:none;
 color:inherit;
 }
@@ -3330,7 +3331,7 @@ card.rel="noopener";
 }
 
 const inner=document.createElement("div");
-inner.className="supporterInnerSurface innerSurface";
+inner.className="supporterInnerSurface";
 
 const thumb=document.createElement("div");
 thumb.className="supporterThumb";
