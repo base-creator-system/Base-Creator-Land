@@ -121,6 +121,8 @@ border-radius:0;
 border:none;
 background:transparent;
 overflow:visible;
+perspective:1000px;
+perspective-origin:center center;
 }
 
 .hero img,
@@ -137,11 +139,14 @@ background:#000;
 .heroSpin{
 animation:heroSpin 18s linear infinite;
 transform-origin:center center;
+transform-style:preserve-3d;
+backface-visibility:visible;
+will-change:transform;
 }
 
 @keyframes heroSpin{
-0%{transform:rotate(0deg)}
-100%{transform:rotate(360deg)}
+0%{transform:rotateY(0deg)}
+100%{transform:rotateY(360deg)}
 }
 
 body.liveActive .wrap{
@@ -335,6 +340,23 @@ padding:14px;
 margin:14px 0;
 text-decoration:none;
 color:inherit;
+}
+
+.innerSurface{
+border:1px solid var(--stroke);
+background:rgba(255,255,255,0.04);
+border-radius:16px;
+padding:14px;
+text-decoration:none;
+color:inherit;
+}
+
+.homeInnerSurface{
+margin-bottom:0;
+}
+
+.homeInnerSurface + #connectMount .btn{
+margin-top:12px;
 }
 
 .left{
@@ -720,14 +742,17 @@ line-height:1.45;
 .collectionCard{
 border:1px solid var(--stroke);
 background:var(--card);
-border-radius:20px;
+border-radius:18px;
 padding:16px;
-margin:14px 0;
+margin:16px 0;
+cursor:pointer;
+}
+
+.collectionInner{
 display:flex;
 align-items:center;
 justify-content:space-between;
 gap:14px;
-cursor:pointer;
 }
 
 .collectionLeft{
@@ -836,10 +861,10 @@ padding:16px;
 
 .media-card{
 border:1px solid var(--stroke);
-background:var(--card);
-border-radius:18px;
-padding:12px;
-margin:10px 0;
+background:rgba(255,255,255,0.04);
+border-radius:16px;
+padding:14px;
+margin:14px 0;
 display:flex;
 align-items:center;
 gap:10px;
@@ -960,9 +985,9 @@ margin:18px 2px 8px;
 .externalMediaCard{
 border:1px solid var(--stroke);
 background:var(--card);
-border-radius:20px;
-padding:14px;
-margin:14px 0;
+border-radius:18px;
+padding:16px;
+margin:16px 0;
 }
 
 .externalMediaTop{
@@ -1191,8 +1216,10 @@ i
 
 <section id="view-home">
 <div class="card">
+<div class="homeInnerSurface innerSurface">
 <div class="h1">Home</div>
 <p class="p" id="bio"></p>
+</div>
 <div id="connectMount"></div>
 </div>
 </section>
@@ -2761,6 +2788,7 @@ applyMediaPresentation(card,presentation);
 
 const top=document.createElement("div");
 top.className="externalMediaTop innerSurface";
+applyMediaPresentation(top,getInnerSurfacePresentationConfig(d),"inner");
 
 const thumb=document.createElement("div");
 thumb.className="externalMediaThumb";
@@ -2874,7 +2902,7 @@ document.body.style.overflow="hidden"
 
 const card=document.createElement("div")
 card.className="media-card innerSurface"
-applyMediaPresentation(card,getMediaPresentationConfig(item,collection,gateway) || collectionPresentation)
+applyMediaPresentation(card,getMediaPresentationConfig(item,collection,gateway) || collectionPresentation,"inner")
 
 card.onclick=()=>{
 collectionBody.querySelectorAll(".media-card.selected").forEach(activeCard=>{
@@ -3400,9 +3428,13 @@ collections.forEach(collection=>{
 const card=document.createElement("div")
 card.className="collectionCard"
 
-applyMediaPresentation(card,getMediaPresentationConfig(collection,gateway) || getGlobalCardPresentationConfig(d))
+applyMediaPresentation(card,getMediaPresentationConfig(collection,gateway) || getGlobalCardPresentationConfig(d),"global")
 
 card.onclick=()=>openCollection(collection)
+
+const inner=document.createElement("div")
+inner.className="collectionInner innerSurface"
+applyMediaPresentation(inner,getInnerSurfacePresentationConfig(d),"inner")
 
 const left=document.createElement("div")
 left.className="collectionLeft"
@@ -3425,8 +3457,9 @@ const arrow=document.createElement("div")
 arrow.className="collectionArrow"
 arrow.textContent="Open"
 
-card.appendChild(left)
-card.appendChild(arrow)
+inner.appendChild(left)
+inner.appendChild(arrow)
+card.appendChild(inner)
 
 container.appendChild(card)
 
