@@ -142,7 +142,7 @@
   "chime": {
     "enabled": true,
     "url": "./media/chime-1782053661232.mp3",
-    "volume": 0.45
+    "volume": 0.3
   },
   "heroMedia": {
     "enabled": true,
@@ -151,8 +151,11 @@
     "animation": "spin"
   },
   "innerSurface": {
-    "style": "default",
-    "color": "",
-    "url": ""
+    "style": "image",
+    "color": "#050505",
+    "url": "./media/inner-surface-image-1782350956752.png",
+    "image": "./media/inner-surface-image-1782350956752.png",
+    "wallpaper": "./media/inner-surface-image-1782350956752.png",
+    "backgroundImage": "./media/inner-surface-image-1782350956752.png"
   }
 }
