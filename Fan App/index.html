@@ -564,14 +564,21 @@ margin-top:12px;
 
 .supporterCard{
 border:1px solid var(--stroke);
-background:rgba(255,255,255,0.04);
-border-radius:16px;
-padding:14px;
-display:flex;
-align-items:center;
-gap:12px;
+background:var(--card);
+border-radius:18px;
+padding:16px;
+display:block;
 text-decoration:none;
 color:inherit;
+}
+
+.supporterInnerSurface{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:14px;
+width:100%;
+min-width:0;
 }
 
 .supporterThumb{
@@ -598,10 +605,6 @@ display:block;
 .supporterBody{
 flex:1;
 min-width:0;
-}
-
-.supporterCard.innerSurface{
-padding:14px;
 }
 
 .supporterType{
@@ -643,6 +646,7 @@ display:inline-flex;
 align-items:center;
 justify-content:center;
 flex:0 0 auto;
+white-space:nowrap;
 }
 
 /* INSTALL INFO MODAL */
@@ -1633,41 +1637,20 @@ const raw=String(
 (heroData && (heroData.animation || heroData.animationType || heroData.motion || heroData.effect)) ||
 (d && (d.heroAnimation || d.heroAnimationType || d.heroMotion || d.heroEffect)) ||
 ""
-).toLowerCase().trim();
+).toLowerCase().replace(/[\s_-]+/g,"").trim();
 
-const normalized=raw.replace(/[\s_]+/g,"-");
-
-if(
-normalized==="flat" ||
-normalized==="flat-spin" ||
-normalized==="spin-flat" ||
-normalized==="record" ||
-normalized==="record-spin" ||
-normalized==="rotate-z" ||
-normalized==="rotatez" ||
-normalized==="z-spin"
-){
-return "flat";
+if(raw==="spin" || raw==="rotate" || raw==="3d" || raw==="3dspin" || raw==="spin3d" || raw==="rotatey" || raw==="uprightspin" || raw==="uprightturn"){
+return "spin";
 }
 
-if(
-normalized==="spin" ||
-normalized==="rotate" ||
-normalized==="3d" ||
-normalized==="3d-spin" ||
-normalized==="spin-3d" ||
-normalized==="three-d" ||
-normalized==="three-d-spin" ||
-normalized==="rotate-y" ||
-normalized==="rotatey" ||
-normalized==="y-spin"
-){
-return "spin";
+if(raw==="flat" || raw==="flatspin" || raw==="record" || raw==="recordspin" || raw==="discspin" || raw==="diskspin" || raw==="rotatez"){
+return "flat";
 }
 
 return "";
 
 }
+
 
 function applyHeroAnimation(element,animationName){
 
@@ -2658,7 +2641,8 @@ const config=getGlobalCardPresentationConfig(d);
 
 const selector=[
 ".card",
-".supportersCard"
+".supportersCard",
+".supporterCard"
 ].join(",");
 
 document.querySelectorAll(selector).forEach(card=>{
@@ -3331,13 +3315,16 @@ const url=safeURL(rawUrl);
 const clickable=Boolean(url);
 
 const card=document.createElement(clickable ? "a" : "div");
-card.className="supporterCard innerSurface";
+card.className="supporterCard";
 
 if(clickable){
 card.href=url;
 card.target="_blank";
 card.rel="noopener";
 }
+
+const inner=document.createElement("div");
+inner.className="supporterInnerSurface innerSurface";
 
 const thumb=document.createElement("div");
 thumb.className="supporterThumb";
@@ -3387,18 +3374,19 @@ body.appendChild(desc);
 
 }
 
-card.appendChild(thumb);
-card.appendChild(body);
+inner.appendChild(thumb);
+inner.appendChild(body);
 
 if(clickable){
 
 const button=document.createElement("div");
 button.className="supporterButton";
 button.textContent=item.buttonText || "Open";
-card.appendChild(button);
+inner.appendChild(button);
 
 }
 
+card.appendChild(inner);
 container.appendChild(card);
 
 });
