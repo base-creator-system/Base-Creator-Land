@@ -136,17 +136,35 @@ height:auto;
 background:#000;
 }
 
-.heroSpin{
-animation:heroSpin 18s linear infinite;
+.heroSpin,
+.heroSpin3D,
+.heroSpinFlat{
+animation-duration:18s;
+animation-timing-function:linear;
+animation-iteration-count:infinite;
 transform-origin:center center;
-transform-style:preserve-3d;
-backface-visibility:visible;
 will-change:transform;
 }
 
-@keyframes heroSpin{
-0%{transform:rotateY(0deg)}
-100%{transform:rotateY(360deg)}
+.heroSpin,
+.heroSpin3D{
+animation-name:heroSpin3D;
+transform-style:preserve-3d;
+backface-visibility:visible;
+}
+
+.heroSpinFlat{
+animation-name:heroSpinFlat;
+}
+
+@keyframes heroSpin3D{
+0%{transform:perspective(900px) rotateY(0deg)}
+100%{transform:perspective(900px) rotateY(360deg)}
+}
+
+@keyframes heroSpinFlat{
+0%{transform:rotate(0deg)}
+100%{transform:rotate(360deg)}
 }
 
 body.liveActive .wrap{
@@ -246,7 +264,9 @@ animation:none;
 
 
 @media (prefers-reduced-motion: reduce){
-.heroSpin{
+.heroSpin,
+.heroSpin3D,
+.heroSpinFlat{
 animation:none;
 }
 }
@@ -546,7 +566,7 @@ margin-top:12px;
 border:1px solid var(--stroke);
 background:rgba(255,255,255,0.04);
 border-radius:16px;
-padding:12px;
+padding:14px;
 display:flex;
 align-items:center;
 gap:12px;
@@ -578,6 +598,10 @@ display:block;
 .supporterBody{
 flex:1;
 min-width:0;
+}
+
+.supporterCard.innerSurface{
+padding:14px;
 }
 
 .supporterType{
@@ -1611,7 +1635,33 @@ const raw=String(
 ""
 ).toLowerCase().trim();
 
-if(raw==="spin" || raw==="rotate"){
+const normalized=raw.replace(/[\s_]+/g,"-");
+
+if(
+normalized==="flat" ||
+normalized==="flat-spin" ||
+normalized==="spin-flat" ||
+normalized==="record" ||
+normalized==="record-spin" ||
+normalized==="rotate-z" ||
+normalized==="rotatez" ||
+normalized==="z-spin"
+){
+return "flat";
+}
+
+if(
+normalized==="spin" ||
+normalized==="rotate" ||
+normalized==="3d" ||
+normalized==="3d-spin" ||
+normalized==="spin-3d" ||
+normalized==="three-d" ||
+normalized==="three-d-spin" ||
+normalized==="rotate-y" ||
+normalized==="rotatey" ||
+normalized==="y-spin"
+){
 return "spin";
 }
 
@@ -1623,10 +1673,15 @@ function applyHeroAnimation(element,animationName){
 
 if(!element) return;
 
-element.classList.remove("heroSpin");
+element.classList.remove("heroSpin","heroSpin3D","heroSpinFlat");
 
 if(animationName==="spin"){
-element.classList.add("heroSpin");
+element.classList.add("heroSpin3D");
+return;
+}
+
+if(animationName==="flat"){
+element.classList.add("heroSpinFlat");
 }
 
 }
