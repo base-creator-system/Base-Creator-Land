@@ -123,6 +123,17 @@
       "url": "https://djalamo.com/",
       "buttonText": "DJ Alamo.com",
       "enabled": true
+    },
+    {
+      "id": "supporter-1782475432502-8bd5c5c81eab2",
+      "type": "supporter",
+      "name": "High Demand 2022",
+      "tagline": "High demand",
+      "description": "testing",
+      "thumbnail": "./media/supporter-supporter-1782475432502-8bd5c5c81eab2-1782475489895.png",
+      "url": "https://highdemandclothingcompany.com/?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQPOTM2NjE5NzQzMzkyNDU5AAGnZ1xAu4VSDxd4vZRk3nDJ4fheXwWvzGW-0H17gocUYlqBbdjfi7n4JUpXgaw_aem_-oCbvFTH2O73fomlgClPtA",
+      "buttonText": "test",
+      "enabled": true
     }
   ],
   "community": {
@@ -136,26 +147,23 @@
   },
   "background": {
     "enabled": true,
-    "type": "video",
-    "url": "./media/background-video-1782058048605.mov"
+    "type": "image",
+    "url": "./media/background-image-1782475488278.png"
   },
   "chime": {
-    "enabled": true,
-    "url": "./media/chime-1782053661232.mp3",
-    "volume": 0.3
+    "enabled": false,
+    "url": "",
+    "volume": 0.65
   },
   "heroMedia": {
     "enabled": true,
     "type": "image",
     "url": "./media/hero-image-1782304362799.png",
-    "animation": "spin"
+    "animation": "flat"
   },
   "innerSurface": {
-    "style": "image",
-    "color": "#050505",
-    "url": "./media/inner-surface-image-1782350956752.png",
-    "image": "./media/inner-surface-image-1782350956752.png",
-    "wallpaper": "./media/inner-surface-image-1782350956752.png",
-    "backgroundImage": "./media/inner-surface-image-1782350956752.png"
+    "style": "color",
+    "color": "#38571a",
+    "url": "./media/inner-surface-image-1782350956752.png"
   }
 }
