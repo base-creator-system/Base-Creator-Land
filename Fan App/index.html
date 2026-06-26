@@ -1404,6 +1404,9 @@ let activeView="home"
 let currentState=null
 let activeHeroAsset=""
 let activeHeroVideo=null
+let activeMediaRenderSignature=""
+let externalMediaRuntimeCache={}
+let externalMediaExpandedState={}
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -2816,15 +2819,113 @@ return label;
 
 }
 
+function getExternalMediaRuntimeKey(item,index){
+
+const raw=String(
+item.id ||
+item.key ||
+item.slug ||
+item.embed ||
+item.embedUrl ||
+item.embedURL ||
+item.embed_url ||
+item.url ||
+item.name ||
+item.title ||
+item.provider ||
+("external-" + index)
+).trim();
+
+return raw || ("external-" + index);
+
+}
+
+function getExternalMediaRuntimeSignature(item){
+
+return JSON.stringify({
+provider:item.provider || "",
+name:item.name || "",
+title:item.title || "",
+description:item.description || item.desc || "",
+thumbnail:item.thumbnail || item.thumb || item.image || "",
+buttonText:item.buttonText || "",
+embed:item.embed || "",
+embedUrl:item.embedUrl || item.embedURL || item.embed_url || "",
+url:item.url || ""
+});
+
+}
+
+function getExternalMediaRuntime(key,item){
+
+const signature=getExternalMediaRuntimeSignature(item);
+const existing=externalMediaRuntimeCache[key];
+
+if(existing && existing.signature===signature){
+return existing;
+}
+
+const mount=document.createElement("div");
+mount.className="externalMediaEmbedMount";
+
+const runtime={
+signature:signature,
+mount:mount,
+rendered:false
+};
+
+externalMediaRuntimeCache[key]=runtime;
+externalMediaExpandedState[key]=false;
+
+return runtime;
+
+}
+
+function pruneExternalMediaRuntimeCache(activeKeys){
+
+Object.keys(externalMediaRuntimeCache).forEach(key=>{
+if(!activeKeys[key]){
+delete externalMediaRuntimeCache[key];
+delete externalMediaExpandedState[key];
+}
+});
+
+}
+
+function getMediaRenderSignature(d){
+
+const gateway=d.mediaGateway || {};
+
+return JSON.stringify({
+mediaGateway:gateway,
+externalMedia:d.externalMedia || null,
+externalMediaItems:d.externalMediaItems || null,
+externalGalleries:d.externalGalleries || null,
+mediaExternal:d.mediaExternal || null,
+cardPresentation:d.cardPresentation || d.mediaPresentation || d.cardStyle || d.cardAnimation || null,
+outerSurface:d.outerSurfacePresentation || d.outerSurface || d.cardSurfacePresentation || d.cardSurface || null,
+innerSurface:d.innerSurfacePresentation || d.innerSurface || d.innerCardPresentation || d.innerCardStyle || d.contentSurfacePresentation || d.contentSurface || null
+});
+
+}
+
 function renderExternalMedia(container,d){
 
 const items=normalizeExternalMediaList(d);
 
-if(items.length===0) return;
+if(items.length===0){
+pruneExternalMediaRuntimeCache({});
+return;
+}
 
 container.appendChild(createMediaSectionLabel("Gallery / Archive"));
 
-items.forEach(item=>{
+const activeKeys={};
+
+items.forEach((item,index)=>{
+
+const runtimeKey=getExternalMediaRuntimeKey(item,index);
+activeKeys[runtimeKey]=true;
 
 const card=document.createElement("div");
 card.className="externalMediaCard";
@@ -2873,23 +2974,6 @@ btn.className="externalMediaExpandBtn";
 btn.type="button";
 btn.textContent=item.buttonText || "Expand";
 
-const mount=document.createElement("div");
-mount.className="externalMediaEmbedMount";
-
-let rendered=false;
-let expanded=false;
-
-btn.onclick=()=>{
-expanded=!expanded;
-mount.classList.toggle("expanded",expanded);
-btn.textContent=expanded ? "Collapse" : (item.buttonText || "Expand");
-
-if(expanded && !rendered){
-renderExternalEmbed(mount,item);
-rendered=true;
-}
-};
-
 const hasEmbed=Boolean(item.embed || item.embedUrl || item.embedURL || item.embed_url);
 const hasUrl=Boolean(safeURL(String(item.url || "").trim()));
 
@@ -2898,18 +2982,48 @@ btn.textContent=item.buttonText || "Open";
 btn.onclick=()=>{
 window.open(safeURL(String(item.url || "").trim()),"_blank","noopener");
 };
+
+}else{
+
+const runtime=getExternalMediaRuntime(runtimeKey,item);
+const mount=runtime.mount;
+const expanded=externalMediaExpandedState[runtimeKey]===true;
+
+mount.classList.toggle("expanded",expanded);
+btn.textContent=expanded ? "Collapse" : (item.buttonText || "Expand");
+
+if(expanded && !runtime.rendered){
+renderExternalEmbed(mount,item);
+runtime.rendered=true;
+}
+
+btn.onclick=()=>{
+const nextExpanded=externalMediaExpandedState[runtimeKey]!==true;
+externalMediaExpandedState[runtimeKey]=nextExpanded;
+mount.classList.toggle("expanded",nextExpanded);
+btn.textContent=nextExpanded ? "Collapse" : (item.buttonText || "Expand");
+
+if(nextExpanded && !runtime.rendered){
+renderExternalEmbed(mount,item);
+runtime.rendered=true;
+}
+};
+
+card.appendChild(mount);
+
 }
 
 top.appendChild(thumb);
 top.appendChild(body);
 top.appendChild(btn);
 
-card.appendChild(top);
-card.appendChild(mount);
+card.insertBefore(top,card.firstChild);
 
 container.appendChild(card);
 
 });
+
+pruneExternalMediaRuntimeCache(activeKeys);
 
 }
 
@@ -3459,13 +3573,23 @@ container.appendChild(a)
 function renderMedia(d){
 
 const container=document.getElementById("mediaSection");
+const renderSignature=getMediaRenderSignature(d);
 
+if(renderSignature===activeMediaRenderSignature && container.children.length>0){
+return;
+}
+
+activeMediaRenderSignature=renderSignature;
 container.innerHTML="";
 
 const gateway=d.mediaGateway || {};
 const enabled=(gateway.enabled!==false);
 
-if(!enabled) return;
+if(!enabled){
+activeMediaRenderSignature="";
+pruneExternalMediaRuntimeCache({});
+return;
+}
 
 const collections=Array.isArray(gateway.collections)?gateway.collections:[];
 
