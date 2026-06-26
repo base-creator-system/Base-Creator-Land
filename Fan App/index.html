@@ -654,6 +654,52 @@ flex:0 0 auto;
 white-space:nowrap;
 }
 
+.supportersList.carousel .supporterCard{
+display:none;
+}
+
+.supportersList.carousel .supporterCard.active{
+display:flex;
+animation:supporterFadeIn .28s ease both;
+}
+
+.supportersNav{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+margin-top:12px;
+}
+
+.supporterNavBtn{
+width:34px;
+height:34px;
+border-radius:999px;
+border:1px solid var(--stroke);
+background:rgba(255,255,255,0.06);
+color:#fff;
+font-size:18px;
+font-weight:900;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
+-webkit-tap-highlight-color:transparent;
+}
+
+.supporterNavCount{
+min-width:54px;
+text-align:center;
+font-size:12px;
+font-weight:800;
+color:var(--muted);
+}
+
+@keyframes supporterFadeIn{
+0%{opacity:0;transform:translateY(2px)}
+100%{opacity:1;transform:translateY(0)}
+}
+
 /* INSTALL INFO MODAL */
 
 .installModal{
@@ -1407,6 +1453,10 @@ let activeHeroVideo=null
 let activeMediaRenderSignature=""
 let externalMediaRuntimeCache={}
 let externalMediaExpandedState={}
+let supportersRuntimeSignature=""
+let supportersRuntimeIndex=0
+let supportersRuntimeTimer=null
+let supportersRuntimePausedUntil=0
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -2514,14 +2564,13 @@ function applyMediaPresentation(card,config,scope){
 
 if(!card) return;
 
-card.querySelectorAll(":scope > .mediaPresentationLayer").forEach(layer=>{
-layer.remove();
-});
+const layers=Array.from(card.querySelectorAll(":scope > .mediaPresentationLayer"));
 
 card.style.background="";
 card.classList.remove("cardPresented","mediaPresented","innerPresented");
 
 if(!config){
+layers.forEach(layer=>layer.remove());
 return;
 }
 
@@ -2537,14 +2586,40 @@ if(config.color){
 card.style.background=config.color;
 }
 
+const presentationKey=[
+scope || "media",
+config.type || "",
+config.src || "",
+config.color || ""
+].join("|");
+
 if(config.type==="color"){
+layers.forEach(layer=>layer.remove());
+card.dataset.presentationKey=presentationKey;
 return;
 }
+
+const currentLayer=layers[0] || null;
+
+if(
+currentLayer &&
+currentLayer.dataset.presentationKey===presentationKey &&
+((config.type==="wallpaper" && currentLayer.querySelector("img")) ||
+(config.type==="video" && currentLayer.querySelector("video")))
+){
+if(layers.length>1){
+layers.slice(1).forEach(layer=>layer.remove());
+}
+return;
+}
+
+layers.forEach(layer=>layer.remove());
 
 if(config.type==="wallpaper" && config.src){
 
 const layer=document.createElement("div");
 layer.className="mediaPresentationLayer";
+layer.dataset.presentationKey=presentationKey;
 
 const img=document.createElement("img");
 img.src=config.src;
@@ -2552,6 +2627,7 @@ img.alt="";
 
 layer.appendChild(img);
 card.insertBefore(layer,card.firstChild);
+card.dataset.presentationKey=presentationKey;
 
 return;
 
@@ -2561,6 +2637,7 @@ if(config.type==="video" && config.src){
 
 const layer=document.createElement("div");
 layer.className="mediaPresentationLayer";
+layer.dataset.presentationKey=presentationKey;
 
 const video=document.createElement("video");
 video.src=config.src;
@@ -2581,6 +2658,7 @@ video.preload="metadata";
 
 layer.appendChild(video);
 card.insertBefore(layer,card.firstChild);
+card.dataset.presentationKey=presentationKey;
 
 try{
 const playPromise=video.play();
@@ -3385,50 +3463,74 @@ applyInnerSurfacePresentation(d);
 
 }
 
-function renderSupporters(d){
+function getSupportersSignature(items){
 
-const section=document.getElementById("supportersSection");
-const container=document.getElementById("supportersList");
-
-container.innerHTML="";
-
-if(activeView!=="home"){
-
-section.classList.add("hidden");
-
-return;
+return JSON.stringify(items.map(item=>({
+type:String(item.type||""),
+name:String(item.name||""),
+tagline:String(item.tagline||""),
+description:String(item.description||""),
+thumbnail:String(item.thumbnail||""),
+url:String(item.url||""),
+buttonText:String(item.buttonText||""),
+enabled:item.enabled===false ? false : true
+})));
 
 }
 
-const supporters=Array.isArray(d.supporters)?d.supporters:[];
+function stopSupportersAutoRotate(){
 
-const visible=supporters.filter(item=>{
+if(supportersRuntimeTimer){
+clearInterval(supportersRuntimeTimer);
+supportersRuntimeTimer=null;
+}
 
-if(!item)return false;
+}
 
-if(item.enabled===false)return false;
+function showSupporterIndex(index){
 
-return Boolean(
-String(item.type||"").trim() ||
-String(item.name||"").trim() ||
-String(item.tagline||"").trim() ||
-String(item.description||"").trim() ||
-String(item.thumbnail||"").trim() ||
-String(item.url||"").trim() ||
-String(item.buttonText||"").trim()
-);
+const container=document.getElementById("supportersList");
+if(!container)return;
 
+const cards=Array.from(container.querySelectorAll(".supporterCard"));
+if(cards.length===0)return;
+
+supportersRuntimeIndex=((index % cards.length) + cards.length) % cards.length;
+
+cards.forEach((card,i)=>{
+card.classList.toggle("active",i===supportersRuntimeIndex);
 });
 
-if(visible.length===0){
-
-section.classList.add("hidden");
-
-return;
+const count=container.querySelector(".supporterNavCount");
+if(count){
+count.textContent=`${supportersRuntimeIndex+1} / ${cards.length}`;
+}
 
 }
 
-visible.forEach(item=>{
+function pauseSupportersAutoRotate(){
+
+supportersRuntimePausedUntil=Date.now()+12000;
+
+}
+
+function startSupportersAutoRotate(count){
+
+stopSupportersAutoRotate();
+
+if(count<=1)return;
+
+supportersRuntimeTimer=setInterval(()=>{
+
+if(Date.now()<supportersRuntimePausedUntil)return;
+
+showSupporterIndex(supportersRuntimeIndex+1);
+
+},9000);
+
+}
+
+function createSupporterCard(item){
 
 const rawUrl=String(item.url||"").trim();
 const url=safeURL(rawUrl);
@@ -3443,6 +3545,8 @@ card.href=url;
 card.target="_blank";
 card.rel="noopener";
 }
+
+card.addEventListener("pointerdown",pauseSupportersAutoRotate,{passive:true});
 
 const inner=document.createElement("div");
 inner.className="supporterInnerSurface";
@@ -3466,7 +3570,14 @@ thumb.textContent=fallback;
 const body=document.createElement("div");
 body.className="supporterBody";
 
+if(item.type){
 
+const type=document.createElement("div");
+type.className="supporterType";
+type.textContent=item.type;
+body.appendChild(type);
+
+}
 
 if(item.name){
 
@@ -3508,11 +3619,121 @@ inner.appendChild(button);
 }
 
 card.appendChild(inner);
-container.appendChild(card);
+
+return card;
+
+}
+
+function renderSupporters(d){
+
+const section=document.getElementById("supportersSection");
+const container=document.getElementById("supportersList");
+
+if(activeView!=="home"){
+
+section.classList.add("hidden");
+stopSupportersAutoRotate();
+
+return;
+
+}
+
+const supporters=Array.isArray(d.supporters)?d.supporters:[];
+
+const visible=supporters.filter(item=>{
+
+if(!item)return false;
+
+if(item.enabled===false)return false;
+
+return Boolean(
+String(item.type||"").trim() ||
+String(item.name||"").trim() ||
+String(item.tagline||"").trim() ||
+String(item.description||"").trim() ||
+String(item.thumbnail||"").trim() ||
+String(item.url||"").trim() ||
+String(item.buttonText||"").trim()
+);
 
 });
 
+if(visible.length===0){
+
+container.innerHTML="";
+container.classList.remove("carousel");
+section.classList.add("hidden");
+supportersRuntimeSignature="";
+supportersRuntimeIndex=0;
+stopSupportersAutoRotate();
+
+return;
+
+}
+
+const signature=getSupportersSignature(visible);
+
 section.classList.remove("hidden");
+
+if(signature===supportersRuntimeSignature && container.dataset.supportersReady==="true"){
+container.classList.toggle("carousel",visible.length>1);
+showSupporterIndex(supportersRuntimeIndex);
+startSupportersAutoRotate(visible.length);
+return;
+}
+
+supportersRuntimeSignature=signature;
+if(supportersRuntimeIndex>=visible.length){
+supportersRuntimeIndex=0;
+}
+
+container.innerHTML="";
+container.dataset.supportersReady="true";
+container.classList.toggle("carousel",visible.length>1);
+
+visible.forEach((item,i)=>{
+const card=createSupporterCard(item);
+card.classList.toggle("active",i===supportersRuntimeIndex);
+container.appendChild(card);
+});
+
+if(visible.length>1){
+
+const nav=document.createElement("div");
+nav.className="supportersNav";
+
+const prev=document.createElement("button");
+prev.type="button";
+prev.className="supporterNavBtn";
+prev.textContent="‹";
+prev.setAttribute("aria-label","Previous supporter");
+prev.onclick=()=>{
+pauseSupportersAutoRotate();
+showSupporterIndex(supportersRuntimeIndex-1);
+};
+
+const count=document.createElement("div");
+count.className="supporterNavCount";
+
+const next=document.createElement("button");
+next.type="button";
+next.className="supporterNavBtn";
+next.textContent="›";
+next.setAttribute("aria-label","Next supporter");
+next.onclick=()=>{
+pauseSupportersAutoRotate();
+showSupporterIndex(supportersRuntimeIndex+1);
+};
+
+nav.appendChild(prev);
+nav.appendChild(count);
+nav.appendChild(next);
+container.appendChild(nav);
+
+}
+
+showSupporterIndex(supportersRuntimeIndex);
+startSupportersAutoRotate(visible.length);
 
 }
 
