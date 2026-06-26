@@ -167,6 +167,67 @@ animation-name:heroSpinFlat;
 100%{transform:rotate(360deg)}
 }
 
+/* LAUNCH INTRO */
+
+body.launchIntroPending .top,
+body.launchIntroPending #communitySection,
+body.launchIntroPending #supportersSection,
+body.launchIntroPending #view-home,
+body.launchIntroPending #view-media,
+body.launchIntroPending #view-links,
+body.launchIntroPending #view-live,
+body.launchIntroPending .baseFooter,
+body.launchIntroPending .tabs{
+opacity:0;
+pointer-events:none;
+}
+
+body.launchIntroPending .hero{
+opacity:0;
+transform:scale(.96);
+}
+
+body.launchIntroReady .hero{
+animation:baseLaunchHeroIntro .58s cubic-bezier(.2,.8,.2,1) both;
+}
+
+body.launchIntroDone .top,
+body.launchIntroDone #communitySection:not(.hidden),
+body.launchIntroDone #supportersSection:not(.hidden),
+body.launchIntroDone #view-home:not(.hidden),
+body.launchIntroDone #view-media:not(.hidden),
+body.launchIntroDone #view-links:not(.hidden),
+body.launchIntroDone #view-live:not(.hidden),
+body.launchIntroDone .baseFooter,
+body.launchIntroDone .tabs{
+animation:baseLaunchContentIn .34s ease-out both;
+}
+
+@keyframes baseLaunchHeroIntro{
+0%{opacity:0;transform:scale(.92) translateY(8px)}
+100%{opacity:1;transform:scale(1) translateY(0)}
+}
+
+@keyframes baseLaunchContentIn{
+0%{opacity:0;transform:translateY(8px)}
+100%{opacity:1;transform:translateY(0)}
+}
+
+@media (prefers-reduced-motion: reduce){
+body.launchIntroReady .hero,
+body.launchIntroDone .top,
+body.launchIntroDone #communitySection:not(.hidden),
+body.launchIntroDone #supportersSection:not(.hidden),
+body.launchIntroDone #view-home:not(.hidden),
+body.launchIntroDone #view-media:not(.hidden),
+body.launchIntroDone #view-links:not(.hidden),
+body.launchIntroDone #view-live:not(.hidden),
+body.launchIntroDone .baseFooter,
+body.launchIntroDone .tabs{
+animation:none;
+}
+}
+
 body.liveActive .wrap{
 display:flex;
 flex-direction:column;
@@ -630,6 +691,7 @@ overflow:hidden;
 text-overflow:ellipsis;
 }
 
+.supporterTagline,
 .supporterDesc{
 font-size:12px;
 color:var(--muted);
@@ -641,7 +703,6 @@ display:-webkit-box;
 -webkit-line-clamp:2;
 -webkit-box-orient:vertical;
 line-height:1.25;
-min-height:30px;
 }
 
 .supporterButton{
@@ -1259,7 +1320,7 @@ min-height:100%;
 </style>
 </head>
 
-<body>
+<body class="launchIntroPending">
 
 <div id="appBackground" class="appBackground" aria-hidden="true"></div>
 
@@ -1461,6 +1522,8 @@ let supportersRuntimeSignature=""
 let supportersRuntimeIndex=0
 let supportersRuntimeTimer=null
 let supportersRuntimePausedUntil=0
+let launchIntroResolved=false
+let launchIntroTimer=null
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -1845,6 +1908,63 @@ img.alt="";
 applyHeroAnimation(img,heroAnimation);
 
 hero.appendChild(img);
+
+}
+
+function hasLaunchHero(d){
+
+const heroData=(d && (d.hero || d.heroMedia)) || {};
+
+if(heroData.enabled===false) return false;
+
+const config=getHeroConfig(d || {});
+
+return !!config;
+
+}
+
+function finishLaunchIntro(animateContent){
+
+if(launchIntroTimer){
+clearTimeout(launchIntroTimer);
+launchIntroTimer=null;
+}
+
+launchIntroResolved=true;
+
+document.body.classList.remove("launchIntroPending","launchIntroReady");
+
+if(animateContent===true){
+document.body.classList.add("launchIntroDone");
+}
+
+}
+
+function runLaunchIntro(d){
+
+if(launchIntroResolved) return;
+
+if(activeView==="live" || !hasLaunchHero(d)){
+finishLaunchIntro(false);
+return;
+}
+
+const reducedMotion=window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+if(reducedMotion){
+finishLaunchIntro(false);
+return;
+}
+
+document.body.classList.add("launchIntroReady");
+
+if(launchIntroTimer){
+clearTimeout(launchIntroTimer);
+}
+
+launchIntroTimer=setTimeout(()=>{
+finishLaunchIntro(true);
+},680);
 
 }
 
@@ -3467,6 +3587,7 @@ renderLinks(d);
 renderMedia(d);
 applyGlobalCardPresentation(d);
 applyInnerSurfacePresentation(d);
+runLaunchIntro(d);
 
 }
 
@@ -3475,6 +3596,7 @@ function getSupportersSignature(items){
 return JSON.stringify(items.map(item=>({
 type:String(item.type||""),
 name:String(item.name||""),
+tagline:String(item.tagline||""),
 description:String(item.description||""),
 thumbnail:String(item.thumbnail||""),
 url:String(item.url||""),
@@ -3594,10 +3716,23 @@ body.appendChild(name);
 
 }
 
+if(item.tagline){
+
+const tagline=document.createElement("div");
+tagline.className="supporterTagline";
+tagline.textContent=item.tagline;
+body.appendChild(tagline);
+
+}
+
+if(item.description){
+
 const desc=document.createElement("div");
 desc.className="supporterDesc";
-desc.textContent=item.description || "";
+desc.textContent=item.description;
 body.appendChild(desc);
+
+}
 
 inner.appendChild(thumb);
 inner.appendChild(body);
@@ -3642,6 +3777,7 @@ if(item.enabled===false)return false;
 return Boolean(
 String(item.type||"").trim() ||
 String(item.name||"").trim() ||
+String(item.tagline||"").trim() ||
 String(item.description||"").trim() ||
 String(item.thumbnail||"").trim() ||
 String(item.url||"").trim() ||
