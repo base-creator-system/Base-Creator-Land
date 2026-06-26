@@ -551,19 +551,20 @@ display:block;
 border:1px solid var(--stroke);
 background:var(--card);
 border-radius:18px;
-padding:16px;
-margin:16px 0;
+padding:10px;
+margin:12px 0;
 }
 
 .supportersInnerSurface{
 display:block;
+padding:12px;
 }
 
 .supportersList{
 display:flex;
 flex-direction:column;
-gap:12px;
-margin-top:12px;
+gap:8px;
+margin-top:0;
 }
 
 .supporterCard{
@@ -581,14 +582,14 @@ color:inherit;
 display:flex;
 align-items:center;
 justify-content:space-between;
-gap:14px;
+gap:10px;
 width:100%;
 min-width:0;
 }
 
 .supporterThumb{
-width:54px;
-height:54px;
+width:44px;
+height:44px;
 border-radius:14px;
 overflow:hidden;
 border:1px solid var(--stroke);
@@ -597,7 +598,7 @@ flex:0 0 auto;
 display:grid;
 place-items:center;
 font-weight:900;
-font-size:18px;
+font-size:16px;
 }
 
 .supporterThumb img{
@@ -613,12 +614,12 @@ min-width:0;
 }
 
 .supporterType{
-font-size:11px;
+font-size:10px;
 font-weight:800;
 text-transform:uppercase;
 letter-spacing:.4px;
 color:var(--muted);
-margin-bottom:3px;
+margin-bottom:2px;
 }
 
 .supporterName{
@@ -633,15 +634,19 @@ text-overflow:ellipsis;
 .supporterDesc{
 font-size:12px;
 color:var(--muted);
-margin-top:3px;
-white-space:nowrap;
+margin-top:2px;
+white-space:normal;
 overflow:hidden;
-text-overflow:ellipsis;
+text-overflow:clip;
+display:-webkit-box;
+-webkit-line-clamp:2;
+-webkit-box-orient:vertical;
+line-height:1.25;
 }
 
 .supporterButton{
-height:32px;
-padding:0 14px;
+height:28px;
+padding:0 10px;
 border-radius:999px;
 background:var(--pillColor);
 color:#fff;
@@ -667,13 +672,13 @@ animation:supporterFadeIn .28s ease both;
 display:flex;
 align-items:center;
 justify-content:center;
-gap:10px;
-margin-top:12px;
+gap:8px;
+margin-top:8px;
 }
 
 .supporterNavBtn{
-width:34px;
-height:34px;
+width:28px;
+height:28px;
 border-radius:999px;
 border:1px solid var(--stroke);
 background:rgba(255,255,255,0.06);
@@ -688,7 +693,7 @@ justify-content:center;
 }
 
 .supporterNavCount{
-min-width:54px;
+min-width:44px;
 text-align:center;
 font-size:12px;
 font-weight:800;
@@ -1289,7 +1294,6 @@ i
 <section id="supportersSection" class="hidden">
 <div class="supportersCard">
 <div class="supportersInnerSurface innerSurface">
-<div class="h1">Supporters</div>
 <div id="supportersList" class="supportersList"></div>
 </div>
 </div>
