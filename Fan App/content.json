@@ -134,6 +134,17 @@
       "url": "https://highdemandclothingcompany.com/?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQPOTM2NjE5NzQzMzkyNDU5AAGnZ1xAu4VSDxd4vZRk3nDJ4fheXwWvzGW-0H17gocUYlqBbdjfi7n4JUpXgaw_aem_-oCbvFTH2O73fomlgClPtA",
       "buttonText": "test",
       "enabled": true
+    },
+    {
+      "id": "supporter-1782484404456-7b2d2e22e0c928",
+      "type": "sponsor",
+      "name": "DJ Mofiya",
+      "tagline": "",
+      "description": "",
+      "thumbnail": "",
+      "url": "",
+      "buttonText": "Visit Supporter",
+      "enabled": true
     }
   ],
   "community": {
