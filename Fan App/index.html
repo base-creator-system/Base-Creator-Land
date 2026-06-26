@@ -197,6 +197,7 @@ body.launchIntroDone #supportersSection:not(.hidden),
 body.launchIntroDone #view-home:not(.hidden),
 body.launchIntroDone #view-media:not(.hidden),
 body.launchIntroDone #view-links:not(.hidden),
+body.launchIntroDone #view-live:not(.hidden),
 body.launchIntroDone .baseFooter,
 body.launchIntroDone .tabs{
 animation:baseLaunchContentIn .34s ease-out both;
@@ -220,6 +221,7 @@ body.launchIntroDone #supportersSection:not(.hidden),
 body.launchIntroDone #view-home:not(.hidden),
 body.launchIntroDone #view-media:not(.hidden),
 body.launchIntroDone #view-links:not(.hidden),
+body.launchIntroDone #view-live:not(.hidden),
 body.launchIntroDone .baseFooter,
 body.launchIntroDone .tabs{
 animation:none;
@@ -436,25 +438,6 @@ margin-bottom:0;
 
 .homeInnerSurface + #connectMount .btn{
 margin-top:12px;
-}
-
-.linkItem{
-border:1px solid var(--stroke);
-background:rgba(255,255,255,0.04);
-border-radius:16px;
-padding:14px;
-margin:14px 0;
-text-decoration:none;
-color:inherit;
-display:block;
-}
-
-.linkItemInner{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:14px;
-width:100%;
 }
 
 .left{
@@ -708,6 +691,7 @@ overflow:hidden;
 text-overflow:ellipsis;
 }
 
+.supporterTagline,
 .supporterDesc{
 font-size:12px;
 color:var(--muted);
@@ -1391,7 +1375,11 @@ i
 </section>
 
 <section id="view-links" class="hidden">
+<div class="card">
+<div class="linksInnerSurface innerSurface">
 <div id="links"></div>
+</div>
+</div>
 </section>
 
 
@@ -3610,6 +3598,7 @@ function getSupportersSignature(items){
 return JSON.stringify(items.map(item=>({
 type:String(item.type||""),
 name:String(item.name||""),
+tagline:String(item.tagline||""),
 description:String(item.description||""),
 thumbnail:String(item.thumbnail||""),
 url:String(item.url||""),
@@ -3729,6 +3718,15 @@ body.appendChild(name);
 
 }
 
+if(item.tagline){
+
+const tagline=document.createElement("div");
+tagline.className="supporterTagline";
+tagline.textContent=item.tagline;
+body.appendChild(tagline);
+
+}
+
 if(item.description){
 
 const desc=document.createElement("div");
@@ -3781,6 +3779,7 @@ if(item.enabled===false)return false;
 return Boolean(
 String(item.type||"").trim() ||
 String(item.name||"").trim() ||
+String(item.tagline||"").trim() ||
 String(item.description||"").trim() ||
 String(item.thumbnail||"").trim() ||
 String(item.url||"").trim() ||
@@ -3875,7 +3874,6 @@ const container=document.getElementById("links");
 container.innerHTML="";
 
 const links=Array.isArray(d.links)?d.links:[];
-const innerPresentation=getInnerSurfacePresentationConfig(d);
 
 links.forEach(item=>{
 
@@ -3884,14 +3882,11 @@ const url=safeURL(item.url);
 if(!url)return;
 
 const a=document.createElement("a");
-a.className="linkItem";
+
+a.className="row";
 a.href=url;
 a.target="_blank";
 a.rel="noopener";
-
-const inner=document.createElement("div");
-inner.className="linkItemInner innerSurface";
-applyMediaPresentation(inner,innerPresentation,"inner");
 
 const left=document.createElement("div");
 left.className="left";
@@ -3917,13 +3912,12 @@ const pill=document.createElement("div");
 pill.className="pill";
 pill.textContent="Open";
 
-inner.appendChild(left);
-inner.appendChild(pill);
-a.appendChild(inner);
+a.appendChild(left);
+a.appendChild(pill);
 
-container.appendChild(a);
+container.appendChild(a)
 
-});
+})
 
 }
 
@@ -4037,11 +4031,7 @@ const state=await fetchState();
 
 applyState(state);
 
-}catch(e){
-
-finishLaunchIntro(false);
-
-}
+}catch(e){}
 
 }
 
