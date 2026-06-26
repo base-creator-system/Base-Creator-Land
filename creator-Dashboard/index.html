@@ -647,7 +647,8 @@ height:520px;
 <option value="float">float</option>
 <option value="pulse">pulse</option>
 <option value="drift">slow drift</option>
-<option value="spin">spin</option>
+<option value="flat">Flat Spin</option>
+<option value="spin">3D Spin</option>
 </select>
 </div>
 </div>
@@ -2246,7 +2247,7 @@ el.heroMediaUrl.value=url
 el.heroMediaFile.value=""
 
 const animation=String(hero.animation || "none").toLowerCase().trim()
-el.heroMediaAnimation.value=["float","pulse","drift","spin"].includes(animation) ? animation : "none"
+el.heroMediaAnimation.value=["float","pulse","drift","flat","spin"].includes(animation) ? animation : "none"
 }
 
 function buildHeroMedia(){
@@ -2259,7 +2260,7 @@ return{
 enabled:false,
 type:"none",
 url:"",
-animation:["float","pulse","drift","spin"].includes(animation) ? animation : "none"
+animation:["float","pulse","drift","flat","spin"].includes(animation) ? animation : "none"
 }
 }
 
@@ -2267,7 +2268,7 @@ return{
 enabled:true,
 type,
 url,
-animation:["float","pulse","drift","spin"].includes(animation) ? animation : "none"
+animation:["float","pulse","drift","flat","spin"].includes(animation) ? animation : "none"
 }
 }
 
@@ -2293,7 +2294,7 @@ return localPath
 async function buildHeroMediaForPublish(token){
 const type=String(el.heroMediaType.value || "none").toLowerCase().trim()
 const animation=String(el.heroMediaAnimation.value || "none").toLowerCase().trim()
-const safeAnimation=["float","pulse","drift","spin"].includes(animation) ? animation : "none"
+const safeAnimation=["float","pulse","drift","flat","spin"].includes(animation) ? animation : "none"
 
 if(type!=="image" && type!=="video"){
 el.heroMediaFile.value=""
