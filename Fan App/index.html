@@ -2575,6 +2575,7 @@ card.classList.remove("cardPresented","mediaPresented","innerPresented");
 
 if(!config){
 layers.forEach(layer=>layer.remove());
+delete card.dataset.presentationKey;
 return;
 }
 
@@ -2586,21 +2587,22 @@ card.classList.add("innerPresented");
 card.classList.add("mediaPresented");
 }
 
-if(config.color){
-card.style.background=config.color;
-}
-
 const presentationKey=[
 scope || "media",
 config.type || "",
 config.src || "",
-config.color || ""
+config.type==="color" ? (config.color || "") : ""
 ].join("|");
 
 if(config.type==="color"){
+card.style.background=config.color || "";
 layers.forEach(layer=>layer.remove());
 card.dataset.presentationKey=presentationKey;
 return;
+}
+
+if(config.type==="wallpaper" || config.type==="video"){
+card.style.background="transparent";
 }
 
 const currentLayer=layers[0] || null;
@@ -2658,7 +2660,8 @@ video.setAttribute("muted","");
 video.setAttribute("playsinline","");
 video.setAttribute("webkit-playsinline","");
 video.setAttribute("aria-hidden","true");
-video.preload="metadata";
+video.preload="auto";
+video.style.background="transparent";
 
 layer.appendChild(video);
 card.insertBefore(layer,card.firstChild);
