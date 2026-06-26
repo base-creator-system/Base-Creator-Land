@@ -159,11 +159,13 @@
     "enabled": true,
     "type": "image",
     "url": "./media/hero-image-1782304362799.png",
-    "animation": "flat"
+    "animation": "pulse"
   },
   "innerSurface": {
-    "style": "color",
-    "color": "#38571a",
-    "url": "./media/inner-surface-image-1782350956752.png"
+    "style": "video",
+    "color": "#000000",
+    "url": "./media/inner-surface-video-1782480543329.mp4",
+    "video": "./media/inner-surface-video-1782480543329.mp4",
+    "backgroundVideo": "./media/inner-surface-video-1782480543329.mp4"
   }
 }
