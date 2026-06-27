@@ -2,3805 +2,3914 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BASE Creator Dashboard</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<title>DJ MOFIYA APP</title>
+
+<link rel="manifest" href="manifest.json?v=1782480548101">
+<meta name="theme-color" content="#000000">
+<link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512-v37.png?v=1782480548101">
+<link rel="shortcut icon" type="image/png" href="icons/icon-192-v37.png?v=1782480548101">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192-v37.png?v=1782480548101">
 
 <style>
-html, body{
+:root{
+--bg:#000;
+--card:rgba(255,255,255,0.05);
+--stroke:rgba(255,255,255,0.12);
+--text:#fff;
+--muted:rgba(255,255,255,0.72);
+--pillColor:#000;
+}
+
+*{box-sizing:border-box}
+
+body{
 margin:0;
-padding:0;
-background:#000;
-color:#fff;
-font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-min-height:100%;
+background:var(--bg);
+color:var(--text);
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+overflow-x:hidden;
+min-height:100vh;
+}
+
+.appBackground{
+position:fixed;
+inset:0;
+z-index:0;
+overflow:hidden;
+pointer-events:none;
+display:none;
+background:transparent;
+}
+
+.appBackground.active{
+display:block;
+}
+
+.appBackground img,
+.appBackground video{
+position:absolute;
+inset:0;
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+}
+
+.appBackground::after{
+content:"";
+position:absolute;
+inset:0;
+background:rgba(0,0,0,.42);
 }
 
 .wrap{
-max-width:1080px;
+max-width:720px;
 margin:0 auto;
-padding:18px 14px 40px;
-box-sizing:border-box;
+padding:20px 16px 100px;
+position:relative;
+z-index:1;
 }
 
 .top{
 display:flex;
-align-items:flex-start;
+align-items:center;
 justify-content:space-between;
-gap:16px;
-margin-bottom:14px;
+padding:6px 2px 14px;
 }
 
-h1{
-font-size:34px;
-margin:0 0 6px 0;
-letter-spacing:.2px;
-}
-
-.sub{
-opacity:.72;
-margin:0;
-font-size:16px;
-}
-
-.pill{
-border:2px solid #caa300;
-border-radius:999px;
-padding:10px 14px;
-font-weight:600;
-min-width:160px;
-text-align:center;
-}
-
-.pill.ok{border-color:#2ee06b}
-.pill.bad{border-color:#ff4b4b}
-.pill.warn{border-color:#caa300}
-
-.dashboardTabs{
+.brand{
 display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin:18px 0 10px;
+align-items:center;
+gap:12px;
 }
 
-.dashboardTab{
-border:1px solid #2a2a2a;
-background:#0b0b0b;
-color:#fff;
-border-radius:14px;
-padding:10px 16px;
+.brand img{
+width:44px;
+height:44px;
+border-radius:12px;
+object-fit:cover;
+border:1px solid var(--stroke);
+background:#000;
+}
+
+.brand .name{
+font-weight:800;
+font-size:17px;
+}
+
+.installInfoBtn{
+width:36px;
+height:36px;
+border-radius:999px;
+border:1px solid rgba(0,122,255,.55);
+background:rgba(0,122,255,.18);
+color:#5eb2ff;
+font-size:18px;
+font-weight:900;
+display:flex;
+align-items:center;
+justify-content:center;
 cursor:pointer;
+-webkit-tap-highlight-color:transparent;
 }
 
-.dashboardTab:hover{
-border-color:#444;
+.hero{
+margin:8px 0 18px;
+border-radius:0;
+border:none;
+background:transparent;
+overflow:visible;
+perspective:1000px;
+perspective-origin:center center;
 }
 
-.dashboardTab.active{
-border-color:#caa300;
-background:#111;
-}
-
-.page{
-display:none;
-}
-
-.page.active{
+.hero img,
+.hero video{
+width:100%;
 display:block;
 }
 
+.hero video{
+height:auto;
+background:#000;
+}
+
+.heroSpin,
+.heroSpin3D,
+.heroSpinFlat{
+animation-duration:18s;
+animation-timing-function:linear;
+animation-iteration-count:infinite;
+transform-origin:center center;
+will-change:transform;
+}
+
+.heroSpin,
+.heroSpin3D{
+animation-name:heroSpin3D;
+transform-style:preserve-3d;
+backface-visibility:visible;
+}
+
+.heroSpinFlat{
+animation-name:heroSpinFlat;
+}
+
+@keyframes heroSpin3D{
+0%{transform:perspective(900px) rotateY(0deg)}
+100%{transform:perspective(900px) rotateY(360deg)}
+}
+
+@keyframes heroSpinFlat{
+0%{transform:rotate(0deg)}
+100%{transform:rotate(360deg)}
+}
+
+body.liveActive .wrap{
+display:flex;
+flex-direction:column;
+}
+
+body.liveActive #view-live{
+order:2;
+}
+
+body.liveActive #communitySection{
+order:3;
+}
+
+body.liveActive .baseFooter{
+order:4;
+}
+
 .card{
-border:1px solid #222;
-background:#070707;
+border:1px solid var(--stroke);
+background:var(--card);
 border-radius:18px;
-padding:18px;
-margin:18px 0;
-box-shadow:0 0 0 1px rgba(255,255,255,.02) inset;
+padding:16px;
+margin:16px 0;
+}
+
+#communitySection .card{
+padding:6px;
+margin:4px 0;
+}
+
+body.cardAnimFloat .card,
+body.cardAnimFloat .supportersCard,
+body.cardAnimFloat .supporterCard,
+body.cardAnimFloat .collectionCard,
+body.cardAnimFloat .media-card,
+body.cardAnimFloat .row{
+animation:baseCardFloat 6s ease-in-out infinite;
+}
+
+body.cardAnimPulse .card,
+body.cardAnimPulse .supportersCard,
+body.cardAnimPulse .supporterCard,
+body.cardAnimPulse .collectionCard,
+body.cardAnimPulse .media-card,
+body.cardAnimPulse .row{
+animation:baseCardPulse 4.5s ease-in-out infinite;
+}
+
+body.cardAnimGlow .card,
+body.cardAnimGlow .supportersCard,
+body.cardAnimGlow .supporterCard,
+body.cardAnimGlow .collectionCard,
+body.cardAnimGlow .media-card,
+body.cardAnimGlow .row{
+animation:baseCardGlow 5s ease-in-out infinite;
+}
+
+@keyframes baseCardFloat{
+0%,100%{transform:translateY(0)}
+50%{transform:translateY(-3px)}
+}
+
+@keyframes baseCardPulse{
+0%,100%{transform:scale(1)}
+50%{transform:scale(1.01)}
+}
+
+@keyframes baseCardGlow{
+0%,100%{box-shadow:0 0 0 rgba(255,255,255,0)}
+50%{box-shadow:0 0 22px rgba(255,255,255,.10)}
+}
+
+@media (prefers-reduced-motion: reduce){
+body.cardAnimFloat .card,
+body.cardAnimFloat .supportersCard,
+body.cardAnimFloat .supporterCard,
+body.cardAnimFloat .collectionCard,
+body.cardAnimFloat .media-card,
+body.cardAnimFloat .row,
+body.cardAnimPulse .card,
+body.cardAnimPulse .supportersCard,
+body.cardAnimPulse .supporterCard,
+body.cardAnimPulse .collectionCard,
+body.cardAnimPulse .media-card,
+body.cardAnimPulse .row,
+body.cardAnimGlow .card,
+body.cardAnimGlow .supportersCard,
+body.cardAnimGlow .supporterCard,
+body.cardAnimGlow .collectionCard,
+body.cardAnimGlow .media-card,
+body.cardAnimGlow .row{
+animation:none;
+}
+}
+
+
+@media (prefers-reduced-motion: reduce){
+.heroSpin,
+.heroSpin3D,
+.heroSpinFlat{
+animation:none;
+}
+}
+
+#communitySection .h1{
+font-size:16px;
+margin:0;
+}
+
+.h1{
+font-size:18px;
+font-weight:800;
+margin:0 0 6px;
+}
+
+.p{
+margin:0;
+color:var(--muted);
+font-size:13px;
+}
+
+.hidden{
+display:none!important
+}
+
+.btn{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+width:100%;
+height:42px;
+border-radius:999px;
+border:none;
+background:var(--pillColor);
+color:#fff;
+font-weight:700;
+text-decoration:none;
+cursor:pointer;
+margin-top:12px;
+}
+
+.tabs{
+position:fixed;
+left:0;
+right:0;
+bottom:0;
+background:rgba(0,0,0,0.88);
+backdrop-filter:blur(12px);
+border-top:1px solid var(--stroke);
+padding:10px 12px;
+z-index:1000;
+}
+
+.tabrow{
+max-width:720px;
+margin:0 auto;
+display:flex;
+gap:10px;
+}
+
+.tab{
+flex:1;
+border:1px solid var(--stroke);
+background:rgba(255,255,255,0.05);
+color:var(--muted);
+padding:10px;
+border-radius:14px;
+font-size:13px;
+text-align:center;
+cursor:pointer;
+}
+
+.tab.active{
+color:var(--text);
+background:rgba(255,255,255,0.12);
+}
+
+.card,.media-card,.row,.innerSurface,.pill,.media-btn,.btn,.tab,.liveDescriptionToggle{
+-webkit-tap-highlight-color:transparent;
 }
 
 .row{
 display:flex;
+align-items:center;
+justify-content:space-between;
 gap:14px;
-flex-wrap:wrap;
+border:1px solid var(--stroke);
+background:rgba(255,255,255,0.04);
+border-radius:16px;
+padding:14px;
+margin:14px 0;
+text-decoration:none;
+color:inherit;
 }
 
-.col{
-flex:1;
-min-width:240px;
+.innerSurface{
+border:1px solid var(--stroke);
+background:rgba(255,255,255,0.04);
+border-radius:16px;
+padding:14px;
+text-decoration:none;
+color:inherit;
 }
 
-label{
-display:block;
-font-size:13px;
-opacity:.75;
-margin-bottom:6px;
+.homeInnerSurface{
+margin-bottom:0;
 }
 
-input,textarea,button,select{
-font:inherit;
-}
-
-input,textarea,select{
-width:100%;
-box-sizing:border-box;
-border-radius:14px;
-border:1px solid #2a2a2a;
-background:#000;
-color:#fff;
-padding:12px;
-outline:none;
-}
-
-textarea{
-min-height:120px;
-resize:vertical;
-}
-
-input[type=color]{
-height:52px;
-padding:6px;
-cursor:pointer;
-}
-
-.btnRow{
-display:flex;
-gap:12px;
-flex-wrap:wrap;
+.homeInnerSurface + #connectMount .btn{
 margin-top:12px;
 }
 
-button{
-border-radius:14px;
-border:1px solid #2a2a2a;
-background:#0b0b0b;
+.left{
+display:flex;
+flex-direction:column;
+gap:4px;
+}
+
+.label{
+font-weight:700;
+font-size:14px;
+}
+
+.hint{
+color:var(--muted);
+font-size:12px;
+}
+
+.pill,.media-btn{
+height:34px;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+padding:0 16px;
+border-radius:999px;
+background:var(--pillColor);
 color:#fff;
-padding:12px 16px;
+font-size:13px;
+font-weight:600;
+text-decoration:none;
+border:none;
 cursor:pointer;
 }
 
-button:hover{border-color:#444}
-button:disabled{opacity:.5;cursor:not-allowed}
-
-.primary{border-color:#caa300!important}
-.danger{border-color:#5a1b1b!important}
-
-.linksList{margin-top:10px}
-
-.linkRow{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:10px;
-padding:10px 12px;
-border:1px solid #222;
-border-radius:14px;
-margin-top:10px;
-background:#050505;
+.media-btn{
+height:30px;
+padding:0 12px;
+font-size:12px;
+margin-left:auto;
+flex:0 0 auto;
 }
 
-.linkText{
-opacity:.92;
+.media-locked{
+opacity:.6;
+background:rgba(255,255,255,.08);
+color:rgba(255,255,255,.7);
+}
+
+.baseFooter{
+max-width:720px;
+margin:18px auto 0;
+padding:0 16px;
+text-align:center;
+color:var(--muted);
+font-size:12px;
+font-weight:600;
+}
+
+.baseFooter a{
+color:var(--muted);
+text-decoration:none;
+}
+
+/* LIVE */
+
+.livePlayer{
+position:relative;
+padding-top:56.25%;
 overflow:hidden;
-text-overflow:ellipsis;
-white-space:nowrap;
-max-width:calc(100% - 110px);
-}
-
-.tiny{
-font-size:12px;
-opacity:.65;
-margin-top:6px;
-}
-
-.statusBox{
-white-space:pre-wrap;
-font-size:12px;
-opacity:.75;
-}
-
-.previewShell{
-display:flex;
-justify-content:center;
-margin-top:18px;
-overflow-x:auto;
-}
-
-.previewDevice{
-width:420px;
-max-width:420px;
-flex:0 0 420px;
-height:720px;
 background:#000;
-border-radius:36px;
-padding:14px;
-border:1px solid #222;
-box-shadow:
-0 0 0 1px rgba(255,255,255,.04) inset,
-0 40px 80px rgba(0,0,0,.8);
-box-sizing:border-box;
 }
 
-.previewFrame{
-display:block;
+.livePlayer iframe{
+position:absolute;
+inset:0;
 width:100%;
 height:100%;
 border:0;
 background:#000;
-border-radius:26px;
 }
 
-.miniPreview{
-border:1px solid #222;
-border-radius:18px;
-padding:16px;
-background:#040404;
+.liveDescription{
+margin-top:12px;
+color:var(--muted);
+font-size:13px;
+line-height:1.4;
 }
 
-.toggleRow{
+.liveDescriptionToggle{
 display:flex;
 align-items:center;
-justify-content:space-between;
-gap:12px;
-flex-wrap:wrap;
-}
-
-.mediaList,
-.supportersList{
-margin-top:12px;
-}
-
-.mediaCollectionBlock{
-border:1px solid #222;
-border-radius:16px;
-background:#050505;
-padding:12px;
-margin-top:12px;
-}
-
-.mediaCollectionHead{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:10px;
-}
-
-.mediaCollectionName{
+justify-content:center;
+width:max-content;
+min-height:26px;
+padding:0 12px;
+border-radius:999px;
+border:1px solid var(--stroke);
+background:rgba(255,255,255,0.05);
+color:var(--text);
 font-weight:800;
-font-size:14px;
-overflow:hidden;
-text-overflow:ellipsis;
-white-space:nowrap;
+font-size:12px;
+cursor:pointer;
+margin:8px auto 0;
+-webkit-tap-highlight-color:transparent;
 }
 
-.mediaCollectionCount{
-font-size:12px;
-opacity:.65;
+/* COMMUNITY */
+
+.communityHeader{
+display:flex;
+align-items:center;
+gap:8px;
+margin-bottom:2px;
+}
+
+.communityIcon{
+width:32px;
+height:32px;
+border-radius:12px;
+border:1px solid var(--stroke);
+object-fit:cover;
+display:none;
+background:rgba(255,255,255,0.05);
 flex:0 0 auto;
 }
 
-.mediaItemRow{
-display:flex;
-align-items:flex-start;
-justify-content:space-between;
-gap:12px;
-padding:12px;
-border:1px solid #222;
-border-radius:14px;
-margin-top:10px;
-background:#050505;
-}
-
-.mediaCollectionBlock .mediaItemRow{
-background:#020202;
-}
-
-.mediaMeta{
-flex:1;
-min-width:0;
-}
-
-.mediaTitle{
-font-weight:700;
-margin-bottom:4px;
-}
-
-.mediaSub{
-opacity:.8;
-font-size:12px;
-overflow:hidden;
-text-overflow:ellipsis;
-white-space:nowrap;
-}
-
-
-.supporterRow{
-display:flex;
-align-items:flex-start;
-justify-content:space-between;
-gap:12px;
-padding:12px;
-border:1px solid #222;
-border-radius:14px;
-margin-top:10px;
-background:#050505;
-}
-
-.supporterMeta{
-flex:1;
-min-width:0;
-}
-
-.supporterName{
-font-weight:800;
-margin-bottom:4px;
-}
-
-.supporterSub{
-opacity:.8;
-font-size:12px;
-overflow:hidden;
-text-overflow:ellipsis;
-white-space:nowrap;
-}
-
-.moduleBlock{
-border-top:1px solid #222;
-margin-top:18px;
-padding-top:14px;
-}
-
-.moduleToggle{
+.communityEmbedMount{
 width:100%;
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:12px;
-border:1px solid #222;
-background:#050505;
+margin-top:12px;
+overflow:hidden;
 border-radius:14px;
-padding:12px 14px;
-text-align:left;
+height:110px;
+max-height:110px;
+transition:height .25s ease,max-height .25s ease;
 }
 
-.moduleTitle{
+.communityEmbedMount.expanded{
+height:420px;
+max-height:55vh;
+}
+
+.communityExpandBtn{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+width:100%;
+height:30px;
+border-radius:999px;
+border:1px solid var(--stroke);
+background:var(--pillColor);
+color:#fff;
 font-weight:800;
-font-size:14px;
-}
-
-.moduleHint{
 font-size:12px;
-opacity:.65;
+cursor:pointer;
 margin-top:4px;
-display:none;
+-webkit-tap-highlight-color:transparent;
 }
 
-.moduleArrow{
-font-size:16px;
-opacity:.75;
-flex:0 0 auto;
-}
-
-.moduleContent{
-display:none;
-padding-top:14px;
-}
-
-.moduleBlock.open .moduleContent{
+.communityEmbedMount iframe{
+width:100%;
+height:420px;
+max-height:55vh;
+border:none;
+border-radius:14px;
+background:#000;
 display:block;
 }
 
-.moduleBlock.open .moduleArrow{
-transform:rotate(90deg);
+/* SUPPORTERS */
+
+.supportersCard{
+border:1px solid var(--stroke);
+background:var(--card);
+border-radius:18px;
+padding:16px;
+margin:16px 0;
 }
 
+.supportersInnerSurface{
+display:block;
+}
 
-@media (max-width:720px){
-.top{
+.supportersList{
+display:flex;
 flex-direction:column;
-align-items:stretch;
+gap:12px;
+margin-top:12px;
 }
 
-.pill{
+.supporterCard{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:14px;
+width:100%;
+min-width:0;
+text-decoration:none;
+color:inherit;
+}
+
+.supporterInnerSurface{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:14px;
+width:100%;
 min-width:0;
 }
 
-.dashboardTab{
-flex:1 1 calc(50% - 10px);
-text-align:center;
+.supporterThumb{
+width:54px;
+height:54px;
+border-radius:14px;
+overflow:hidden;
+border:1px solid var(--stroke);
+background:rgba(255,255,255,0.05);
+flex:0 0 auto;
+display:grid;
+place-items:center;
+font-weight:900;
+font-size:18px;
 }
 
-.previewDevice{
-width:360px;
-max-width:360px;
-flex:0 0 360px;
+.supporterThumb img{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+}
+
+.supporterBody{
+flex:1;
+min-width:0;
+}
+
+.supporterType{
+font-size:11px;
+font-weight:800;
+text-transform:uppercase;
+letter-spacing:.4px;
+color:var(--muted);
+margin-bottom:3px;
+}
+
+.supporterName{
+font-size:14px;
+font-weight:800;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.supporterTagline,
+.supporterDesc{
+font-size:12px;
+color:var(--muted);
+margin-top:3px;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.supporterButton{
+height:32px;
+padding:0 14px;
+border-radius:999px;
+background:var(--pillColor);
+color:#fff;
+font-size:12px;
+font-weight:700;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+flex:0 0 auto;
+white-space:nowrap;
+}
+
+.supportersList.carousel .supporterCard{
+display:none;
+}
+
+.supportersList.carousel .supporterCard.active{
+display:flex;
+animation:supporterFadeIn .28s ease both;
+}
+
+.supportersNav{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+margin-top:12px;
+}
+
+.supporterNavBtn{
+width:34px;
+height:34px;
+border-radius:999px;
+border:1px solid var(--stroke);
+background:rgba(255,255,255,0.06);
+color:#fff;
+font-size:18px;
+font-weight:900;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
+-webkit-tap-highlight-color:transparent;
+}
+
+.supporterNavCount{
+min-width:54px;
+text-align:center;
+font-size:12px;
+font-weight:800;
+color:var(--muted);
+}
+
+@keyframes supporterFadeIn{
+0%{opacity:0;transform:translateY(2px)}
+100%{opacity:1;transform:translateY(0)}
+}
+
+/* INSTALL INFO MODAL */
+
+.installModal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.78);
+backdrop-filter:blur(14px);
+z-index:10000;
+display:none;
+align-items:center;
+justify-content:center;
+padding:18px;
+}
+
+.installModal.active{
+display:flex;
+}
+
+.installPanel{
+width:100%;
+max-width:420px;
+max-height:86vh;
+overflow:auto;
+border:1px solid var(--stroke);
+background:rgba(14,14,14,.96);
+border-radius:24px;
+padding:18px;
+box-shadow:0 18px 60px rgba(0,0,0,.55);
+}
+
+.installTop{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+margin-bottom:14px;
+}
+
+.installTitle{
+font-size:18px;
+font-weight:900;
+letter-spacing:-.2px;
+}
+
+.installClose{
+width:36px;
+height:36px;
+border-radius:999px;
+border:1px solid var(--stroke);
+background:rgba(255,255,255,.08);
+color:#fff;
+font-size:20px;
+font-weight:800;
+cursor:pointer;
+}
+
+.installIntro{
+font-size:13px;
+line-height:1.45;
+color:var(--muted);
+margin:0 0 14px;
+}
+
+.installBlock{
+border:1px solid rgba(255,255,255,.1);
+background:rgba(255,255,255,.04);
+border-radius:18px;
+padding:14px;
+margin:12px 0;
+}
+
+.installBlockTitle{
+display:flex;
+align-items:center;
+gap:8px;
+font-size:15px;
+font-weight:850;
+margin-bottom:8px;
+}
+
+.installBadge{
+width:26px;
+height:26px;
+border-radius:9px;
+display:flex;
+align-items:center;
+justify-content:center;
+background:rgba(0,122,255,.18);
+color:#5eb2ff;
+font-size:14px;
+font-weight:900;
+}
+
+.installSteps{
+margin:0;
+padding-left:20px;
+color:var(--muted);
+font-size:13px;
+line-height:1.55;
+}
+
+.installSteps li{
+margin:5px 0;
+}
+
+.installNote{
+margin:14px 0 0;
+padding:12px;
+border-radius:16px;
+background:rgba(0,122,255,.11);
+border:1px solid rgba(0,122,255,.28);
+color:rgba(255,255,255,.82);
+font-size:12px;
+line-height:1.45;
+}
+
+/* COLLECTION CARDS */
+
+.collectionCard{
+border:1px solid var(--stroke);
+background:var(--card);
+border-radius:18px;
+padding:16px;
+margin:16px 0;
+cursor:pointer;
+}
+
+.collectionInner{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:14px;
+}
+
+.collectionLeft{
+display:flex;
+flex-direction:column;
+min-width:0;
+}
+
+.collectionTitle{
+font-size:16px;
+font-weight:800;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.collectionMeta{
+font-size:12px;
+color:var(--muted);
+margin-top:4px;
+}
+
+.collectionArrow{
+height:32px;
+padding:0 12px;
+border-radius:999px;
+display:flex;
+align-items:center;
+justify-content:center;
+background:var(--pillColor);
+color:#fff;
+font-weight:700;
+font-size:12px;
+flex:0 0 auto;
+}
+
+
+
+/* COLLECTION VIEW */
+
+.collectionView{
+position:fixed;
+inset:0;
+background:transparent;
+z-index:9998;
+display:none;
+flex-direction:column;
+overflow:hidden;
+}
+
+body.collectionOpen .wrap,
+body.collectionOpen .tabs,
+body.mediaRuntimeOpen .wrap,
+body.mediaRuntimeOpen .tabs{
+visibility:hidden;
+}
+
+body.mediaRuntimeOpen .collectionView{
+visibility:hidden;
+pointer-events:none;
+}
+
+.collectionView.active{
+display:flex;
+}
+
+.collectionHeader{
+height:64px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 16px;
+border-bottom:1px solid rgba(255,255,255,.08);
+background:rgba(0,0,0,.72);
+backdrop-filter:blur(12px);
+flex:0 0 auto;
+}
+
+.collectionHeaderTitle{
+font-size:15px;
+font-weight:800;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+padding-right:10px;
+}
+
+.collectionBack{
+height:38px;
+padding:0 16px;
+border:none;
+border-radius:999px;
+background:rgba(255,255,255,.1);
+color:#fff;
+font-weight:700;
+cursor:pointer;
+}
+
+.collectionBody{
+flex:1;
+overflow:auto;
+padding:16px;
+}
+
+/* MEDIA CARDS */
+
+.media-card{
+border:1px solid var(--stroke);
+background:rgba(255,255,255,0.04);
+border-radius:16px;
+padding:14px;
+margin:14px 0;
+display:flex;
+align-items:center;
+gap:10px;
+width:100%;
+min-width:0;
+overflow:hidden;
+cursor:pointer;
+}
+
+.media-card.selected{
+background:rgba(255,255,255,0.10);
+border-color:rgba(255,255,255,0.28);
+}
+
+.media-thumb{
+width:52px;
+height:52px;
+border-radius:14px;
+overflow:hidden;
+border:1px solid var(--stroke);
+background:rgba(255,255,255,0.04);
+flex:0 0 auto;
+display:grid;
+place-items:center;
+}
+
+.media-thumb img{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+}
+
+.media-body{
+flex:1;
+min-width:0;
+}
+
+.media-title{
+font-weight:700;
+font-size:14px;
+margin:0;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.media-desc{
+font-size:12px;
+color:var(--muted);
+margin-top:3px;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+
+/* MEDIA PRESENTATION */
+
+.card.cardPresented,
+.supportersCard.cardPresented,
+.supporterCard.cardPresented,
+.row.cardPresented,
+.innerSurface.innerPresented,
+.collectionCard.mediaPresented,
+.media-card.mediaPresented,
+.externalMediaCard.mediaPresented{
+position:relative;
+isolation:isolate;
+overflow:hidden;
+}
+
+.card.cardPresented > *:not(.mediaPresentationLayer),
+.supportersCard.cardPresented > *:not(.mediaPresentationLayer),
+.supporterCard.cardPresented > *:not(.mediaPresentationLayer),
+.row.cardPresented > *:not(.mediaPresentationLayer),
+.innerSurface.innerPresented > *:not(.mediaPresentationLayer),
+.collectionCard.mediaPresented > *:not(.mediaPresentationLayer),
+.media-card.mediaPresented > *:not(.mediaPresentationLayer),
+.externalMediaCard.mediaPresented > *:not(.mediaPresentationLayer){
+position:relative;
+z-index:2;
+}
+
+.mediaPresentationLayer{
+position:absolute;
+inset:0;
+z-index:0;
+pointer-events:none;
+overflow:hidden;
+background:transparent;
+}
+
+.mediaPresentationLayer img,
+.mediaPresentationLayer video{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+}
+
+.mediaPresentationLayer::after{
+content:"";
+position:absolute;
+inset:0;
+background:rgba(0,0,0,.36);
+}
+
+.mediaSectionLabel{
+font-size:12px;
+font-weight:900;
+letter-spacing:.6px;
+text-transform:uppercase;
+color:var(--muted);
+margin:18px 2px 8px;
+}
+
+.externalMediaCard{
+border:1px solid var(--stroke);
+background:var(--card);
+border-radius:18px;
+padding:16px;
+margin:16px 0;
+}
+
+.externalMediaTop{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.externalMediaThumb{
+width:54px;
+height:54px;
+border-radius:14px;
+overflow:hidden;
+border:1px solid var(--stroke);
+background:rgba(255,255,255,0.05);
+flex:0 0 auto;
+display:grid;
+place-items:center;
+font-weight:900;
+}
+
+.externalMediaThumb img{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+}
+
+.externalMediaBody{
+flex:1;
+min-width:0;
+}
+
+.externalMediaProvider{
+font-size:11px;
+font-weight:900;
+text-transform:uppercase;
+letter-spacing:.4px;
+color:var(--muted);
+margin-bottom:3px;
+}
+
+.externalMediaTitle{
+font-size:15px;
+font-weight:850;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.externalMediaDescription{
+font-size:12px;
+color:var(--muted);
+margin-top:3px;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.externalMediaExpandBtn{
+height:32px;
+padding:0 14px;
+border:none;
+border-radius:999px;
+background:var(--pillColor);
+color:#fff;
+font-size:12px;
+font-weight:800;
+cursor:pointer;
+flex:0 0 auto;
+}
+
+.externalMediaEmbedMount{
+width:100%;
+margin-top:12px;
+height:0;
+max-height:0;
+overflow:hidden;
+border-radius:16px;
+transition:height .25s ease,max-height .25s ease;
+background:transparent;
+}
+
+.externalMediaEmbedMount.expanded{
 height:520px;
+max-height:65vh;
 }
+
+.externalMediaEmbedMount iframe,
+.externalMediaEmbedMount picflow-gallery{
+width:100%;
+height:520px;
+max-height:65vh;
+border:none;
+border-radius:16px;
+background:#000;
+display:block;
 }
+
+/* INTERNAL MEDIA RUNTIME */
+
+.mediaRuntime{
+position:fixed;
+inset:0;
+background:transparent;
+z-index:9999;
+display:none;
+flex-direction:column;
+}
+
+.mediaRuntime.active{
+display:flex;
+}
+
+.mediaRuntimeHeader{
+height:64px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 16px;
+border-bottom:1px solid rgba(255,255,255,.08);
+background:rgba(0,0,0,.72);
+backdrop-filter:blur(12px);
+flex:0 0 auto;
+}
+
+.mediaRuntimeTitle{
+font-size:14px;
+font-weight:700;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+padding-right:10px;
+}
+
+.mediaRuntimeClose{
+height:38px;
+padding:0 16px;
+border:none;
+border-radius:999px;
+background:rgba(255,255,255,.1);
+color:#fff;
+font-weight:700;
+cursor:pointer;
+flex:0 0 auto;
+}
+
+.mediaRuntimeBody{
+flex:1;
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
+background:transparent;
+position:relative;
+}
+
+.mediaRuntime video,
+.mediaRuntime iframe,
+.mediaRuntime img{
+width:100%;
+height:100%;
+border:none;
+background:transparent;
+}
+
+.mediaRuntime video,
+.mediaRuntime img{
+object-fit:contain;
+}
+
+.mediaRuntime img{
+max-width:100%;
+max-height:100%;
+width:auto;
+height:auto;
+display:block;
+border-radius:18px;
+}
+
+.mediaRuntime iframe{
+min-height:100%;
+}
+
 </style>
 </head>
 
 <body>
 
+<div id="appBackground" class="appBackground" aria-hidden="true"></div>
+
 <div class="wrap">
 
 <div class="top">
-<div>
-<h1>BASE Creator Dashboard</h1>
-<p class="sub">Load current state first, then edit, preview, and publish.</p>
-</div>
-<div id="statePill" class="pill warn">STATUS: ready</div>
+<div class="brand">
+<img id="logo" src="icons/icon-192-v37.png?v=1782480548101">
+<div class="name" id="name">Creator</div>
 </div>
 
-<div class="dashboardTabs">
-<button type="button" class="dashboardTab active" data-page="creator">Creator</button>
-<button type="button" class="dashboardTab" data-page="links">Links</button>
-<button type="button" class="dashboardTab" data-page="media">Media</button>
-<button type="button" class="dashboardTab" data-page="preview">Preview</button>
-<button type="button" class="dashboardTab" data-page="publish">Publish</button>
-<button type="button" class="dashboardTab" data-page="status">Status</button>
+<button id="installInfoBtn" class="installInfoBtn" type="button" aria-label="Install app information">
+i
+</button>
 </div>
 
-<div id="page-creator" class="page active">
+<div class="hero"></div>
 
+<section id="communitySection" class="hidden">
 <div class="card">
+<div class="communityHeader">
+<img id="communityIcon" class="communityIcon" src="" alt="">
+<div class="h1" id="communityTitle">Community</div>
+</div>
+<p class="p" id="communityDescription">Join the community.</p>
+<a id="communityBtn" class="btn" href="#" target="_blank" rel="noopener">Enter Community</a>
+<div id="communityEmbedMount" class="communityEmbedMount hidden"></div>
+<button id="communityExpandBtn" class="communityExpandBtn hidden" type="button">Expand</button>
+</div>
+</section>
 
-<div class="moduleBlock" data-module="system-control" style="border-top:none;margin-top:0;padding-top:0;">
-
-<button type="button" class="moduleToggle">
-<div>
-<div class="moduleTitle">System Control</div>
-<div class="moduleHint">Creator key, content source, and loading controls.</div>
-</div>
-<div class="moduleArrow">›</div>
-</button>
-
-<div class="moduleContent">
-
-<div class="tiny">Use this when you need to load current state or reset the creator key.</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Creator Key</label>
-<input id="token" type="password">
-</div>
-
-<div class="col">
-<label>content.json URL</label>
-<input id="contentUrl">
-</div>
-</div>
-
-<div class="btnRow">
-<button id="btnLoad" class="primary">Load Current State</button>
-</div>
-
-<div class="tiny" id="lastSha">sha: —</div>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<div class="moduleBlock" data-module="creator-settings" style="border-top:none;margin-top:0;padding-top:0;">
-
-<button type="button" class="moduleToggle">
-<div>
-<div class="moduleTitle">Creator Settings</div>
-<div class="moduleHint">Basic creator identity, contact, colors, and app icon.</div>
-</div>
-<div class="moduleArrow">›</div>
-</button>
-
-<div class="moduleContent">
-
-<div class="tiny">Basic creator identity, contact, colors, and app icon.</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Name</label>
-<input id="name">
-</div>
-
-<div class="col">
-<label>Bio</label>
-<input id="bio">
-</div>
-</div>
-
-<div class="row" style="margin-top:14px;">
-<div class="col">
-<label>Contact Email</label>
-<input id="contactEmail" type="email">
-</div>
-
-<div class="col">
-<label>Button Label</label>
-<input id="contactLabel" type="text">
-</div>
-</div>
-
-<div style="margin-top:14px;">
-<label>Background Color</label>
-<input id="backgroundColor" type="color">
-</div>
-
-<div style="margin-top:18px;border-top:1px solid #222;padding-top:14px;">
-<label>Wallpaper / Video Background</label>
-<div class="row">
-<div class="col">
-<select id="backgroundType">
-<option value="none">none</option>
-<option value="image">image wallpaper</option>
-<option value="video">video wallpaper</option>
-</select>
-</div>
-<div class="col">
-<input id="backgroundFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm,video/quicktime">
-</div>
-</div>
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Wallpaper / Video URL (legacy/manual optional)</label>
-<input id="backgroundUrl" type="text" placeholder="https://... or ./media/background.mp4">
-<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
-</div>
-</div>
-</div>
-
-<div style="margin-top:18px;border-top:1px solid #222;padding-top:14px;">
-<label>App Open Chime</label>
-<div class="toggleRow" style="margin-top:12px;">
-<div class="tiny">Optional sound that plays when the Fan App opens.</div>
-<label style="display:flex;align-items:center;gap:10px;margin:0;">
-<span class="tiny">Enabled</span>
-<input id="chimeEnabled" type="checkbox" style="width:auto;height:auto;">
-</label>
-</div>
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Chime Audio Upload</label>
-<input id="chimeFile" type="file" accept="audio/mpeg,audio/mp3,audio/wav,audio/ogg,audio/aac,audio/mp4,audio/webm">
-<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
-</div>
-</div>
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Chime URL (legacy/manual optional)</label>
-<input id="chimeUrl" type="text" placeholder="https://... or ./media/chime.mp3">
-</div>
-<div class="col">
-<label>Chime Volume</label>
-<input id="chimeVolume" type="range" min="0" max="1" step="0.05" value="0.65">
-<div class="tiny">Recommended: 0.65</div>
-</div>
-</div>
-<div class="btnRow">
-<button id="btnPreviewChime" type="button">Preview Chime</button>
-<button id="btnClearChime" class="danger" type="button">Remove Chime</button>
-</div>
-</div>
-
-<div style="margin-top:14px;">
-<label>Pill Color</label>
-<input id="pillColor" type="color">
-</div>
-
-<div style="margin-top:18px;border-top:1px solid #222;padding-top:14px;">
-<label>Inner Surface</label>
-<div class="tiny">Controls content container presentation separate from the outer background and action pill color.</div>
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Inner Surface Style</label>
-<select id="innerSurfaceStyle">
-<option value="default">default glass</option>
-<option value="color">color</option>
-<option value="image">wallpaper</option>
-<option value="video">video</option>
-</select>
-<div class="tiny">Default restores the BASE transparent glass presentation.</div>
-</div>
-<div class="col">
-<label>Inner Surface Color</label>
-<input id="innerSurfaceColor" type="color" value="#050505">
-<div class="tiny">Used when Inner Surface Style is color.</div>
-</div>
-</div>
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Inner Surface Asset Upload</label>
-<input id="innerSurfaceFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm,video/quicktime">
-<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
-</div>
-</div>
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Inner Surface Asset URL (legacy/manual optional)</label>
-<input id="innerSurfaceUrl" type="text" placeholder="https://... or ./media/inner-surface.mp4">
-<div class="tiny">Use only when you need a manual URL instead of a file upload.</div>
-</div>
-</div>
-</div>
-
-<div style="margin-top:18px;border-top:1px solid #222;padding-top:14px;">
-<label>App Icon</label>
-<input id="appIconInput" type="file" accept="image/png,image/jpeg">
-</div>
-
-<div style="margin-top:18px;border-top:1px solid #222;padding-top:14px;">
-<label>Hero Media</label>
-<div class="tiny">Separate from the app icon. Use this for the creator presence layer.</div>
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Hero Type</label>
-<select id="heroMediaType">
-<option value="none">none</option>
-<option value="image">image</option>
-<option value="video">video</option>
-</select>
-</div>
-<div class="col">
-<label>Hero Animation</label>
-<select id="heroMediaAnimation">
-<option value="none">none</option>
-<option value="float">float</option>
-<option value="pulse">pulse</option>
-<option value="drift">slow drift</option>
-<option value="spin">spin</option>
-</select>
-</div>
-</div>
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Hero Media Upload</label>
-<input id="heroMediaFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm,video/quicktime">
-<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
-</div>
-</div>
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Hero Media URL (legacy/manual optional)</label>
-<input id="heroMediaUrl" type="text" placeholder="https://... or ./media/hero.png">
-</div>
-</div>
-</div>
-
-</div>
-
-</div>
-
-<div class="moduleBlock" data-module="live">
-
-<button type="button" class="moduleToggle">
-<div>
-<div class="moduleTitle">Live Control</div>
-<div class="moduleHint">Control live availability and stream destination.</div>
-</div>
-<div class="moduleArrow">›</div>
-</button>
-
-<div class="moduleContent">
-
-<div class="tiny">Control live availability and stream destination.</div>
-
-<div class="toggleRow" style="margin-top:12px;">
-<div class="tiny">Only enabled live sessions appear in the Fan App.</div>
-<label style="display:flex;align-items:center;gap:10px;margin:0;">
-<span class="tiny">Enabled</span>
-<input id="liveEnabled" type="checkbox" style="width:auto;height:auto;">
-</label>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Status</label>
-<select id="liveStatus">
-<option value="offline">offline</option>
-<option value="live">live</option>
-</select>
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Live Watch URL</label>
-<input id="liveWatchUrl" type="text" placeholder="https://...">
-<div class="tiny">Paste your Cloudflare or other live host URL.</div>
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Live Description</label>
-<textarea id="liveDescription" placeholder="Tell fans what the live space is for, what to expect, or when to check in."></textarea>
-<div class="tiny">Appears under the Live player in the Fan App.</div>
-</div>
-</div>
-
-</div>
-
-</div>
-
-<div class="moduleBlock" data-module="supporters">
-
-<button type="button" class="moduleToggle">
-<div>
-<div class="moduleTitle">Supporters</div>
-<div class="moduleHint">Display sponsors, partners, venues, collaborators, and supporters without payments, accounts, tracking, or platform behavior.</div>
-</div>
-<div class="moduleArrow">›</div>
-</button>
-
-<div class="moduleContent">
-
-<div class="tiny">Display sponsors, partners, venues, collaborators, and supporters without payments, accounts, tracking, or platform behavior.</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Type</label>
-<select id="supporterType">
-<option value="supporter">supporter</option>
-<option value="sponsor">sponsor</option>
-<option value="partner">partner</option>
-<option value="venue">venue</option>
-<option value="collaborator">collaborator</option>
-</select>
-</div>
-
-<div class="col">
-<label>Name</label>
-<input id="supporterName" type="text" placeholder="Name">
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Tagline</label>
-<input id="supporterTagline" type="text" placeholder="Official supporter, launch partner, venue partner">
-</div>
-
-<div class="col">
-<label>Button Text</label>
-<input id="supporterButtonText" type="text" placeholder="Visit Supporter">
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Description</label>
-<input id="supporterDesc" type="text" placeholder="Short explanation of the support relationship">
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Supporter Thumbnail Upload</label>
-<input id="supporterThumbFile" type="file" accept="image/png,image/jpeg,image/webp">
-<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Thumbnail URL (legacy/manual optional)</label>
-<input id="supporterThumbnail" type="text" placeholder="https://.../logo.png">
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Supporter URL</label>
-<input id="supporterUrl" type="text" placeholder="https://...">
-</div>
-</div>
-
-<div class="toggleRow" style="margin-top:12px;">
-<div class="tiny">Only enabled supporters appear in the Fan App.</div>
-<label style="display:flex;align-items:center;gap:10px;margin:0;">
-<span class="tiny">Enabled</span>
-<input id="supporterEnabled" type="checkbox" checked style="width:auto;height:auto;">
-</label>
-</div>
-
-<div class="btnRow">
-<button id="btnAddSupporter">Add Supporter</button>
-<button id="btnClearSupporters" class="danger">Clear Supporters</button>
-</div>
-
+<section id="supportersSection" class="hidden">
+<div class="supportersCard">
+<div class="supportersInnerSurface innerSurface">
+<div class="h1">Supporters</div>
 <div id="supportersList" class="supportersList"></div>
-
-</div>
-
-</div>
-
-<div class="moduleBlock" data-module="community">
-
-<button type="button" class="moduleToggle">
-<div>
-<div class="moduleTitle">Community</div>
-<div class="moduleHint">Connect a persistent community doorway without BASE owning accounts, messages, or audience data.</div>
-</div>
-<div class="moduleArrow">›</div>
-</button>
-
-<div class="moduleContent">
-
-<div class="tiny">Connect a persistent community doorway without BASE owning accounts, messages, or audience data.</div>
-
-<div class="toggleRow" style="margin-top:12px;">
-<div class="tiny">Only enabled community doorways will publish into content.json.</div>
-<label style="display:flex;align-items:center;gap:10px;margin:0;">
-<span class="tiny">Enabled</span>
-<input id="communityEnabled" type="checkbox" style="width:auto;height:auto;">
-</label>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Provider</label>
-<select id="communityProvider">
-<option value="matrix">Matrix</option>
-<option value="discord">Discord</option>
-<option value="telegram">Telegram</option>
-<option value="whatsapp">WhatsApp</option>
-<option value="custom">Custom</option>
-</select>
-</div>
-
-<div class="col">
-<label>Community Name</label>
-<input id="communityName" type="text" placeholder="Community name">
 </div>
 </div>
+</section>
 
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Community Icon Upload</label>
-<input id="communityIconFile" type="file" accept="image/png,image/jpeg,image/webp">
-<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Community Icon URL (legacy/manual optional)</label>
-<input id="communityIcon" type="text" placeholder="https://.../icon.png">
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Button Text</label>
-<input id="communityButtonText" type="text" placeholder="Enter Community">
-</div>
-
-<div class="col">
-<label>Community URL</label>
-<input id="communityUrl" type="text" placeholder="https://...">
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Community Embed</label>
-<input id="communityEmbed" type="text" placeholder="https://...">
-</div>
-</div>
-
-<div class="tiny">Use Community URL for external communities. Use Community Embed for embedded community experiences.</div>
-
-<div class="btnRow">
-<button id="btnAddCommunity">Add Community</button>
-<button id="btnClearCommunity" class="danger">Remove Community</button>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<div id="page-links" class="page">
-
+<section id="view-home">
 <div class="card">
-
-<h3>Links</h3>
-
-<div class="row">
-<div class="col">
-<label>Label</label>
-<input id="linkLabelInput">
+<div class="homeInnerSurface innerSurface">
+<div class="h1">Home</div>
+<p class="p" id="bio"></p>
 </div>
-
-<div class="col">
-<label>URL</label>
-<input id="linkUrlInput">
+<div id="connectMount"></div>
 </div>
-</div>
+</section>
 
-<div class="btnRow">
-<button id="addLinkBtn">Add Link</button>
-<button id="clearLinksBtn" class="danger">Clear Links</button>
-</div>
+<section id="view-media" class="hidden">
+<div id="mediaSection"></div>
+</section>
 
-<div id="linksList" class="linksList"></div>
-
-</div>
-
-</div>
-
-<div id="page-media" class="page">
-
+<section id="view-links" class="hidden">
 <div class="card">
-
-<h3>Media Gateway</h3>
-<div class="tiny">Manage media access, collections, uploads, thumbnails, and the current media list without one long scrolling form.</div>
-
-<div class="moduleBlock open" data-module="media-gateway" style="border-top:none;margin-top:14px;padding-top:0;">
-
-<button type="button" class="moduleToggle">
-<div>
-<div class="moduleTitle">Media Access</div>
-<div class="moduleHint">Turn the Media tab on or off.</div>
+<div id="links"></div>
 </div>
-<div class="moduleArrow">›</div>
-</button>
+</section>
 
-<div class="moduleContent">
 
-<div class="toggleRow">
-<div class="tiny">Controls what fans can access from the Media tab.</div>
-<label style="display:flex;align-items:center;gap:10px;margin:0;">
-<span class="tiny">Enabled</span>
-<input id="mediaEnabled" type="checkbox" style="width:auto;height:auto;">
-</label>
-</div>
-
-</div>
-
-</div>
-
-<div class="moduleBlock" data-module="media-collections">
-
-<button type="button" class="moduleToggle">
-<div>
-<div class="moduleTitle">Collections</div>
-<div class="moduleHint">Choose, add, or remove lightweight media groups.</div>
-</div>
-<div class="moduleArrow">›</div>
-</button>
-
-<div class="moduleContent">
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Collection</label>
-<select id="mediaCollectionSelect"></select>
-<div class="tiny">Choose where the next media item belongs.</div>
-</div>
-
-<div class="col">
-<label>New Collection</label>
-<input id="mediaCollectionTitle" type="text" placeholder="Event Night, Clips, Photos">
-<div class="tiny">Add lightweight groups without cluttering the fan app.</div>
-</div>
-</div>
-
-<div class="btnRow">
-<button id="btnAddCollection">Add Collection</button>
-<button id="btnRemoveCollection" class="danger">Remove Selected Collection</button>
-</div>
-
-</div>
-
-</div>
-
-<div class="moduleBlock" data-module="media-item">
-
-<button type="button" class="moduleToggle">
-<div>
-<div class="moduleTitle">Add Media Item</div>
-<div class="moduleHint">Add one image, video, URL, thumbnail, and description.</div>
-</div>
-<div class="moduleArrow">›</div>
-</button>
-
-<div class="moduleContent">
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Item Title</label>
-<input id="mediaTitle" type="text" placeholder="Clip title">
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>URL (optional)</label>
-<input id="mediaUrl" type="text" placeholder="https://...">
-<div class="tiny">Use this only when the item should open an external media link.</div>
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Local Media Upload (optional)</label>
-<input id="mediaFile" type="file" accept="video/mp4,video/webm,video/quicktime,image/png,image/jpeg,image/webp">
-<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Thumbnail Upload (optional)</label>
-<input id="mediaThumbFile" type="file" accept="image/png,image/jpeg,image/webp">
-<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Thumbnail URL (legacy/manual optional)</label>
-<input id="mediaThumb" type="text" placeholder="https://.../thumb.jpg">
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Description (optional)</label>
-<input id="mediaDesc" type="text" placeholder="Short description">
-</div>
-</div>
-
-<div class="btnRow">
-<button id="btnAddMedia">Add Item</button>
-<button id="btnClearMedia" class="danger">Clear Media</button>
-</div>
-
-</div>
-
-</div>
-
-<div class="moduleBlock" data-module="media-external">
-
-<button type="button" class="moduleToggle">
-<div>
-<div class="moduleTitle">External Media</div>
-<div class="moduleHint">Add embedded photo, video, gallery, or future provider media experiences.</div>
-</div>
-<div class="moduleArrow">›</div>
-</button>
-
-<div class="moduleContent">
-
-<div class="toggleRow" style="margin-top:12px;">
-<div class="tiny">Only enabled external media appears in the Fan App when supported by the Fan App runtime.</div>
-<label style="display:flex;align-items:center;gap:10px;margin:0;">
-<span class="tiny">Enabled</span>
-<input id="externalMediaEnabled" type="checkbox" checked style="width:auto;height:auto;">
-</label>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Provider</label>
-<select id="externalMediaProvider">
-<option value="custom">Custom</option>
-<option value="vimeo">Vimeo</option>
-<option value="pixieset">Pixieset</option>
-<option value="flickr">Flickr</option>
-<option value="future">Future Provider</option>
-</select>
-</div>
-
-<div class="col">
-<label>External Media Name</label>
-<input id="externalMediaName" type="text" placeholder="Summer Photos, Behind The Scenes, Live Archive">
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>External Media URL</label>
-<input id="externalMediaUrl" type="text" placeholder="https://...">
-<div class="tiny">Use this for the external doorway or fallback link.</div>
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>External Media Embed URL</label>
-<input id="externalMediaEmbed" type="text" placeholder="https://...">
-<div class="tiny">Use this for embedded media experiences when the provider supports embeds.</div>
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Thumbnail Upload (optional)</label>
-<input id="externalMediaThumbFile" type="file" accept="image/png,image/jpeg,image/webp">
-<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Thumbnail URL (legacy/manual optional)</label>
-<input id="externalMediaThumbnail" type="text" placeholder="https://.../thumb.jpg">
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Button Text</label>
-<input id="externalMediaButtonText" type="text" placeholder="Open Gallery">
-</div>
-</div>
-
-<div class="btnRow">
-<button id="btnAddExternalMedia">Add External Media</button>
-<button id="btnClearExternalMedia" class="danger">Remove External Media</button>
-</div>
-
-<div id="externalMediaList" class="mediaList"></div>
-
-</div>
-
-</div>
-
-<div class="moduleBlock" data-module="media-presentation">
-
-<button type="button" class="moduleToggle">
-<div>
-<div class="moduleTitle">Media Presentation</div>
-<div class="moduleHint">Control the global media card look with color, wallpaper, video, and motion.</div>
-</div>
-<div class="moduleArrow">›</div>
-</button>
-
-<div class="moduleContent">
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Media Card Style</label>
-<select id="mediaCardStyle">
-<option value="default">default</option>
-<option value="color">color</option>
-<option value="image">wallpaper</option>
-<option value="video">video</option>
-</select>
-<div class="tiny">Choose how the media card background should render in the Fan App.</div>
-</div>
-
-<div class="col">
-<label>Media Card Animation</label>
-<select id="mediaCardAnimation">
-<option value="none">none</option>
-<option value="float">float</option>
-<option value="pulse">pulse</option>
-<option value="drift">slow drift</option>
-</select>
-<div class="tiny">Applies to the media card presentation layer when supported by the Fan App runtime.</div>
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Media Card Color</label>
-<input id="mediaCardColor" type="color" value="#050505">
-<div class="tiny">Used when Media Card Style is color.</div>
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Media Card Asset Upload</label>
-<input id="mediaCardFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm,video/quicktime">
-<div class="tiny">Uploads automatically into Fan App/media/ during publish.</div>
-</div>
-</div>
-
-<div class="row" style="margin-top:12px;">
-<div class="col">
-<label>Media Card Asset URL (legacy/manual optional)</label>
-<input id="mediaCardUrl" type="text" placeholder="https://... or ./media/media-card.mp4">
-<div class="tiny">Use only when you need a manual URL instead of a file upload.</div>
-</div>
-</div>
-
-</div>
-
-</div>
-
-<div class="moduleBlock open" data-module="media-current">
-
-<button type="button" class="moduleToggle">
-<div>
-<div class="moduleTitle">Current Media</div>
-<div class="moduleHint">Review and remove existing media items.</div>
-</div>
-<div class="moduleArrow">›</div>
-</button>
-
-<div class="moduleContent">
-
-<div id="mediaList" class="mediaList"></div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<div id="page-preview" class="page">
-
-<div class="card">
-
-<h3 style="margin-bottom:6px;">Fan App Preview</h3>
-<div class="tiny">This is exactly how fans experience your app.</div>
-
-<div class="previewShell">
-
-<div class="previewDevice">
-
+<section id="view-live" class="hidden">
+<p class="p hidden" id="liveStatus"></p>
+<div id="livePlayer" class="livePlayer hidden">
 <iframe
-id="fanPreviewFrame"
-class="previewFrame"
-src="../Fan App/index.html?basePreviewShell=1">
+id="liveFrame"
+allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+allowfullscreen="true">
 </iframe>
+</div>
+<button id="liveDescriptionToggle" class="liveDescriptionToggle hidden" type="button">▼ Description</button>
+<p class="liveDescription hidden" id="liveDescription"></p>
+</section>
 
+<div class="baseFooter">Powered by BASE</div>
+
+</div>
+
+<nav class="tabs">
+<div class="tabrow">
+<div class="tab active" data-id="home">Home</div>
+<div class="tab" data-id="media">Media</div>
+<div class="tab" data-id="links">Links</div>
+<div class="tab" data-id="live">Live</div>
+</div>
+</nav>
+
+<!-- INSTALL INFO MODAL -->
+
+<div id="installModal" class="installModal" aria-hidden="true">
+
+<div class="installPanel" role="dialog" aria-modal="true" aria-labelledby="installModalTitle">
+
+<div class="installTop">
+<div id="installModalTitle" class="installTitle">Install This App</div>
+
+<button id="installModalClose" class="installClose" type="button" aria-label="Close install instructions">
+×
+</button>
+</div>
+
+<p class="installIntro">
+Add this app to your phone so it opens like a regular app from your Home Screen.
+</p>
+
+<div class="installBlock">
+<div class="installBlockTitle">
+<div class="installBadge"></div>
+<div>iPhone / iPad</div>
+</div>
+
+<ol class="installSteps">
+<li>Open this app in Safari.</li>
+<li>Tap the Share button.</li>
+<li>Scroll down and tap Add to Home Screen.</li>
+<li>Tap Add.</li>
+</ol>
+</div>
+
+<div class="installBlock">
+<div class="installBlockTitle">
+<div class="installBadge">▶</div>
+<div>Android</div>
+</div>
+
+<ol class="installSteps">
+<li>Open this app in Chrome.</li>
+<li>Tap the three-dot menu.</li>
+<li>Tap Install App or Add to Home Screen.</li>
+<li>Tap Install.</li>
+</ol>
+</div>
+
+<div class="installNote">
+Once installed, the app icon will appear on your device and open directly from your Home Screen.
 </div>
 
 </div>
 
 </div>
 
+<!-- COLLECTION VIEW -->
+
+<div id="collectionView" class="collectionView">
+
+<div class="collectionHeader">
+<div id="collectionHeaderTitle" class="collectionHeaderTitle">
+Collection
 </div>
 
-<div id="page-publish" class="page">
-
-<div class="card">
-
-<div style="display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;">
-
-<div>
-<div>Repo: <span id="repoLabel"></span></div>
-<div class="tiny">Target: Fan App/content.json</div>
+<button id="collectionBack" class="collectionBack">
+Back
+</button>
 </div>
 
-<div style="display:flex;gap:12px;flex-wrap:wrap;">
-<button id="btnPublish" disabled>Publish</button>
-<button id="btnResetToken" class="danger">Reset Key</button>
-</div>
-
-</div>
+<div id="collectionBody" class="collectionBody"></div>
 
 </div>
 
+<!-- INTERNAL BASE MEDIA RUNTIME -->
+
+<div id="mediaRuntime" class="mediaRuntime">
+
+<div class="mediaRuntimeHeader">
+<div id="mediaRuntimeTitle" class="mediaRuntimeTitle">Media</div>
+
+<button id="mediaRuntimeClose" class="mediaRuntimeClose">
+Close
+</button>
 </div>
 
-<div id="page-status" class="page">
-
-<div class="card">
-<h3>Status</h3>
-<div id="status" class="statusBox"></div>
-</div>
-
-</div>
+<div id="mediaRuntimeBody" class="mediaRuntimeBody"></div>
 
 </div>
 
 <script>
 
-const OWNER ="base-creator-system"
-const REPO ="Base-Creator-Land"
-const BRANCH="main"
+const CONTENT_URL="./content.json"
+const POLL_INTERVAL=15000
 
-const TARGET_PATH="Fan App/content.json"
-const DEFAULT_CONTENT_URL=`https://${OWNER}.github.io/${REPO}/Fan%20App/content.json`
-const LS_TOKEN="base_creator_token_v1"
+let previewMode=false
+let activeCommunityEmbed=""
+let activeBackgroundAsset=""
+let activeBackgroundVideo=null
+let backgroundVideoRecoveryTimer=null
+let activeChimeAsset=""
+let chimeAudio=null
+let chimePlayed=false
+let chimePending=false
+let communityExpanded=false
+let liveDescriptionExpanded=false
+let activeView="home"
+let currentState=null
+let activeHeroAsset=""
+let activeHeroVideo=null
+let activeMediaRenderSignature=""
+let externalMediaRuntimeCache={}
+let externalMediaExpandedState={}
+let supportersRuntimeSignature=""
+let supportersRuntimeIndex=0
+let supportersRuntimeTimer=null
+let supportersRuntimePausedUntil=0
 
-const $=id=>document.getElementById(id)
+const installInfoBtn=document.getElementById("installInfoBtn")
+const installModal=document.getElementById("installModal")
+const installModalClose=document.getElementById("installModalClose")
 
-const el={
-token:$("token"),
-contentUrl:$("contentUrl"),
-btnLoad:$("btnLoad"),
-btnPublish:$("btnPublish"),
-btnResetToken:$("btnResetToken"),
-name:$("name"),
-bio:$("bio"),
-backgroundColor:$("backgroundColor"),
-backgroundType:$("backgroundType"),
-backgroundFile:$("backgroundFile"),
-backgroundUrl:$("backgroundUrl"),
-chimeEnabled:$("chimeEnabled"),
-chimeFile:$("chimeFile"),
-chimeUrl:$("chimeUrl"),
-chimeVolume:$("chimeVolume"),
-btnPreviewChime:$("btnPreviewChime"),
-btnClearChime:$("btnClearChime"),
-pillColor:$("pillColor"),
-innerSurfaceStyle:$("innerSurfaceStyle"),
-innerSurfaceColor:$("innerSurfaceColor"),
-innerSurfaceFile:$("innerSurfaceFile"),
-innerSurfaceUrl:$("innerSurfaceUrl"),
-appIconInput:$("appIconInput"),
-heroMediaType:$("heroMediaType"),
-heroMediaFile:$("heroMediaFile"),
-heroMediaUrl:$("heroMediaUrl"),
-heroMediaAnimation:$("heroMediaAnimation"),
-contactEmail:$("contactEmail"),
-contactLabel:$("contactLabel"),
-liveEnabled:$("liveEnabled"),
-liveStatus:$("liveStatus"),
-liveWatchUrl:$("liveWatchUrl"),
-liveDescription:$("liveDescription"),
-linkLabelInput:$("linkLabelInput"),
-linkUrlInput:$("linkUrlInput"),
-addLinkBtn:$("addLinkBtn"),
-clearLinksBtn:$("clearLinksBtn"),
-linksList:$("linksList"),
-mediaEnabled:$("mediaEnabled"),
-mediaCollectionSelect:$("mediaCollectionSelect"),
-mediaCollectionTitle:$("mediaCollectionTitle"),
-btnAddCollection:$("btnAddCollection"),
-btnRemoveCollection:$("btnRemoveCollection"),
-mediaTitle:$("mediaTitle"),
-mediaUrl:$("mediaUrl"),
-mediaFile:$("mediaFile"),
-mediaThumb:$("mediaThumb"),
-mediaThumbFile:$("mediaThumbFile"),
-mediaDesc:$("mediaDesc"),
-btnAddMedia:$("btnAddMedia"),
-btnClearMedia:$("btnClearMedia"),
-externalMediaEnabled:$("externalMediaEnabled"),
-externalMediaProvider:$("externalMediaProvider"),
-externalMediaName:$("externalMediaName"),
-externalMediaUrl:$("externalMediaUrl"),
-externalMediaEmbed:$("externalMediaEmbed"),
-externalMediaThumbFile:$("externalMediaThumbFile"),
-externalMediaThumbnail:$("externalMediaThumbnail"),
-externalMediaButtonText:$("externalMediaButtonText"),
-btnAddExternalMedia:$("btnAddExternalMedia"),
-btnClearExternalMedia:$("btnClearExternalMedia"),
-externalMediaList:$("externalMediaList"),
-mediaCardStyle:$("mediaCardStyle"),
-mediaCardColor:$("mediaCardColor"),
-mediaCardFile:$("mediaCardFile"),
-mediaCardUrl:$("mediaCardUrl"),
-mediaCardAnimation:$("mediaCardAnimation"),
-mediaList:$("mediaList"),
-supporterType:$("supporterType"),
-supporterName:$("supporterName"),
-supporterTagline:$("supporterTagline"),
-supporterButtonText:$("supporterButtonText"),
-supporterDesc:$("supporterDesc"),
-supporterThumbFile:$("supporterThumbFile"),
-supporterThumbnail:$("supporterThumbnail"),
-supporterUrl:$("supporterUrl"),
-supporterEnabled:$("supporterEnabled"),
-btnAddSupporter:$("btnAddSupporter"),
-btnClearSupporters:$("btnClearSupporters"),
-supportersList:$("supportersList"),
-communityEnabled:$("communityEnabled"),
-communityProvider:$("communityProvider"),
-communityName:$("communityName"),
-communityIconFile:$("communityIconFile"),
-communityIcon:$("communityIcon"),
-communityButtonText:$("communityButtonText"),
-communityUrl:$("communityUrl"),
-communityEmbed:$("communityEmbed"),
-btnAddCommunity:$("btnAddCommunity"),
-btnClearCommunity:$("btnClearCommunity"),
-status:$("status"),
-repoLabel:$("repoLabel"),
-statePill:$("statePill"),
-lastSha:$("lastSha"),
-previewFrame:$("fanPreviewFrame")
+function openInstallModal(){
+
+installModal.classList.add("active")
+installModal.setAttribute("aria-hidden","false")
+
 }
 
-let hasLoadedState=false
-let linkState=[]
-let mediaItems=[]
-let mediaCollections=[]
-let externalMediaState=[]
-let mediaHydrated=false
-let mediaTouched=false
-let supporterState=[]
-let supportersHydrated=false
-let supportersTouched=false
-let communityHydrated=false
-let communityTouched=false
-let isPublishing=false
-let isDirty=false
-let loadedSha=null
-let shaConflict=false
-const defaultPublishLabel="Publish"
+function closeInstallModal(){
 
-function log(t){
-const s=new Date().toLocaleString()
-el.status.textContent=`[${s}] ${t}\n`+el.status.textContent
+installModal.classList.remove("active")
+installModal.setAttribute("aria-hidden","true")
+
 }
 
-function setPill(type,text){
-el.statePill.className=`pill ${type}`
-el.statePill.textContent=text
+installInfoBtn.onclick=openInstallModal
+installModalClose.onclick=closeInstallModal
+
+installModal.onclick=(event)=>{
+
+if(event.target===installModal){
+closeInstallModal()
 }
 
-function ghEncodePath(path){
-return path.split("/").map(encodeURIComponent).join("/")
 }
 
-function ghHeaders(token){
-return{
-Accept:"application/vnd.github+json",
-Authorization:`Bearer ${String(token||"").trim()}`,
-"X-GitHub-Api-Version":"2022-11-28",
-"Content-Type":"application/json"
-}
+window.addEventListener("keydown",(event)=>{
+
+if(event.key==="Escape" && installModal.classList.contains("active")){
+closeInstallModal()
 }
 
-function toBase64Utf8(str){
-const utf8=new TextEncoder().encode(str)
-let bin=""
-utf8.forEach(b=>bin+=String.fromCharCode(b))
-return btoa(bin)
-}
+})
 
-function fromBase64Utf8(b64){
-const bytes=Uint8Array.from(atob(b64.replace(/\s/g,"")),c=>c.charCodeAt(0))
-return new TextDecoder().decode(bytes)
-}
+function safeURL(url){
 
-function escapeHtml(text){
-return String(text ?? "")
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#39;")
-}
+if(!url) return "";
 
-function makeCollectionId(){
-return `collection-${Date.now()}-${Math.random().toString(16).slice(2)}`
-}
-
-function ensureDefaultCollection(){
-if(!Array.isArray(mediaCollections)){
-mediaCollections=[]
-}
-
-if(mediaCollections.length===0){
-mediaCollections=[{
-id:"collection-default",
-title:"Latest"
-}]
-}
-
-mediaCollections=mediaCollections.map((c,i)=>({
-id:c.id || (i===0 ? "collection-default" : makeCollectionId()),
-title:String(c.title || (i===0 ? "Latest" : `Collection ${i+1}`))
-}))
-
-mediaItems=mediaItems.map(item=>({
-...item,
-collectionId:item.collectionId || mediaCollections[0].id
-}))
-}
-
-function getCollectionTitle(id){
-const found=mediaCollections.find(c=>c.id===id)
-return found ? found.title : "Latest"
-}
-
-function enablePublishIfReady(){
-const hasToken=(el.token.value||"").trim().length>0
-const hasSha=String(loadedSha||"").trim().length>0
-el.btnPublish.disabled=!!isPublishing || !(hasLoadedState && hasToken && isDirty && hasSha && !shaConflict)
-refreshPreview()
-}
-
-function setPublishBusy(busy){
-isPublishing=busy===true
-el.btnPublish.textContent=isPublishing ? "Publishing..." : defaultPublishLabel
-enablePublishIfReady()
-}
-
-function markDirty(){
-isDirty=true
-enablePublishIfReady()
-}
-
-function clearDirty(){
-isDirty=false
-enablePublishIfReady()
-}
-
-function clearShaState(){
-loadedSha=null
-shaConflict=false
-el.lastSha.textContent="sha: —"
-enablePublishIfReady()
-}
-
-async function syncLoadedSha(){
-const token=(el.token.value||"").trim()
-
-if(!token){
-clearShaState()
-return
+if(
+url.startsWith("./media/") ||
+url.startsWith("media/")
+){
+return url;
 }
 
 try{
-const meta=await ghGetFileMeta(token,TARGET_PATH)
-loadedSha=meta?.sha || null
-shaConflict=false
-el.lastSha.textContent=loadedSha ? `sha: ${loadedSha}` : "sha: —"
-}catch(e){
-loadedSha=null
-shaConflict=false
-el.lastSha.textContent="sha: —"
-log(`SHA sync failed: ${e.message}`)
-}
 
-enablePublishIfReady()
-}
-
-async function fetchState(){
-const raw=(el.contentUrl.value||DEFAULT_CONTENT_URL).trim() || DEFAULT_CONTENT_URL
-const url=new URL(raw)
-url.searchParams.set("ts",Date.now())
-const res=await fetch(url.toString(),{cache:"no-store"})
-if(!res.ok) throw new Error(`content.json load failed (${res.status})`)
-return res.json()
-}
-
-function renderLinks(){
-
-el.linksList.innerHTML=""
-
-linkState.forEach((l,i)=>{
-
-const row=document.createElement("div")
-row.className="linkRow"
-
-const text=document.createElement("div")
-text.className="linkText"
-text.textContent=`${l.label} — ${l.url}`
-
-const remove=document.createElement("button")
-remove.textContent="Remove"
-
-remove.onclick=()=>{
-linkState.splice(i,1)
-renderLinks()
-markDirty()
-}
-
-row.appendChild(text)
-row.appendChild(remove)
-
-el.linksList.appendChild(row)
-
-})
-
-}
-
-
-function hydrateCommunity(state){
-
-communityHydrated=true
-
-const community=state && typeof state==="object" && state.community && typeof state.community==="object"
-? state.community
-: {}
-
-el.communityEnabled.checked=community.enabled===true
-el.communityProvider.value=community.provider || "matrix"
-el.communityName.value=community.name || ""
-el.communityIcon.value=community.icon || ""
-el.communityIconFile.value=""
-el.communityButtonText.value=community.buttonText || "Enter Community"
-el.communityUrl.value=community.url || ""
-el.communityEmbed.value=community.embed || ""
-
-}
-
-function buildCommunity(){
-if(!(communityHydrated || communityTouched)) return null
-
-return{
-enabled:el.communityEnabled.checked===true,
-provider:(el.communityProvider.value || "matrix").trim() || "matrix",
-name:(el.communityName.value || "").trim(),
-icon:(el.communityIcon.value || "").trim(),
-buttonText:(el.communityButtonText.value || "Enter Community").trim() || "Enter Community",
-url:(el.communityUrl.value || "").trim(),
-embed:(el.communityEmbed.value || "").trim()
-}
-
-}
-
-
-async function uploadCommunityIcon(token,file){
-const safeExt=getSafeMediaThumbExtension(file)
-const fileName=`community-icon-${Date.now()}.${safeExt}`
-const repoPath=`Fan App/media/${fileName}`
-const localPath=`./media/${fileName}`
-const base64=await fileToBase64(file)
-
-await ghPutFile(
-token,
-repoPath,
-undefined,
-base64,
-`BASE community icon ${fileName}`
-)
-
-return localPath
-}
-
-async function buildCommunityForPublish(token){
-if(!(communityHydrated || communityTouched)) return null
-
-let icon=(el.communityIcon.value || "").trim()
-
-const iconFile=el.communityIconFile.files[0] || null
-
-if(iconFile){
-log("Community icon upload started.")
-icon=await uploadCommunityIcon(token,iconFile)
-el.communityIcon.value=icon
-el.communityIconFile.value=""
-log(`Community icon uploaded: ${icon}`)
-}
-
-return{
-enabled:el.communityEnabled.checked===true,
-provider:(el.communityProvider.value || "matrix").trim() || "matrix",
-name:(el.communityName.value || "").trim(),
-icon,
-buttonText:(el.communityButtonText.value || "Enter Community").trim() || "Enter Community",
-url:(el.communityUrl.value || "").trim(),
-embed:(el.communityEmbed.value || "").trim()
-}
-
-}
-
-
-function renderSupporters(){
-
-el.supportersList.innerHTML=""
-
-const total=document.createElement("div")
-total.className="tiny"
-total.textContent=`Supporters: ${supporterState.length}`
-el.supportersList.appendChild(total)
-
-supporterState.forEach((item,i)=>{
-
-const row=document.createElement("div")
-row.className="supporterRow"
-
-const left=document.createElement("div")
-left.className="supporterMeta"
-
-const name=document.createElement("div")
-name.className="supporterName"
-name.textContent=item.name || "(unnamed supporter)"
-
-const sub=document.createElement("div")
-sub.className="supporterSub"
-sub.textContent=`${item.type || "supporter"} · ${item.enabled===false ? "disabled" : "enabled"} · ${item.thumbnail ? item.thumbnail : (item.thumbnailFile instanceof File ? "(thumbnail pending publish)" : "(no thumbnail)")}`
-
-left.appendChild(name)
-left.appendChild(sub)
-
-const remove=document.createElement("button")
-remove.textContent="Remove"
-
-remove.onclick=()=>{
-supporterState.splice(i,1)
-supportersTouched=true
-renderSupporters()
-markDirty()
-}
-
-row.appendChild(left)
-row.appendChild(remove)
-
-el.supportersList.appendChild(row)
-
-})
-
-}
-
-function hydrateSupporters(state){
-
-supportersHydrated=true
-
-const incoming=Array.isArray(state?.supporters) ? state.supporters : []
-
-supporterState=incoming.map(x=>({
-id:x?.id || `supporter-${Math.random().toString(16).slice(2)}`,
-type:String(x?.type || "supporter"),
-name:String(x?.name || ""),
-tagline:String(x?.tagline || ""),
-description:String(x?.description || ""),
-thumbnail:String(x?.thumbnail || ""),
-url:String(x?.url || ""),
-buttonText:String(x?.buttonText || "Visit Supporter"),
-enabled:x?.enabled===false ? false : true
-}))
-
-renderSupporters()
-
-}
-
-function buildSupporters(){
-if(!(supportersHydrated || supportersTouched)) return null
-
-return supporterState.map(item=>({
-id:item.id || `supporter-${Math.random().toString(16).slice(2)}`,
-type:(item.type || "supporter").trim() || "supporter",
-name:(item.name || "").trim(),
-tagline:(item.tagline || "").trim(),
-description:(item.description || "").trim(),
-thumbnail:(item.thumbnail || "").trim(),
-url:(item.url || "").trim(),
-buttonText:(item.buttonText || "Visit Supporter").trim() || "Visit Supporter",
-enabled:item.enabled===false ? false : true
-}))
-
-}
-
-async function uploadSupporterThumbnail(token,file,itemId){
-const safeExt=getSafeMediaThumbExtension(file)
-const safeId=String(itemId || `supporter-${Date.now()}`).replace(/[^a-zA-Z0-9_-]/g,"")
-const fileName=`supporter-${safeId}-${Date.now()}.${safeExt}`
-const repoPath=`Fan App/media/${fileName}`
-const localPath=`./media/${fileName}`
-const base64=await fileToBase64(file)
-
-await ghPutFile(
-token,
-repoPath,
-undefined,
-base64,
-`BASE supporter thumbnail ${fileName}`
-)
-
-return localPath
-}
-
-async function buildSupportersForPublish(token){
-if(!(supportersHydrated || supportersTouched)) return null
-
-const supporters=[]
-
-for(const item of supporterState){
-
-let thumbnail=(item.thumbnail || "").trim()
-
-if(item.thumbnailFile instanceof File){
-log(`Supporter thumbnail upload started: ${item.name || "supporter"}`)
-thumbnail=await uploadSupporterThumbnail(token,item.thumbnailFile,item.id)
-item.thumbnail=thumbnail
-delete item.thumbnailFile
-log(`Supporter thumbnail uploaded: ${thumbnail}`)
-}
-
-supporters.push({
-id:item.id || `supporter-${Math.random().toString(16).slice(2)}`,
-type:(item.type || "supporter").trim() || "supporter",
-name:(item.name || "").trim(),
-tagline:(item.tagline || "").trim(),
-description:(item.description || "").trim(),
-thumbnail,
-url:(item.url || "").trim(),
-buttonText:(item.buttonText || "Visit Supporter").trim() || "Visit Supporter",
-enabled:item.enabled===false ? false : true
-})
-
-}
-
-return supporters
-
-}
-
-function renderCollectionSelect(){
-ensureDefaultCollection()
-
-const current=el.mediaCollectionSelect.value || mediaCollections[0].id
-
-el.mediaCollectionSelect.innerHTML=""
-
-mediaCollections.forEach(collection=>{
-const option=document.createElement("option")
-option.value=collection.id
-option.textContent=collection.title
-el.mediaCollectionSelect.appendChild(option)
-})
-
-if(mediaCollections.some(c=>c.id===current)){
-el.mediaCollectionSelect.value=current
-}else{
-el.mediaCollectionSelect.value=mediaCollections[0].id
-}
-}
-
-function renderMediaList(){
-
-ensureDefaultCollection()
-renderCollectionSelect()
-
-el.mediaList.innerHTML=""
-
-const total=document.createElement("div")
-total.className="tiny"
-total.textContent=`Collections: ${mediaCollections.length} · Items: ${mediaItems.length}`
-el.mediaList.appendChild(total)
-
-mediaCollections.forEach(collection=>{
-
-const block=document.createElement("div")
-block.className="mediaCollectionBlock"
-
-const head=document.createElement("div")
-head.className="mediaCollectionHead"
-
-const name=document.createElement("div")
-name.className="mediaCollectionName"
-name.textContent=collection.title
-
-const itemsForCollection=mediaItems.filter(item=>(item.collectionId || mediaCollections[0].id)===collection.id)
-
-const count=document.createElement("div")
-count.className="mediaCollectionCount"
-count.textContent=`${itemsForCollection.length} item${itemsForCollection.length===1 ? "" : "s"}`
-
-head.appendChild(name)
-head.appendChild(count)
-block.appendChild(head)
-
-itemsForCollection.forEach((item)=>{
-
-const row=document.createElement("div")
-row.className="mediaItemRow"
-
-const left=document.createElement("div")
-left.className="mediaMeta"
-
-const t=document.createElement("div")
-t.className="mediaTitle"
-t.textContent=item.title||"(untitled)"
-
-const sub=document.createElement("div")
-sub.className="mediaSub"
-sub.textContent=`${item.access||"public"} — ${item.url ? item.url : (item.mediaFile instanceof File ? "(local media pending publish)" : "(no url)")}`
-
-left.appendChild(t)
-left.appendChild(sub)
-
-const remove=document.createElement("button")
-remove.textContent="Remove"
-
-remove.onclick=()=>{
-mediaItems=mediaItems.filter(x=>x.id!==item.id)
-mediaTouched=true
-renderMediaList()
-markDirty()
-}
-
-row.appendChild(left)
-row.appendChild(remove)
-
-block.appendChild(row)
-
-})
-
-el.mediaList.appendChild(block)
-
-})
-
-}
-
-
-function renderExternalMediaList(){
-
-if(!el.externalMediaList)return
-
-el.externalMediaList.innerHTML=""
-
-const total=document.createElement("div")
-total.className="tiny"
-total.textContent=`External Media: ${externalMediaState.length}`
-el.externalMediaList.appendChild(total)
-
-externalMediaState.forEach((item,i)=>{
-
-const row=document.createElement("div")
-row.className="mediaItemRow"
-
-const left=document.createElement("div")
-left.className="mediaMeta"
-
-const t=document.createElement("div")
-t.className="mediaTitle"
-t.textContent=item.name || "(unnamed external media)"
-
-const sub=document.createElement("div")
-sub.className="mediaSub"
-sub.textContent=`${item.provider || "custom"} · ${item.enabled===false ? "disabled" : "enabled"} · ${item.embed ? item.embed : (item.url || "(no url)")}`
-
-left.appendChild(t)
-left.appendChild(sub)
-
-const remove=document.createElement("button")
-remove.textContent="Remove"
-
-remove.onclick=()=>{
-externalMediaState.splice(i,1)
-mediaTouched=true
-renderExternalMediaList()
-markDirty()
-}
-
-row.appendChild(left)
-row.appendChild(remove)
-
-el.externalMediaList.appendChild(row)
-
-})
-
-}
-
-function hydrateMediaGateway(state){
-
-const mg=state && typeof state==="object" ? state.mediaGateway : null
-
-mediaHydrated=true
-
-if(!mg || typeof mg!=="object"){
-el.mediaEnabled.checked=false
-mediaCollections=[{id:"collection-default",title:"Latest"}]
-mediaItems=[]
-externalMediaState=[]
-hydrateMediaPresentation({})
-renderMediaList()
-renderExternalMediaList()
-return
-}
-
-el.mediaEnabled.checked=mg.enabled===true
-hydrateMediaPresentation(mg)
-externalMediaState=Array.isArray(mg.externalMedia) ? mg.externalMedia.map(x=>({
-id:x?.id || `external-${Math.random().toString(16).slice(2)}`,
-provider:String(x?.provider || "custom"),
-name:String(x?.name || ""),
-url:String(x?.url || ""),
-embed:String(x?.embed || ""),
-thumbnail:String(x?.thumbnail || ""),
-buttonText:String(x?.buttonText || "Open Media"),
-enabled:x?.enabled===false ? false : true
-})) : []
-
-const collections=Array.isArray(mg.collections)?mg.collections:[]
-
-if(collections.length===0){
-mediaCollections=[{id:"collection-default",title:"Latest"}]
-mediaItems=[]
-hydrateMediaPresentation(mg)
-renderMediaList()
-renderExternalMediaList()
-return
-}
-
-mediaCollections=collections.map((collection,i)=>({
-id:collection?.id || (i===0 ? "collection-default" : `collection-${i}-${Math.random().toString(16).slice(2)}`),
-title:String(collection?.title || (i===0 ? "Latest" : `Collection ${i+1}`))
-}))
-
-mediaItems=[]
-
-collections.forEach((collection,i)=>{
-const collectionId=mediaCollections[i]?.id || "collection-default"
-const items=Array.isArray(collection?.items) ? collection.items : []
-
-items.forEach(x=>{
-mediaItems.push({
-id:x?.id || `item-${Math.random().toString(16).slice(2)}`,
-collectionId,
-title:String(x?.title || ""),
-description:String(x?.description || ""),
-thumbnail:String(x?.thumbnail || ""),
-url:String(x?.url || ""),
-access:"public"
-})
-})
-})
-
-ensureDefaultCollection()
-renderMediaList()
-renderExternalMediaList()
-
-}
-
-function buildMediaGateway(){
-if(!(mediaHydrated || mediaTouched)) return null
-
-ensureDefaultCollection()
-
-const collections=mediaCollections.map(collection=>{
-
-const items=mediaItems
-.filter(it=>(it.collectionId || mediaCollections[0].id)===collection.id)
-.map(it=>({
-id:it.id || `item-${Math.random().toString(16).slice(2)}`,
-title:(it.title||"").trim(),
-description:(it.description||"").trim(),
-thumbnail:(it.thumbnail||"").trim(),
-url:(it.url||"").trim(),
-access:"public"
-}))
-
-return{
-id:collection.id,
-title:(collection.title||"Latest").trim() || "Latest",
-items
-}
-
-})
-
-return{
-enabled:el.mediaEnabled.checked===true,
-collections,
-presentation:buildMediaPresentation(),
-externalMedia:externalMediaState.map(item=>({
-id:item.id || `external-${Math.random().toString(16).slice(2)}`,
-provider:(item.provider || "custom").trim() || "custom",
-name:(item.name || "").trim(),
-url:(item.url || "").trim(),
-embed:(item.embed || "").trim(),
-thumbnail:(item.thumbnail || "").trim(),
-buttonText:(item.buttonText || "Open Media").trim() || "Open Media",
-enabled:item.enabled===false ? false : true
-}))
-}
-
-}
-
-
-function inferBackgroundType(url){
-const clean=String(url || "").toLowerCase().split("?")[0]
+const u=new URL(url);
 
 if(
-clean.endsWith(".mp4") ||
-clean.endsWith(".webm") ||
-clean.endsWith(".mov") ||
-clean.endsWith(".m4v")
+u.protocol==="http:" ||
+u.protocol==="https:" ||
+u.protocol==="mailto:"
 ){
-return "video"
+return u.href;
 }
 
-if(
+}catch(e){}
+
+return "";
+}
+
+function normalizeURL(url){
+
+if(!url)return"";
+
+if(url.includes("dropbox.com")){
+url=url
+.replace("www.dropbox.com","dl.dropboxusercontent.com")
+.replace("?dl=0","")
+.replace("&dl=0","")
+}
+
+if(url.includes("drive.google.com")){
+url=url.replace("/view","/preview")
+}
+
+return url
+}
+
+
+function safeAssetURL(url){
+
+if(!url) return "";
+
+const normalized=normalizeURL(url);
+const safe=safeURL(normalized);
+
+if(!safe || safe.startsWith("mailto:")) return "";
+
+return safe;
+
+}
+
+function isImageAsset(url){
+
+if(!url) return false;
+
+const clean=url.toLowerCase().split("?")[0];
+
+return(
 clean.endsWith(".jpg") ||
 clean.endsWith(".jpeg") ||
 clean.endsWith(".png") ||
 clean.endsWith(".gif") ||
 clean.endsWith(".webp") ||
 clean.endsWith(".svg")
-){
-return "image"
+);
+
 }
 
-return "none"
+function isVideoAsset(url){
+
+if(!url) return false;
+
+const clean=url.toLowerCase().split("?")[0];
+
+return(
+clean.endsWith(".mp4") ||
+clean.endsWith(".webm") ||
+clean.endsWith(".mov") ||
+clean.endsWith(".m4v")
+);
+
 }
 
-function hydrateBackground(state){
-const background=state && typeof state==="object" && state.background && typeof state.background==="object"
-? state.background
-: {}
 
-const url=String(
-background.url ||
-background.image ||
-background.video ||
-state?.backgroundImage ||
-state?.backgroundVideo ||
+function isAudioAsset(url){
+
+if(!url) return false;
+
+const clean=url.toLowerCase().split("?")[0];
+
+return(
+clean.endsWith(".mp3") ||
+clean.endsWith(".m4a") ||
+clean.endsWith(".wav") ||
+clean.endsWith(".ogg") ||
+clean.endsWith(".aac") ||
+clean.endsWith(".webm")
+);
+
+}
+
+
+function getAppIconSource(d){
+
+const rawUrl=String(
+(d.appIcon && (d.appIcon.url || d.appIcon.image || d.appIcon.src)) ||
+d.appIcon ||
+d.icon ||
+d.logo ||
+d.icon192 ||
+d.icon512 ||
 ""
-).trim()
+).trim();
 
-let type=String(background.type || "").toLowerCase().trim()
+return safeAssetURL(rawUrl);
 
-if(type!=="image" && type!=="video"){
-type=inferBackgroundType(url)
 }
 
-if(background.enabled===false || !url){
-type="none"
+function applyAppIcon(d){
+
+const logo=document.getElementById("logo");
+const iconSource=getAppIconSource(d);
+
+if(iconSource){
+logo.src=iconSource;
 }
 
-el.backgroundType.value=type
-el.backgroundUrl.value=url
-el.backgroundFile.value=""
 }
 
-function buildBackground(){
-const type=String(el.backgroundType.value || "none").toLowerCase().trim()
-const url=String(el.backgroundUrl.value || "").trim()
+function getHeroConfig(d){
 
-if(type!=="image" && type!=="video"){
-return{
-enabled:false,
-type:"none",
-url:""
-}
-}
+const hero=d.hero || d.heroMedia || {};
 
-return{
-enabled:true,
-type,
-url
-}
-}
+if(hero.enabled===false) return null;
 
-function getSafeBackgroundExtension(file,type){
-const name=String(file?.name || "")
-const ext=(name.split(".").pop() || "").toLowerCase()
-const mime=String(file?.type || "").toLowerCase()
-
-if(type==="image"){
-if(["png","jpg","jpeg","webp","gif"].includes(ext)) return ext
-if(mime==="image/png") return "png"
-if(mime==="image/jpeg") return "jpg"
-if(mime==="image/webp") return "webp"
-if(mime==="image/gif") return "gif"
-return "png"
-}
-
-if(["mp4","webm","mov","m4v"].includes(ext)) return ext
-if(mime==="video/mp4") return "mp4"
-if(mime==="video/webm") return "webm"
-if(mime==="video/quicktime") return "mov"
-
-return "mp4"
-}
-
-async function uploadBackgroundAsset(token,file,type){
-const safeType=type==="video" ? "video" : "image"
-const safeExt=getSafeBackgroundExtension(file,safeType)
-const fileName=`background-${safeType}-${Date.now()}.${safeExt}`
-const repoPath=`Fan App/media/${fileName}`
-const localPath=`./media/${fileName}`
-const base64=await fileToBase64(file)
-
-await ghPutFile(
-token,
-repoPath,
-undefined,
-base64,
-`BASE background ${safeType} ${fileName}`
-)
-
-return localPath
-}
-
-async function buildBackgroundForPublish(token){
-const type=String(el.backgroundType.value || "none").toLowerCase().trim()
-
-if(type!=="image" && type!=="video"){
-el.backgroundFile.value=""
-el.backgroundUrl.value=""
-return{
-enabled:false,
-type:"none",
-url:""
-}
-}
-
-let url=String(el.backgroundUrl.value || "").trim()
-const file=el.backgroundFile.files[0] || null
-
-if(file){
-log(`Background ${type} upload started.`)
-url=await uploadBackgroundAsset(token,file,type)
-el.backgroundUrl.value=url
-el.backgroundFile.value=""
-log(`Background ${type} uploaded: ${url}`)
-}
-
-return{
-enabled:true,
-type,
-url
-}
-}
-
-
-
-function hydrateHeroMedia(state){
-const hero=state && typeof state==="object" && state.heroMedia && typeof state.heroMedia==="object"
-? state.heroMedia
-: {}
-
-let type=String(hero.type || "").toLowerCase().trim()
-const url=String(hero.url || hero.src || hero.file || "").trim()
-
-if(type!=="image" && type!=="video"){
-type=inferBackgroundType(url)
-}
-
-if(hero.enabled===false || !url){
-type="none"
-}
-
-el.heroMediaType.value=type
-el.heroMediaUrl.value=url
-el.heroMediaFile.value=""
-
-const animation=String(hero.animation || "none").toLowerCase().trim()
-el.heroMediaAnimation.value=["float","pulse","drift","spin"].includes(animation) ? animation : "none"
-}
-
-function buildHeroMedia(){
-const type=String(el.heroMediaType.value || "none").toLowerCase().trim()
-const url=String(el.heroMediaUrl.value || "").trim()
-const animation=String(el.heroMediaAnimation.value || "none").toLowerCase().trim()
-
-if(type!=="image" && type!=="video"){
-return{
-enabled:false,
-type:"none",
-url:"",
-animation:["float","pulse","drift","spin"].includes(animation) ? animation : "none"
-}
-}
-
-return{
-enabled:true,
-type,
-url,
-animation:["float","pulse","drift","spin"].includes(animation) ? animation : "none"
-}
-}
-
-async function uploadHeroMediaAsset(token,file,type){
-const safeType=type==="video" ? "video" : "image"
-const safeExt=getSafeBackgroundExtension(file,safeType)
-const fileName=`hero-${safeType}-${Date.now()}.${safeExt}`
-const repoPath=`Fan App/media/${fileName}`
-const localPath=`./media/${fileName}`
-const base64=await fileToBase64(file)
-
-await ghPutFile(
-token,
-repoPath,
-undefined,
-base64,
-`BASE hero ${safeType} ${fileName}`
-)
-
-return localPath
-}
-
-async function buildHeroMediaForPublish(token){
-const type=String(el.heroMediaType.value || "none").toLowerCase().trim()
-const animation=String(el.heroMediaAnimation.value || "none").toLowerCase().trim()
-const safeAnimation=["float","pulse","drift","spin"].includes(animation) ? animation : "none"
-
-if(type!=="image" && type!=="video"){
-el.heroMediaFile.value=""
-el.heroMediaUrl.value=""
-return{
-enabled:false,
-type:"none",
-url:"",
-animation:safeAnimation
-}
-}
-
-let url=String(el.heroMediaUrl.value || "").trim()
-const file=el.heroMediaFile.files[0] || null
-
-if(file){
-log(`Hero ${type} upload started.`)
-url=await uploadHeroMediaAsset(token,file,type)
-el.heroMediaUrl.value=url
-el.heroMediaFile.value=""
-log(`Hero ${type} uploaded: ${url}`)
-}
-
-return{
-enabled:true,
-type,
-url,
-animation:safeAnimation
-}
-}
-
-function hydrateMediaPresentation(mg){
-const presentation=mg && typeof mg==="object" && mg.presentation && typeof mg.presentation==="object"
-? mg.presentation
-: {}
-
-const style=String(presentation.style || "default").toLowerCase().trim()
-el.mediaCardStyle.value=["color","image","video"].includes(style) ? style : "default"
-el.mediaCardColor.value=presentation.color || "#050505"
-el.mediaCardUrl.value=String(presentation.url || "").trim()
-el.mediaCardFile.value=""
-
-const animation=String(presentation.animation || "none").toLowerCase().trim()
-el.mediaCardAnimation.value=["float","pulse","drift"].includes(animation) ? animation : "none"
-}
-
-function buildMediaPresentation(){
-const style=String(el.mediaCardStyle.value || "default").toLowerCase().trim()
-const safeStyle=["color","image","video"].includes(style) ? style : "default"
-const animation=String(el.mediaCardAnimation.value || "none").toLowerCase().trim()
-
-return{
-style:safeStyle,
-color:el.mediaCardColor.value || "#050505",
-url:String(el.mediaCardUrl.value || "").trim(),
-animation:["float","pulse","drift"].includes(animation) ? animation : "none"
-}
-}
-
-async function uploadMediaCardAsset(token,file,style){
-const safeType=style==="video" ? "video" : "image"
-const safeExt=getSafeBackgroundExtension(file,safeType)
-const fileName=`media-card-${safeType}-${Date.now()}.${safeExt}`
-const repoPath=`Fan App/media/${fileName}`
-const localPath=`./media/${fileName}`
-const base64=await fileToBase64(file)
-
-await ghPutFile(
-token,
-repoPath,
-undefined,
-base64,
-`BASE media card ${safeType} ${fileName}`
-)
-
-return localPath
-}
-
-async function buildMediaPresentationForPublish(token){
-const style=String(el.mediaCardStyle.value || "default").toLowerCase().trim()
-const safeStyle=["color","image","video"].includes(style) ? style : "default"
-const animation=String(el.mediaCardAnimation.value || "none").toLowerCase().trim()
-
-let url=String(el.mediaCardUrl.value || "").trim()
-const file=el.mediaCardFile.files[0] || null
-
-if((safeStyle==="image" || safeStyle==="video") && file){
-log(`Media card ${safeStyle} upload started.`)
-url=await uploadMediaCardAsset(token,file,safeStyle)
-el.mediaCardUrl.value=url
-el.mediaCardFile.value=""
-log(`Media card ${safeStyle} uploaded: ${url}`)
-}
-
-if(safeStyle==="default" || safeStyle==="color"){
-el.mediaCardFile.value=""
-if(safeStyle==="default") url=""
-}
-
-return{
-style:safeStyle,
-color:el.mediaCardColor.value || "#050505",
-url,
-animation:["float","pulse","drift"].includes(animation) ? animation : "none"
-}
-}
-
-function getPresentationSourceUrl(presentation){
-const style=String(presentation?.style || "default").toLowerCase().trim()
-
-if(style==="video"){
-return String(
-presentation?.video ||
-presentation?.backgroundVideo ||
-presentation?.url ||
+const rawImage=String(
+hero.image ||
+hero.url ||
+hero.src ||
+d.heroImage ||
+d.heroImageUrl ||
+d.hero_media_image ||
 ""
-).trim()
-}
+).trim();
 
-if(style==="image"){
-return String(
-presentation?.image ||
-presentation?.wallpaper ||
-presentation?.backgroundImage ||
-presentation?.url ||
+const rawVideo=String(
+hero.video ||
+d.heroVideo ||
+d.heroVideoUrl ||
+d.hero_media_video ||
 ""
-).trim()
+).trim();
+
+let type=String(hero.type || hero.kind || "").toLowerCase().trim();
+let src="";
+
+if(type==="video"){
+src=safeAssetURL(rawVideo || rawImage);
+}else if(type==="image"){
+src=safeAssetURL(rawImage || rawVideo);
+}else if(rawVideo){
+src=safeAssetURL(rawVideo);
+type="video";
+}else if(rawImage){
+src=safeAssetURL(rawImage);
+type="image";
 }
 
-return String(presentation?.url || "").trim()
+if(!src) return null;
+
+if(type!=="video" && type!=="image"){
+if(isVideoAsset(src)){
+type="video";
+}else if(isImageAsset(src)){
+type="image";
+}else{
+type="image";
+}
 }
 
-function hydrateInnerSurface(state){
-const source=(state && typeof state==="object" && state.innerSurface && typeof state.innerSurface==="object")
-? state.innerSurface
-: ((state && typeof state==="object" && state.innerSurfacePresentation && typeof state.innerSurfacePresentation==="object")
-? state.innerSurfacePresentation
-: {})
+return{
+type:type,
+src:src
+};
 
-const style=String(source.style || source.type || "default").toLowerCase().trim()
-el.innerSurfaceStyle.value=["color","image","video"].includes(style) ? style : "default"
-el.innerSurfaceColor.value=source.color || source.backgroundColor || "#050505"
-el.innerSurfaceUrl.value=getPresentationSourceUrl({
-...source,
-style:el.innerSurfaceStyle.value
-})
-el.innerSurfaceFile.value=""
 }
 
-function buildInnerSurface(){
-const style=String(el.innerSurfaceStyle.value || "default").toLowerCase().trim()
-const safeStyle=["color","image","video"].includes(style) ? style : "default"
-const color=el.innerSurfaceColor.value || "#050505"
-const url=String(el.innerSurfaceUrl.value || "").trim()
+function getHeroAnimationName(d,heroData){
 
-const output={
-style:safeStyle,
-color:safeStyle==="default" ? "" : color,
-url:safeStyle==="default" ? "" : url
+const raw=String(
+(heroData && (heroData.animation || heroData.animationType || heroData.motion || heroData.effect)) ||
+(d && (d.heroAnimation || d.heroAnimationType || d.heroMotion || d.heroEffect)) ||
+""
+).toLowerCase().replace(/[\s_-]+/g,"").trim();
+
+if(raw==="spin" || raw==="rotate" || raw==="3d" || raw==="3dspin" || raw==="spin3d" || raw==="rotatey" || raw==="uprightspin" || raw==="uprightturn"){
+return "spin";
 }
 
-if(safeStyle==="image"){
-output.image=url
-output.wallpaper=url
-output.backgroundImage=url
+if(raw==="flat" || raw==="flatspin" || raw==="record" || raw==="recordspin" || raw==="discspin" || raw==="diskspin" || raw==="rotatez"){
+return "flat";
 }
 
-if(safeStyle==="video"){
-output.video=url
-output.backgroundVideo=url
+return "";
+
 }
 
-return output
+
+function applyHeroAnimation(element,animationName){
+
+if(!element) return;
+
+element.classList.remove("heroSpin","heroSpin3D","heroSpinFlat");
+
+if(animationName==="spin"){
+element.classList.add("heroSpin3D");
+return;
 }
 
-async function uploadInnerSurfaceAsset(token,file,style){
-const safeType=style==="video" ? "video" : "image"
-const safeExt=getSafeBackgroundExtension(file,safeType)
-const fileName=`inner-surface-${safeType}-${Date.now()}.${safeExt}`
-const repoPath=`Fan App/media/${fileName}`
-const localPath=`./media/${fileName}`
-const base64=await fileToBase64(file)
-
-await ghPutFile(
-token,
-repoPath,
-undefined,
-base64,
-`BASE inner surface ${safeType} ${fileName}`
-)
-
-return localPath
+if(animationName==="flat"){
+element.classList.add("heroSpinFlat");
 }
 
-async function buildInnerSurfaceForPublish(token){
-const style=String(el.innerSurfaceStyle.value || "default").toLowerCase().trim()
-const safeStyle=["color","image","video"].includes(style) ? style : "default"
-let url=String(el.innerSurfaceUrl.value || "").trim()
-const file=el.innerSurfaceFile.files[0] || null
-
-if((safeStyle==="image" || safeStyle==="video") && file){
-log(`Inner surface ${safeStyle} upload started.`)
-url=await uploadInnerSurfaceAsset(token,file,safeStyle)
-el.innerSurfaceUrl.value=url
-el.innerSurfaceFile.value=""
-log(`Inner surface ${safeStyle} uploaded: ${url}`)
 }
 
-if(safeStyle==="default" || safeStyle==="color"){
-el.innerSurfaceFile.value=""
-if(safeStyle==="default") url=""
+function stopHeroVideo(){
+
+if(activeHeroVideo){
+try{
+activeHeroVideo.pause();
+}catch(e){}
 }
 
-const output={
-style:safeStyle,
-color:safeStyle==="default" ? "" : (el.innerSurfaceColor.value || "#050505"),
-url
+activeHeroVideo=null;
+
 }
 
-if(safeStyle==="image"){
-output.image=url
-output.wallpaper=url
-output.backgroundImage=url
+function applyHero(d){
+
+const hero=document.querySelector(".hero");
+
+if(!hero) return;
+
+const heroData=d.hero || d.heroMedia || {};
+const heroAnimation=getHeroAnimationName(d,heroData);
+const heroDisabled=heroData.enabled===false;
+const config=getHeroConfig(d);
+
+if(activeView==="live" || heroDisabled){
+stopHeroVideo();
+activeHeroAsset="";
+hero.innerHTML="";
+hero.classList.add("hidden");
+return;
 }
 
-if(safeStyle==="video"){
-output.video=url
-output.backgroundVideo=url
+if(!config){
+
+const fallbackSrc="icons/icon-512-v37.png?v=1782058053694";
+const assetKey="fallback|" + fallbackSrc + "|" + heroAnimation;
+
+stopHeroVideo();
+hero.classList.remove("hidden");
+
+if(assetKey===activeHeroAsset){
+return;
 }
 
-return output
+activeHeroAsset=assetKey;
+hero.innerHTML="";
+
+const img=document.createElement("img");
+img.src=fallbackSrc;
+img.alt="";
+
+applyHeroAnimation(img,heroAnimation);
+
+hero.appendChild(img);
+
+return;
+
 }
 
-function hydrateChime(state){
-const chime=state && typeof state==="object" && state.chime && typeof state.chime==="object"
-? state.chime
-: {}
+const assetKey=config.type + "|" + config.src + "|" + heroAnimation;
 
-const url=String(
+hero.classList.remove("hidden");
+
+if(assetKey===activeHeroAsset){
+return;
+}
+
+activeHeroAsset=assetKey;
+hero.innerHTML="";
+
+if(config.type==="video"){
+
+const video=document.createElement("video");
+video.src=config.src;
+video.autoplay=true;
+video.loop=true;
+video.muted=true;
+video.defaultMuted=true;
+video.playsInline=true;
+video.controls=false;
+video.disablePictureInPicture=true;
+video.setAttribute("autoplay","");
+video.setAttribute("loop","");
+video.setAttribute("muted","");
+video.setAttribute("playsinline","");
+video.setAttribute("webkit-playsinline","");
+video.preload="auto";
+
+applyHeroAnimation(video,heroAnimation);
+
+hero.appendChild(video);
+activeHeroVideo=video;
+
+try{
+const playPromise=video.play();
+if(playPromise && typeof playPromise.catch==="function"){
+playPromise.catch(()=>{});
+}
+}catch(e){}
+
+return;
+
+}
+
+stopHeroVideo();
+
+const img=document.createElement("img");
+img.src=config.src;
+img.alt="";
+
+applyHeroAnimation(img,heroAnimation);
+
+hero.appendChild(img);
+
+}
+
+function getChimeConfig(d){
+
+const chime=d.chime || d.appChime || d.openChime || {};
+
+if(chime.enabled!==true) return null;
+
+const rawUrl=String(
 chime.url ||
 chime.file ||
 chime.audio ||
-state?.chimeUrl ||
-state?.appChimeUrl ||
+d.chimeUrl ||
+d.appChimeUrl ||
+""
+).trim();
+
+const src=safeAssetURL(rawUrl);
+
+if(!src) return null;
+
+const volumeNumber=Number(chime.volume);
+let volume=.65;
+
+if(!Number.isNaN(volumeNumber)){
+volume=Math.max(0,Math.min(1,volumeNumber));
+}
+
+return{
+src:src,
+volume:volume
+};
+
+}
+
+function playChime(){
+
+if(!chimeAudio || chimePlayed) return;
+
+try{
+
+chimeAudio.currentTime=0;
+
+const result=chimeAudio.play();
+
+if(result && typeof result.then==="function"){
+
+result.then(()=>{
+chimePlayed=true;
+chimePending=false;
+}).catch(()=>{
+chimePending=true;
+});
+
+}else{
+chimePlayed=true;
+chimePending=false;
+}
+
+}catch(e){
+chimePending=true;
+}
+
+}
+
+function unlockChime(){
+
+if(chimePending && !chimePlayed){
+playChime();
+}
+
+}
+
+document.addEventListener("pointerdown",unlockChime,{passive:true});
+document.addEventListener("keydown",unlockChime);
+
+function applyCardAnimation(d){
+
+const raw=String(
+(d.cardAnimation && (d.cardAnimation.type || d.cardAnimation.name || d.cardAnimation.style)) ||
+(d.animation && (d.animation.type || d.animation.name || d.animation.style)) ||
+d.cardAnimation ||
+d.animation ||
+""
+).toLowerCase().trim();
+
+document.body.classList.remove("cardAnimFloat","cardAnimPulse","cardAnimGlow");
+
+if(raw==="float"){
+document.body.classList.add("cardAnimFloat");
+return;
+}
+
+if(raw==="pulse"){
+document.body.classList.add("cardAnimPulse");
+return;
+}
+
+if(raw==="glow"){
+document.body.classList.add("cardAnimGlow");
+return;
+}
+
+}
+
+function applyChime(d){
+
+const config=getChimeConfig(d);
+
+if(!config){
+activeChimeAsset="";
+chimeAudio=null;
+chimePlayed=false;
+chimePending=false;
+return;
+}
+
+if(config.src!==activeChimeAsset){
+activeChimeAsset=config.src;
+chimePlayed=false;
+chimePending=false;
+chimeAudio=new Audio();
+chimeAudio.preload="auto";
+chimeAudio.volume=config.volume;
+chimeAudio.src=config.src;
+}
+
+if(!chimePlayed && !chimePending){
+playChime();
+}
+
+}
+
+function getBackgroundConfig(d){
+
+const background=d.background || {};
+
+if(background.enabled===false) return null;
+
+const rawUrl=String(
+background.url ||
+background.image ||
+background.video ||
+d.backgroundImage ||
+d.backgroundVideo ||
+""
+).trim();
+
+const src=safeAssetURL(rawUrl);
+
+if(!src) return null;
+
+let type=String(background.type || "").toLowerCase().trim();
+
+if(!type){
+
+if(background.video || d.backgroundVideo || isVideoAsset(src)){
+type="video";
+}else if(background.image || d.backgroundImage || isImageAsset(src)){
+type="image";
+}
+
+}
+
+if(type!=="video" && type!=="image"){
+return null;
+}
+
+return{
+type:type,
+src:src
+};
+
+}
+
+
+function stopBackgroundVideoRecovery(){
+
+if(backgroundVideoRecoveryTimer){
+clearInterval(backgroundVideoRecoveryTimer);
+backgroundVideoRecoveryTimer=null;
+}
+
+activeBackgroundVideo=null;
+
+}
+
+function resumeBackgroundVideo(){
+
+const video=activeBackgroundVideo;
+
+if(!video) return;
+
+if(document.hidden) return;
+
+try{
+
+video.muted=true;
+video.defaultMuted=true;
+video.setAttribute("muted","");
+video.setAttribute("playsinline","");
+video.setAttribute("webkit-playsinline","");
+
+const playPromise=video.play();
+
+if(playPromise && typeof playPromise.catch==="function"){
+playPromise.catch(()=>{});
+}
+
+}catch(e){}
+
+}
+
+function startBackgroundVideoRecovery(video){
+
+stopBackgroundVideoRecovery();
+
+activeBackgroundVideo=video;
+
+video.addEventListener("pause",()=>{
+setTimeout(resumeBackgroundVideo,250);
+});
+
+video.addEventListener("stalled",()=>{
+setTimeout(resumeBackgroundVideo,250);
+});
+
+video.addEventListener("suspend",()=>{
+setTimeout(resumeBackgroundVideo,250);
+});
+
+video.addEventListener("ended",()=>{
+try{
+video.currentTime=0;
+}catch(e){}
+setTimeout(resumeBackgroundVideo,250);
+});
+
+backgroundVideoRecoveryTimer=setInterval(()=>{
+
+if(!activeBackgroundVideo || document.hidden) return;
+
+if(activeBackgroundVideo.paused || activeBackgroundVideo.readyState < 2){
+resumeBackgroundVideo();
+}
+
+},3000);
+
+resumeBackgroundVideo();
+
+}
+
+document.addEventListener("visibilitychange",()=>{
+
+if(!document.hidden){
+setTimeout(resumeBackgroundVideo,250);
+}
+
+});
+
+window.addEventListener("pageshow",()=>{
+setTimeout(resumeBackgroundVideo,250);
+});
+
+function applyBackground(d){
+
+const appBackground=document.getElementById("appBackground");
+
+if(d.backgroundColor){
+document.body.style.background=d.backgroundColor;
+}else{
+document.body.style.background="var(--bg)";
+}
+
+const config=getBackgroundConfig(d);
+
+if(!config){
+stopBackgroundVideoRecovery();
+activeBackgroundAsset="";
+appBackground.innerHTML="";
+appBackground.classList.remove("active");
+return;
+}
+
+const assetKey=config.type + "|" + config.src;
+
+if(assetKey===activeBackgroundAsset){
+appBackground.classList.add("active");
+return;
+}
+
+activeBackgroundAsset=assetKey;
+appBackground.innerHTML="";
+
+if(config.type==="image"){
+
+stopBackgroundVideoRecovery();
+
+const img=document.createElement("img");
+img.src=config.src;
+img.alt="";
+
+appBackground.appendChild(img);
+appBackground.classList.add("active");
+
+return;
+
+}
+
+if(config.type==="video"){
+
+const video=document.createElement("video");
+video.src=config.src;
+video.autoplay=true;
+video.loop=true;
+video.muted=true;
+video.defaultMuted=true;
+video.playsInline=true;
+video.controls=false;
+video.disablePictureInPicture=true;
+video.setAttribute("autoplay","");
+video.setAttribute("loop","");
+video.setAttribute("muted","");
+video.setAttribute("playsinline","");
+video.setAttribute("webkit-playsinline","");
+video.setAttribute("aria-hidden","true");
+video.preload="auto";
+
+appBackground.appendChild(video);
+appBackground.classList.add("active");
+
+startBackgroundVideoRecovery(video);
+
+}
+
+}
+
+function isVideoUrl(url){
+
+if(!url) return false
+
+const clean=url.toLowerCase().split("?")[0]
+
+return(
+clean.endsWith(".mp4") ||
+clean.endsWith(".webm") ||
+clean.endsWith(".mov") ||
+url.includes("youtube.com") ||
+url.includes("youtu.be") ||
+url.includes("vimeo.com") ||
+url.includes("cloudflarestream.com")
+)
+
+}
+
+function getYouTubeEmbed(url){
+
+try{
+
+if(url.includes("youtube.com/watch?v=")){
+
+const parsed=new URL(url)
+const id=parsed.searchParams.get("v")
+
+if(id){
+return `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&playsinline=1&rel=0`
+}
+
+}
+
+if(url.includes("youtu.be/")){
+
+const id=url.split("youtu.be/")[1]?.split("?")[0]
+
+if(id){
+return `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&playsinline=1&rel=0`
+}
+
+}
+
+}catch(e){}
+
+return null
+
+}
+
+function getVimeoEmbed(url){
+
+try{
+
+if(url.includes("vimeo.com/")){
+
+const id=url.split("vimeo.com/")[1]?.split("?")[0]
+
+if(id){
+return `https://player.vimeo.com/video/${id}?autoplay=1`
+}
+
+}
+
+}catch(e){}
+
+return null
+
+}
+
+function getCloudflareEmbed(url){
+
+try{
+
+if(url.includes("cloudflarestream.com")){
+
+if(url.includes("/embed/")){
+return url
+}
+
+return url.replace(
+"cloudflarestream.com/",
+"cloudflarestream.com/embed/"
+)
+
+}
+
+}catch(e){}
+
+return null
+
+}
+
+function getEmbedConfig(url){
+
+if(!url) return null
+
+const lower=url.toLowerCase().split("?")[0]
+
+if(
+lower.endsWith(".jpg") ||
+lower.endsWith(".jpeg") ||
+lower.endsWith(".png") ||
+lower.endsWith(".gif") ||
+lower.endsWith(".webp") ||
+lower.endsWith(".svg")
+){
+
+return{
+type:"image",
+src:url
+}
+
+}
+
+if(
+lower.endsWith(".mp4") ||
+lower.endsWith(".webm") ||
+lower.endsWith(".mov") ||
+lower.endsWith(".m4v")
+){
+
+return{
+type:"video",
+src:url
+}
+
+}
+
+const yt=getYouTubeEmbed(url)
+
+if(yt){
+
+return{
+type:"iframe",
+src:yt
+}
+
+}
+
+const vimeo=getVimeoEmbed(url)
+
+if(vimeo){
+
+return{
+type:"iframe",
+src:vimeo
+}
+
+}
+
+const cf=getCloudflareEmbed(url)
+
+if(cf){
+
+return{
+type:"iframe",
+src:cf
+}
+
+}
+
+return{
+type:"external",
+src:url
+}
+
+}
+
+const mediaRuntime=document.getElementById("mediaRuntime")
+const mediaRuntimeBody=document.getElementById("mediaRuntimeBody")
+const mediaRuntimeClose=document.getElementById("mediaRuntimeClose")
+const mediaRuntimeTitle=document.getElementById("mediaRuntimeTitle")
+
+function closeMediaRuntime(){
+
+mediaRuntime.classList.remove("active")
+mediaRuntimeBody.innerHTML=""
+
+document.body.classList.remove("mediaRuntimeOpen")
+
+if(!collectionView.classList.contains("active")){
+document.body.style.overflow=""
+}else{
+document.body.style.overflow="hidden"
+}
+
+}
+
+function openMediaRuntime(item){
+
+if(!item) return
+
+const rawSource=String(
+item.embedUrl ||
+item.embedURL ||
+item.embed_url ||
+item.embed ||
+item.url ||
 ""
 ).trim()
 
-const volumeNumber=Number(chime.volume)
-let volume="0.65"
+const source=safeAssetURL(rawSource)
 
-if(!Number.isNaN(volumeNumber)){
-volume=String(Math.max(0,Math.min(1,volumeNumber)))
+if(!source) return
+
+mediaRuntimeBody.innerHTML=""
+
+document.body.style.overflow="hidden"
+
+mediaRuntimeTitle.textContent=item.title || item.name || "Media"
+
+const config=getEmbedConfig(source)
+
+if(!config) return
+
+if(config.type==="image"){
+
+const img=document.createElement("img")
+
+img.src=config.src
+img.alt=item.title || item.name || "Media"
+
+mediaRuntimeBody.appendChild(img)
+
+document.body.classList.add("mediaRuntimeOpen")
+mediaRuntime.classList.add("active")
+
+return
+
 }
 
-el.chimeEnabled.checked=chime.enabled===true
-el.chimeUrl.value=url
-el.chimeVolume.value=volume
-el.chimeFile.value=""
+if(config.type==="video"){
+
+const video=document.createElement("video")
+
+video.controls=true
+video.autoplay=true
+video.playsInline=true
+video.setAttribute("webkit-playsinline","")
+video.src=config.src
+
+mediaRuntimeBody.appendChild(video)
+
+document.body.classList.add("mediaRuntimeOpen")
+mediaRuntime.classList.add("active")
+
+return
+
 }
 
-function buildChime(){
-const enabled=el.chimeEnabled.checked===true
-const url=String(el.chimeUrl.value || "").trim()
-const volumeNumber=Number(el.chimeVolume.value)
-const volume=Number.isNaN(volumeNumber) ? .65 : Math.max(0,Math.min(1,volumeNumber))
+if(config.type==="iframe"){
 
-return{
-enabled,
-url:enabled ? url : "",
-volume
-}
-}
+const iframe=document.createElement("iframe")
 
-function getSafeChimeExtension(file){
-const name=String(file?.name || "")
-const ext=(name.split(".").pop() || "").toLowerCase()
-const mime=String(file?.type || "").toLowerCase()
+iframe.src=config.src
 
-if(["mp3","m4a","wav","ogg","aac","webm"].includes(ext)) return ext
-if(mime==="audio/mpeg") return "mp3"
-if(mime==="audio/mp3") return "mp3"
-if(mime==="audio/mp4") return "m4a"
-if(mime==="audio/wav") return "wav"
-if(mime==="audio/ogg") return "ogg"
-if(mime==="audio/aac") return "aac"
-if(mime==="audio/webm") return "webm"
+iframe.allow=
+"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 
-return "mp3"
+iframe.allowFullscreen=true
+
+iframe.referrerPolicy="strict-origin-when-cross-origin"
+
+mediaRuntimeBody.appendChild(iframe)
+
+document.body.classList.add("mediaRuntimeOpen")
+mediaRuntime.classList.add("active")
+
+return
+
 }
 
-async function uploadChimeAsset(token,file){
-const safeExt=getSafeChimeExtension(file)
-const fileName=`chime-${Date.now()}.${safeExt}`
-const repoPath=`Fan App/media/${fileName}`
-const localPath=`./media/${fileName}`
-const base64=await fileToBase64(file)
+window.open(config.src,"_blank","noopener")
 
-await ghPutFile(
-token,
-repoPath,
-undefined,
-base64,
-`BASE chime ${fileName}`
-)
-
-return localPath
 }
 
-async function buildChimeForPublish(token){
-const enabled=el.chimeEnabled.checked===true
-const volumeNumber=Number(el.chimeVolume.value)
-const volume=Number.isNaN(volumeNumber) ? .65 : Math.max(0,Math.min(1,volumeNumber))
+mediaRuntimeClose.onclick=closeMediaRuntime
+
+
+function firstMediaPresentationSource(){
+
+for(let i=0;i<arguments.length;i++){
+const obj=arguments[i];
+if(!obj || typeof obj!=="object") continue;
+
+const direct=obj.mediaPresentation || obj.cardPresentation || obj.presentation || obj.cardStyle || obj.mediaCard || obj.mediaCardPresentation || null;
+
+if(direct && typeof direct==="object") return direct;
+
+if(
+obj.mediaCardColor || obj.cardColor || obj.color ||
+obj.mediaCardWallpaper || obj.cardWallpaper || obj.wallpaper || obj.backgroundImage || obj.image ||
+obj.mediaCardVideo || obj.cardVideo || obj.video || obj.backgroundVideo
+){
+return obj;
+}
+
+}
+
+return null;
+
+}
+
+function getMediaPresentationConfig(){
+
+const source=firstMediaPresentationSource.apply(null,arguments);
+
+if(!source || source.enabled===false) return null;
+
+const style=String(
+source.style ||
+source.cardStyle ||
+source.type ||
+source.kind ||
+source.mode ||
+source.value ||
+""
+).toLowerCase().trim();
+
+if(
+style==="default" ||
+style==="base" ||
+style==="none" ||
+style==="off" ||
+style==="transparent"
+){
+return null;
+}
+
+const rawColor=String(
+source.color ||
+source.cardColor ||
+source.mediaCardColor ||
+source.backgroundColor ||
+""
+).trim();
+
+const rawWallpaper=String(
+source.wallpaper ||
+source.cardWallpaper ||
+source.mediaCardWallpaper ||
+source.backgroundImage ||
+source.image ||
+""
+).trim();
+
+const rawVideo=String(
+source.video ||
+source.cardVideo ||
+source.mediaCardVideo ||
+source.backgroundVideo ||
+""
+).trim();
+
+const video=safeAssetURL(rawVideo);
+const wallpaper=safeAssetURL(rawWallpaper);
+
+if(video && (style==="video" || isVideoAsset(video) || !rawColor && !wallpaper)){
+return{type:"video",src:video,color:rawColor};
+}
+
+if(wallpaper && (style==="wallpaper" || style==="image" || isImageAsset(wallpaper) || !rawColor)){
+return{type:"wallpaper",src:wallpaper,color:rawColor};
+}
+
+if(rawColor){
+return{type:"color",color:rawColor};
+}
+
+if(video){
+return{type:"video",src:video,color:rawColor};
+}
+
+if(wallpaper){
+return{type:"wallpaper",src:wallpaper,color:rawColor};
+}
+
+return null;
+
+}
+
+function applyMediaPresentation(card,config,scope){
+
+if(!card) return;
+
+const layers=Array.from(card.querySelectorAll(":scope > .mediaPresentationLayer"));
+
+card.style.background="";
+card.classList.remove("cardPresented","mediaPresented","innerPresented");
+
+if(!config){
+layers.forEach(layer=>layer.remove());
+return;
+}
+
+if(scope==="global"){
+card.classList.add("cardPresented");
+}else if(scope==="inner"){
+card.classList.add("innerPresented");
+}else{
+card.classList.add("mediaPresented");
+}
+
+if(config.color){
+card.style.background=config.color;
+}
+
+const presentationKey=[
+scope || "media",
+config.type || "",
+config.src || "",
+config.color || ""
+].join("|");
+
+if(config.type==="color"){
+layers.forEach(layer=>layer.remove());
+card.dataset.presentationKey=presentationKey;
+return;
+}
+
+const currentLayer=layers[0] || null;
+
+if(
+currentLayer &&
+currentLayer.dataset.presentationKey===presentationKey &&
+((config.type==="wallpaper" && currentLayer.querySelector("img")) ||
+(config.type==="video" && currentLayer.querySelector("video")))
+){
+if(layers.length>1){
+layers.slice(1).forEach(layer=>layer.remove());
+}
+return;
+}
+
+layers.forEach(layer=>layer.remove());
+
+if(config.type==="wallpaper" && config.src){
+
+const layer=document.createElement("div");
+layer.className="mediaPresentationLayer";
+layer.dataset.presentationKey=presentationKey;
+
+const img=document.createElement("img");
+img.src=config.src;
+img.alt="";
+
+layer.appendChild(img);
+card.insertBefore(layer,card.firstChild);
+card.dataset.presentationKey=presentationKey;
+
+return;
+
+}
+
+if(config.type==="video" && config.src){
+
+const layer=document.createElement("div");
+layer.className="mediaPresentationLayer";
+layer.dataset.presentationKey=presentationKey;
+
+const video=document.createElement("video");
+video.src=config.src;
+video.autoplay=true;
+video.loop=true;
+video.muted=true;
+video.defaultMuted=true;
+video.playsInline=true;
+video.controls=false;
+video.disablePictureInPicture=true;
+video.setAttribute("autoplay","");
+video.setAttribute("loop","");
+video.setAttribute("muted","");
+video.setAttribute("playsinline","");
+video.setAttribute("webkit-playsinline","");
+video.setAttribute("aria-hidden","true");
+video.preload="metadata";
+
+layer.appendChild(video);
+card.insertBefore(layer,card.firstChild);
+card.dataset.presentationKey=presentationKey;
+
+try{
+const playPromise=video.play();
+if(playPromise && typeof playPromise.catch==="function"){
+playPromise.catch(()=>{});
+}
+}catch(e){}
+
+}
+
+}
+
+function getGlobalCardPresentationConfig(d){
+
+if(!d) return null;
+
+const gateway=d.mediaGateway || {};
+
+return getMediaPresentationConfig(
+d.cardPresentation,
+d.mediaPresentation,
+d.mediaCardPresentation,
+d.cardStyle,
+gateway.cardPresentation,
+gateway.mediaPresentation,
+gateway.mediaCardPresentation,
+gateway.cardStyle
+);
+
+}
+
+function getInnerSurfacePresentationConfig(d){
+
+if(!d) return null;
+
+const gateway=d.mediaGateway || {};
+
+return getMediaPresentationConfig(
+d.innerSurfacePresentation,
+d.innerSurface,
+d.innerCardPresentation,
+d.innerCardStyle,
+d.contentSurfacePresentation,
+d.contentSurface,
+gateway.innerSurfacePresentation,
+gateway.innerSurface,
+gateway.innerCardPresentation,
+gateway.innerCardStyle,
+gateway.contentSurfacePresentation,
+gateway.contentSurface
+);
+
+}
+
+function applyInnerSurfacePresentation(d){
+
+const config=getInnerSurfacePresentationConfig(d);
+
+document.querySelectorAll(".innerSurface").forEach(surface=>{
+applyMediaPresentation(surface,config,"inner");
+});
+
+}
+
+function applyGlobalCardPresentation(d){
+
+const config=getGlobalCardPresentationConfig(d);
+
+const selector=[
+".card",
+".supportersCard",
+".supporterCard"
+].join(",");
+
+document.querySelectorAll(selector).forEach(card=>{
+applyMediaPresentation(card,config,"global");
+});
+
+}
+
+function normalizeExternalMediaList(d){
+
+const gateway=d.mediaGateway || {};
+const possible=[
+
+gateway.externalMedia,
+gateway.external,
+gateway.externalItems,
+gateway.externalMediaItems,
+gateway.providers,
+gateway.galleries,
+d.externalMedia,
+d.externalMediaItems,
+d.externalGalleries,
+d.mediaExternal
+
+];
+
+let output=[];
+
+possible.forEach(value=>{
+
+if(!value) return;
+
+if(Array.isArray(value)){
+output=output.concat(value);
+return;
+}
+
+if(Array.isArray(value.items)){
+output=output.concat(value.items);
+return;
+}
+
+if(Array.isArray(value.collections)){
+output=output.concat(value.collections);
+return;
+}
+
+if(typeof value==="object"){
+output.push(value);
+}
+
+});
+
+return output.filter(item=>{
+if(!item || item.enabled===false) return false;
+return Boolean(
+String(item.name||item.title||item.provider||"").trim() ||
+String(item.url||item.embed||item.embedUrl||item.embedURL||item.embed_url||"").trim()
+);
+});
+
+}
+
+function ensurePicflowScript(){
+
+if(window.picflow) return;
+
+window.picflow=true;
+
+const script=document.createElement("script");
+script.src="https://picflow.com/embed/main.js";
+script.type="module";
+script.defer=true;
+document.head.appendChild(script);
+
+}
+
+function renderPicflowEmbed(mount,embedValue){
+
+const idMatch=embedValue.match(/id=["']([^"']+)["']/i);
+const tenantMatch=embedValue.match(/tenant=["']([^"']+)["']/i);
+const lightboxMatch=embedValue.match(/lightbox=["']([^"']+)["']/i);
+
+if(idMatch && tenantMatch){
+ensurePicflowScript();
+
+const gallery=document.createElement("picflow-gallery");
+gallery.setAttribute("id",idMatch[1]);
+gallery.setAttribute("tenant",tenantMatch[1]);
+gallery.setAttribute("no-padding","true");
+gallery.setAttribute("no-background","true");
+gallery.setAttribute("show-cover","true");
+
+if(lightboxMatch){
+gallery.setAttribute("lightbox",lightboxMatch[1]);
+}
+
+mount.appendChild(gallery);
+return true;
+}
+
+if(embedValue.includes("picflow.com/embed/main.js") || embedValue.includes("<picflow-gallery")){
+mount.innerHTML=embedValue;
+ensurePicflowScript();
+return true;
+}
+
+return false;
+
+}
+
+function renderExternalEmbed(mount,item){
+
+mount.innerHTML="";
+
+const embedValue=String(
+item.embed ||
+item.embedUrl ||
+item.embedURL ||
+item.embed_url ||
+""
+).trim();
+
+if(embedValue){
+
+if(renderPicflowEmbed(mount,embedValue)){
+return;
+}
+
+const safeEmbed=safeURL(embedValue);
+
+if(safeEmbed){
+const iframe=document.createElement("iframe");
+iframe.src=safeEmbed;
+iframe.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen";
+iframe.allowFullscreen=true;
+iframe.referrerPolicy="strict-origin-when-cross-origin";
+mount.appendChild(iframe);
+return;
+}
+
+}
+
+const rawUrl=String(item.url || "").trim();
+const safe=safeURL(rawUrl);
+
+if(safe){
+const iframe=document.createElement("iframe");
+iframe.src=safe;
+iframe.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen";
+iframe.allowFullscreen=true;
+iframe.referrerPolicy="strict-origin-when-cross-origin";
+mount.appendChild(iframe);
+}
+
+}
+
+function createMediaSectionLabel(text){
+
+const label=document.createElement("div");
+label.className="mediaSectionLabel";
+label.textContent=text;
+return label;
+
+}
+
+function getExternalMediaRuntimeKey(item,index){
+
+const raw=String(
+item.id ||
+item.key ||
+item.slug ||
+item.embed ||
+item.embedUrl ||
+item.embedURL ||
+item.embed_url ||
+item.url ||
+item.name ||
+item.title ||
+item.provider ||
+("external-" + index)
+).trim();
+
+return raw || ("external-" + index);
+
+}
+
+function getExternalMediaRuntimeSignature(item){
+
+return JSON.stringify({
+provider:item.provider || "",
+name:item.name || "",
+title:item.title || "",
+description:item.description || item.desc || "",
+thumbnail:item.thumbnail || item.thumb || item.image || "",
+buttonText:item.buttonText || "",
+embed:item.embed || "",
+embedUrl:item.embedUrl || item.embedURL || item.embed_url || "",
+url:item.url || ""
+});
+
+}
+
+function getExternalMediaRuntime(key,item){
+
+const signature=getExternalMediaRuntimeSignature(item);
+const existing=externalMediaRuntimeCache[key];
+
+if(existing && existing.signature===signature){
+return existing;
+}
+
+const mount=document.createElement("div");
+mount.className="externalMediaEmbedMount";
+
+const runtime={
+signature:signature,
+mount:mount,
+rendered:false
+};
+
+externalMediaRuntimeCache[key]=runtime;
+externalMediaExpandedState[key]=false;
+
+return runtime;
+
+}
+
+function pruneExternalMediaRuntimeCache(activeKeys){
+
+Object.keys(externalMediaRuntimeCache).forEach(key=>{
+if(!activeKeys[key]){
+delete externalMediaRuntimeCache[key];
+delete externalMediaExpandedState[key];
+}
+});
+
+}
+
+function getMediaRenderSignature(d){
+
+const gateway=d.mediaGateway || {};
+
+return JSON.stringify({
+mediaGateway:gateway,
+externalMedia:d.externalMedia || null,
+externalMediaItems:d.externalMediaItems || null,
+externalGalleries:d.externalGalleries || null,
+mediaExternal:d.mediaExternal || null,
+cardPresentation:d.cardPresentation || d.mediaPresentation || d.cardStyle || d.cardAnimation || null,
+outerSurface:d.outerSurfacePresentation || d.outerSurface || d.cardSurfacePresentation || d.cardSurface || null,
+innerSurface:d.innerSurfacePresentation || d.innerSurface || d.innerCardPresentation || d.innerCardStyle || d.contentSurfacePresentation || d.contentSurface || null
+});
+
+}
+
+function renderExternalMedia(container,d){
+
+const items=normalizeExternalMediaList(d);
+
+if(items.length===0){
+pruneExternalMediaRuntimeCache({});
+return;
+}
+
+container.appendChild(createMediaSectionLabel("Gallery / Archive"));
+
+const activeKeys={};
+
+items.forEach((item,index)=>{
+
+const runtimeKey=getExternalMediaRuntimeKey(item,index);
+activeKeys[runtimeKey]=true;
+
+const card=document.createElement("div");
+card.className="externalMediaCard";
+
+const presentation=getMediaPresentationConfig(item,d.mediaGateway || {}) || getGlobalCardPresentationConfig(d);
+applyMediaPresentation(card,presentation);
+
+const top=document.createElement("div");
+top.className="externalMediaTop innerSurface";
+applyMediaPresentation(top,getInnerSurfacePresentationConfig(d),"inner");
+
+const thumb=document.createElement("div");
+thumb.className="externalMediaThumb";
+
+if(item.thumbnail || item.thumb || item.image){
+const img=document.createElement("img");
+img.src=normalizeURL(item.thumbnail || item.thumb || item.image);
+thumb.appendChild(img);
+}else{
+thumb.textContent="↗";
+}
+
+const body=document.createElement("div");
+body.className="externalMediaBody";
+
+const provider=document.createElement("div");
+provider.className="externalMediaProvider";
+provider.textContent=item.provider || "External Media";
+
+const title=document.createElement("div");
+title.className="externalMediaTitle";
+title.textContent=item.name || item.title || item.provider || "Gallery";
+
+body.appendChild(provider);
+body.appendChild(title);
+
+if(item.description || item.desc){
+const desc=document.createElement("div");
+desc.className="externalMediaDescription";
+desc.textContent=item.description || item.desc;
+body.appendChild(desc);
+}
+
+const btn=document.createElement("button");
+btn.className="externalMediaExpandBtn";
+btn.type="button";
+btn.textContent=item.buttonText || "Expand";
+
+const hasEmbed=Boolean(item.embed || item.embedUrl || item.embedURL || item.embed_url);
+const hasUrl=Boolean(safeURL(String(item.url || "").trim()));
+
+if(!hasEmbed && hasUrl){
+btn.textContent=item.buttonText || "Open";
+btn.onclick=()=>{
+window.open(safeURL(String(item.url || "").trim()),"_blank","noopener");
+};
+
+}else{
+
+const runtime=getExternalMediaRuntime(runtimeKey,item);
+const mount=runtime.mount;
+const expanded=externalMediaExpandedState[runtimeKey]===true;
+
+mount.classList.toggle("expanded",expanded);
+btn.textContent=expanded ? "Collapse" : (item.buttonText || "Expand");
+
+if(expanded && !runtime.rendered){
+renderExternalEmbed(mount,item);
+runtime.rendered=true;
+}
+
+btn.onclick=()=>{
+const nextExpanded=externalMediaExpandedState[runtimeKey]!==true;
+externalMediaExpandedState[runtimeKey]=nextExpanded;
+mount.classList.toggle("expanded",nextExpanded);
+btn.textContent=nextExpanded ? "Collapse" : (item.buttonText || "Expand");
+
+if(nextExpanded && !runtime.rendered){
+renderExternalEmbed(mount,item);
+runtime.rendered=true;
+}
+};
+
+card.appendChild(mount);
+
+}
+
+top.appendChild(thumb);
+top.appendChild(body);
+top.appendChild(btn);
+
+card.insertBefore(top,card.firstChild);
+
+container.appendChild(card);
+
+});
+
+pruneExternalMediaRuntimeCache(activeKeys);
+
+}
+
+/* COLLECTION VIEW */
+
+const collectionView=document.getElementById("collectionView")
+const collectionBody=document.getElementById("collectionBody")
+const collectionHeaderTitle=document.getElementById("collectionHeaderTitle")
+const collectionBack=document.getElementById("collectionBack")
+
+collectionBack.onclick=()=>{
+
+collectionView.classList.remove("active")
+
+document.body.classList.remove("collectionOpen")
+document.body.style.overflow=""
+
+}
+
+function openCollection(collection){
+
+if(!collection) return
+
+const rootState=currentState || {};
+const gateway=rootState.mediaGateway || {};
+const appPresentation=getGlobalCardPresentationConfig(rootState);
+const collectionPresentation=getMediaPresentationConfig(collection,gateway) || appPresentation;
+
+collectionHeaderTitle.textContent=collection.title || "Collection"
+
+collectionBody.innerHTML=""
+
+document.body.style.overflow="hidden"
+
+;(collection.items || []).forEach(item=>{
+
+const card=document.createElement("div")
+card.className="media-card innerSurface"
+applyMediaPresentation(card,getMediaPresentationConfig(item,collection,gateway) || collectionPresentation,"inner")
+
+card.onclick=()=>{
+collectionBody.querySelectorAll(".media-card.selected").forEach(activeCard=>{
+activeCard.classList.remove("selected")
+})
+card.classList.add("selected")
+}
+
+const thumb=document.createElement("div")
+thumb.className="media-thumb"
+
+if(item.thumbnail){
+
+const img=document.createElement("img")
+
+img.src=normalizeURL(item.thumbnail)
+
+thumb.appendChild(img)
+
+}else{
+
+thumb.textContent="▶"
+
+}
+
+const body=document.createElement("div")
+body.className="media-body"
+
+const title=document.createElement("div")
+title.className="media-title"
+title.textContent=item.title || ""
+
+body.appendChild(title)
+
+if(item.description){
+
+const desc=document.createElement("div")
+desc.className="media-desc"
+desc.textContent=item.description
+
+body.appendChild(desc)
+
+}
+
+card.appendChild(thumb)
+card.appendChild(body)
+
+if(item.url || item.embed || item.embedUrl || item.embedURL || item.embed_url){
+
+const btn=document.createElement("button")
+
+btn.className="media-btn"
+btn.textContent=item.buttonText || "View"
+
+btn.onclick=(event)=>{
+event.stopPropagation()
+collectionBody.querySelectorAll(".media-card.selected").forEach(activeCard=>{
+activeCard.classList.remove("selected")
+})
+card.classList.add("selected")
+openMediaRuntime(item)
+}
+
+card.appendChild(btn)
+
+}
+
+collectionBody.appendChild(card)
+
+})
+
+document.body.classList.add("collectionOpen")
+collectionView.classList.add("active")
+
+}
+
+const views={
+home:document.getElementById("view-home"),
+media:document.getElementById("view-media"),
+links:document.getElementById("view-links"),
+live:document.getElementById("view-live")
+}
+
+document.querySelectorAll(".tab").forEach(t=>{
+t.onclick=()=>setView(t.dataset.id)
+})
+
+function setView(id){
+
+activeView=id
+
+Object.keys(views).forEach(k=>{
+views[k].classList.toggle("hidden",k!==id)
+})
+
+document.querySelectorAll(".tab").forEach(t=>{
+t.classList.toggle("active",t.dataset.id===id)
+})
+
+const supportersSection=document.getElementById("supportersSection")
+const hero=document.querySelector(".hero")
+
+document.body.classList.toggle("liveActive",id==="live")
+
+if(id==="live"){
+
+hero.classList.add("hidden")
+supportersSection.classList.add("hidden")
+
+}
+
+if(currentState){
+applyState(currentState)
+}
+
+}
+
+function applyState(d){
+
+if(!d)return;
+
+currentState=d;
+
+document.getElementById("name").textContent=d.name||"";
+document.getElementById("bio").textContent=d.bio||"";
+
+document.documentElement.style.setProperty('--pillColor',d.pillColor||"#000");
+
+applyAppIcon(d);
+applyHero(d);
+applyBackground(d);
+applyChime(d);
+applyCardAnimation(d);
+
+const mount=document.getElementById("connectMount");
+
+mount.innerHTML="";
+
+if(d.contactEmail){
+
+const a=document.createElement("a");
+
+a.className="btn";
+a.href=`mailto:${d.contactEmail}`;
+a.textContent=d.contactLabel||"Connect";
+
+mount.appendChild(a);
+
+}
+
+const liveStatus=document.getElementById("liveStatus");
+const livePlayer=document.getElementById("livePlayer");
+const liveFrame=document.getElementById("liveFrame");
+const liveDescription=document.getElementById("liveDescription");
+const liveDescriptionToggle=document.getElementById("liveDescriptionToggle");
+
+if(d.live && d.live.enabled){
+liveStatus.textContent=d.live.status==="live"?"Live now":"Offline";
+
+const liveURL=safeURL(d.live.watch_url || "");
+
+if(liveURL){
+livePlayer.classList.remove("hidden");
+
+if(liveFrame.src!==liveURL){
+liveFrame.src=liveURL;
+}
+
+}else{
+livePlayer.classList.add("hidden");
+liveFrame.removeAttribute("src");
+}
+
+if(String(d.live.description || "").trim()){
+liveDescription.textContent=d.live.description;
+liveDescriptionToggle.classList.remove("hidden");
+liveDescriptionToggle.textContent=liveDescriptionExpanded ? "▲ Description" : "▼ Description";
+liveDescription.classList.toggle("hidden",!liveDescriptionExpanded);
+liveDescriptionToggle.onclick=()=>{
+liveDescriptionExpanded=!liveDescriptionExpanded;
+liveDescriptionToggle.textContent=liveDescriptionExpanded ? "▲ Description" : "▼ Description";
+liveDescription.classList.toggle("hidden",!liveDescriptionExpanded);
+};
+}else{
+liveDescriptionExpanded=false;
+liveDescription.textContent="";
+liveDescription.classList.add("hidden");
+liveDescriptionToggle.classList.add("hidden");
+liveDescriptionToggle.onclick=null;
+}
+
+}else{
+liveStatus.textContent="Unavailable";
+livePlayer.classList.add("hidden");
+liveFrame.removeAttribute("src");
+liveDescriptionExpanded=false;
+liveDescription.textContent="";
+liveDescription.classList.add("hidden");
+liveDescriptionToggle.classList.add("hidden");
+liveDescriptionToggle.onclick=null;
+}
+
+
+const communitySection=document.getElementById("communitySection");
+const community=d.community||{};
+
+const communityTitle=document.getElementById("communityTitle");
+const communityDescription=document.getElementById("communityDescription");
+const communityBtn=document.getElementById("communityBtn");
+const communityIcon=document.getElementById("communityIcon");
+const communityEmbedMount=document.getElementById("communityEmbedMount");
+const communityExpandBtn=document.getElementById("communityExpandBtn");
+
+communityEmbedMount.classList.add("hidden");
+communityEmbedMount.classList.toggle("expanded",communityExpanded);
+communityExpandBtn.classList.add("hidden");
+communityDescription.classList.remove("hidden");
+communityBtn.classList.remove("hidden");
+communityBtn.href="#";
+
+if(community.enabled===true && (community.embed || community.url)){
+
+communitySection.classList.remove("hidden");
+
+communityTitle.textContent=community.name || "Community";
+
+if(community.icon){
+communityIcon.src=normalizeURL(community.icon);
+communityIcon.style.display="block";
+}else{
+communityIcon.removeAttribute("src");
+communityIcon.style.display="none";
+}
+
+if(community.embed){
+
+communityDescription.classList.add("hidden");
+communityBtn.classList.add("hidden");
+communityEmbedMount.classList.remove("hidden");
+communityEmbedMount.classList.toggle("expanded",communityExpanded);
+communityExpandBtn.classList.remove("hidden");
+communityExpandBtn.textContent=communityExpanded ? "Collapse" : "Expand";
+communityExpandBtn.onclick=()=>{
+
+communityExpanded=!communityExpanded;
+communityEmbedMount.classList.toggle("expanded",communityExpanded);
+communityExpandBtn.textContent=communityExpanded ? "Collapse" : "Expand";
+
+};
+
+const embedValue=String(community.embed || "").trim();
+
+if(embedValue!==activeCommunityEmbed){
+
+activeCommunityEmbed=embedValue;
+communityEmbedMount.innerHTML="";
+
+if(embedValue.includes("minnit.chat")){
+
+const span=document.createElement("span");
+span.style.display="none";
+span.className="minnit-chat-sembed";
+span.setAttribute("data-chatname",embedValue);
+span.setAttribute("data-style","width:100%; height:420px; max-height:55vh;");
+span.setAttribute("data-version","1.55");
+span.textContent="Chat";
+
+communityEmbedMount.appendChild(span);
+
+const script=document.createElement("script");
+script.src="https://minnit.chat/js/embed.js?c=1772345192";
+script.defer=true;
+
+communityEmbedMount.appendChild(script);
+
+}else{
+
+const safeEmbed=safeURL(embedValue);
+
+if(safeEmbed){
+
+const iframe=document.createElement("iframe");
+iframe.src=safeEmbed;
+iframe.allow="clipboard-write; encrypted-media; fullscreen";
+iframe.referrerPolicy="strict-origin-when-cross-origin";
+
+communityEmbedMount.appendChild(iframe);
+
+}
+
+}
+
+}
+
+}else{
+
+communityExpanded=false;
+communityEmbedMount.classList.remove("expanded");
+communityExpandBtn.classList.add("hidden");
+communityDescription.textContent=(community.provider || "Community") + " Community";
+communityBtn.textContent=community.buttonText || "Enter Community";
+communityBtn.href=safeURL(community.url) || "#";
+
+}
+
+}else{
+
+communityExpanded=false;
+communityEmbedMount.classList.remove("expanded");
+communityExpandBtn.classList.add("hidden");
+communitySection.classList.add("hidden");
+
+}
+
+renderSupporters(d);
+renderLinks(d);
+renderMedia(d);
+applyGlobalCardPresentation(d);
+applyInnerSurfacePresentation(d);
+
+}
+
+function getSupportersSignature(items){
+
+return JSON.stringify(items.map(item=>({
+type:String(item.type||""),
+name:String(item.name||""),
+tagline:String(item.tagline||""),
+description:String(item.description||""),
+thumbnail:String(item.thumbnail||""),
+url:String(item.url||""),
+buttonText:String(item.buttonText||""),
+enabled:item.enabled===false ? false : true
+})));
+
+}
+
+function stopSupportersAutoRotate(){
+
+if(supportersRuntimeTimer){
+clearInterval(supportersRuntimeTimer);
+supportersRuntimeTimer=null;
+}
+
+}
+
+function showSupporterIndex(index){
+
+const container=document.getElementById("supportersList");
+if(!container)return;
+
+const cards=Array.from(container.querySelectorAll(".supporterCard"));
+if(cards.length===0)return;
+
+supportersRuntimeIndex=((index % cards.length) + cards.length) % cards.length;
+
+cards.forEach((card,i)=>{
+card.classList.toggle("active",i===supportersRuntimeIndex);
+});
+
+const count=container.querySelector(".supporterNavCount");
+if(count){
+count.textContent=`${supportersRuntimeIndex+1} / ${cards.length}`;
+}
+
+}
+
+function pauseSupportersAutoRotate(){
+
+supportersRuntimePausedUntil=Date.now()+12000;
+
+}
+
+function startSupportersAutoRotate(count){
+
+stopSupportersAutoRotate();
+
+if(count<=1)return;
+
+supportersRuntimeTimer=setInterval(()=>{
+
+if(Date.now()<supportersRuntimePausedUntil)return;
+
+showSupporterIndex(supportersRuntimeIndex+1);
+
+},9000);
+
+}
+
+function createSupporterCard(item){
+
+const rawUrl=String(item.url||"").trim();
+const url=safeURL(rawUrl);
+
+const clickable=Boolean(url);
+
+const card=document.createElement(clickable ? "a" : "div");
+card.className="supporterCard";
+
+if(clickable){
+card.href=url;
+card.target="_blank";
+card.rel="noopener";
+}
+
+card.addEventListener("pointerdown",pauseSupportersAutoRotate,{passive:true});
+
+const inner=document.createElement("div");
+inner.className="supporterInnerSurface";
+
+const thumb=document.createElement("div");
+thumb.className="supporterThumb";
+
+if(item.thumbnail){
+
+const img=document.createElement("img");
+img.src=normalizeURL(item.thumbnail);
+thumb.appendChild(img);
+
+}else{
+
+const fallback=String(item.name||item.type||"S").trim().charAt(0).toUpperCase() || "S";
+thumb.textContent=fallback;
+
+}
+
+const body=document.createElement("div");
+body.className="supporterBody";
+
+if(item.type){
+
+const type=document.createElement("div");
+type.className="supporterType";
+type.textContent=item.type;
+body.appendChild(type);
+
+}
+
+if(item.name){
+
+const name=document.createElement("div");
+name.className="supporterName";
+name.textContent=item.name;
+body.appendChild(name);
+
+}
+
+if(item.tagline){
+
+const tagline=document.createElement("div");
+tagline.className="supporterTagline";
+tagline.textContent=item.tagline;
+body.appendChild(tagline);
+
+}
+
+if(item.description){
+
+const desc=document.createElement("div");
+desc.className="supporterDesc";
+desc.textContent=item.description;
+body.appendChild(desc);
+
+}
+
+inner.appendChild(thumb);
+inner.appendChild(body);
+
+if(clickable){
+
+const button=document.createElement("div");
+button.className="supporterButton";
+button.textContent=item.buttonText || "Open";
+inner.appendChild(button);
+
+}
+
+card.appendChild(inner);
+
+return card;
+
+}
+
+function renderSupporters(d){
+
+const section=document.getElementById("supportersSection");
+const container=document.getElementById("supportersList");
+
+if(activeView!=="home"){
+
+section.classList.add("hidden");
+stopSupportersAutoRotate();
+
+return;
+
+}
+
+const supporters=Array.isArray(d.supporters)?d.supporters:[];
+
+const visible=supporters.filter(item=>{
+
+if(!item)return false;
+
+if(item.enabled===false)return false;
+
+return Boolean(
+String(item.type||"").trim() ||
+String(item.name||"").trim() ||
+String(item.tagline||"").trim() ||
+String(item.description||"").trim() ||
+String(item.thumbnail||"").trim() ||
+String(item.url||"").trim() ||
+String(item.buttonText||"").trim()
+);
+
+});
+
+if(visible.length===0){
+
+container.innerHTML="";
+container.classList.remove("carousel");
+section.classList.add("hidden");
+supportersRuntimeSignature="";
+supportersRuntimeIndex=0;
+stopSupportersAutoRotate();
+
+return;
+
+}
+
+const signature=getSupportersSignature(visible);
+
+section.classList.remove("hidden");
+
+if(signature===supportersRuntimeSignature && container.dataset.supportersReady==="true"){
+container.classList.toggle("carousel",visible.length>1);
+showSupporterIndex(supportersRuntimeIndex);
+startSupportersAutoRotate(visible.length);
+return;
+}
+
+supportersRuntimeSignature=signature;
+if(supportersRuntimeIndex>=visible.length){
+supportersRuntimeIndex=0;
+}
+
+container.innerHTML="";
+container.dataset.supportersReady="true";
+container.classList.toggle("carousel",visible.length>1);
+
+visible.forEach((item,i)=>{
+const card=createSupporterCard(item);
+card.classList.toggle("active",i===supportersRuntimeIndex);
+container.appendChild(card);
+});
+
+if(visible.length>1){
+
+const nav=document.createElement("div");
+nav.className="supportersNav";
+
+const prev=document.createElement("button");
+prev.type="button";
+prev.className="supporterNavBtn";
+prev.textContent="‹";
+prev.setAttribute("aria-label","Previous supporter");
+prev.onclick=()=>{
+pauseSupportersAutoRotate();
+showSupporterIndex(supportersRuntimeIndex-1);
+};
+
+const count=document.createElement("div");
+count.className="supporterNavCount";
+
+const next=document.createElement("button");
+next.type="button";
+next.className="supporterNavBtn";
+next.textContent="›";
+next.setAttribute("aria-label","Next supporter");
+next.onclick=()=>{
+pauseSupportersAutoRotate();
+showSupporterIndex(supportersRuntimeIndex+1);
+};
+
+nav.appendChild(prev);
+nav.appendChild(count);
+nav.appendChild(next);
+container.appendChild(nav);
+
+}
+
+showSupporterIndex(supportersRuntimeIndex);
+startSupportersAutoRotate(visible.length);
+
+}
+
+function renderLinks(d){
+
+const container=document.getElementById("links");
+
+container.innerHTML="";
+
+const links=Array.isArray(d.links)?d.links:[];
+
+links.forEach(item=>{
+
+const url=safeURL(item.url);
+
+if(!url)return;
+
+const a=document.createElement("a");
+
+a.className="row innerSurface";
+a.href=url;
+a.target="_blank";
+a.rel="noopener";
+
+const left=document.createElement("div");
+left.className="left";
+
+const label=document.createElement("div");
+label.className="label";
+label.textContent=item.label||"Link";
+
+const hint=document.createElement("div");
+hint.className="hint";
+
+try{
+const domain=new URL(url).hostname.replace(/^www\./,"");
+hint.textContent=domain+"/";
+}catch(e){
+hint.textContent=url;
+}
+
+left.appendChild(label);
+left.appendChild(hint);
+
+const pill=document.createElement("div");
+pill.className="pill";
+pill.textContent="Open";
+
+a.appendChild(left);
+a.appendChild(pill);
+
+container.appendChild(a)
+
+})
+
+}
+
+function renderMedia(d){
+
+const container=document.getElementById("mediaSection");
+const renderSignature=getMediaRenderSignature(d);
+
+if(renderSignature===activeMediaRenderSignature && container.children.length>0){
+return;
+}
+
+activeMediaRenderSignature=renderSignature;
+container.innerHTML="";
+
+const gateway=d.mediaGateway || {};
+const enabled=(gateway.enabled!==false);
 
 if(!enabled){
-el.chimeFile.value=""
-return{
-enabled:false,
-url:"",
-volume
-}
+activeMediaRenderSignature="";
+pruneExternalMediaRuntimeCache({});
+return;
 }
 
-let url=String(el.chimeUrl.value || "").trim()
-const file=el.chimeFile.files[0] || null
+const collections=Array.isArray(gateway.collections)?gateway.collections:[];
 
-if(file){
-log("Chime upload started.")
-url=await uploadChimeAsset(token,file)
-el.chimeUrl.value=url
-el.chimeFile.value=""
-log(`Chime uploaded: ${url}`)
+if(collections.length>0){
+container.appendChild(createMediaSectionLabel("Featured Media"));
 }
 
-return{
-enabled:true,
-url,
-volume
+collections.forEach(collection=>{
+
+const card=document.createElement("div")
+card.className="collectionCard"
+
+applyMediaPresentation(card,getMediaPresentationConfig(collection,gateway) || getGlobalCardPresentationConfig(d),"global")
+
+card.onclick=()=>openCollection(collection)
+
+const inner=document.createElement("div")
+inner.className="collectionInner innerSurface"
+applyMediaPresentation(inner,getInnerSurfacePresentationConfig(d),"inner")
+
+const left=document.createElement("div")
+left.className="collectionLeft"
+
+const title=document.createElement("div")
+title.className="collectionTitle"
+title.textContent=collection.title || "Collection"
+
+const meta=document.createElement("div")
+meta.className="collectionMeta"
+
+const count=(collection.items || []).length
+
+meta.textContent=`${count} item${count===1?"":"s"}`
+
+left.appendChild(title)
+left.appendChild(meta)
+
+const arrow=document.createElement("div")
+arrow.className="collectionArrow"
+arrow.textContent="Open"
+
+inner.appendChild(left)
+inner.appendChild(arrow)
+card.appendChild(inner)
+
+container.appendChild(card)
+
+})
+
+renderExternalMedia(container,d)
+
 }
+
+window.addEventListener("message",(event)=>{
+
+const msg=event.data;
+
+if(!msg)return;
+
+if(msg.type==="BASE_PREVIEW"){
+
+previewMode=true;
+applyState(msg.payload);
+
 }
 
-function previewChime(){
-let src=""
+});
 
-const file=el.chimeFile.files[0] || null
+async function fetchState(){
 
-if(file){
-src=URL.createObjectURL(file)
-}else{
-src=String(el.chimeUrl.value || "").trim()
+if(previewMode)return;
+
+const url=new URL(CONTENT_URL,location.href);
+
+url.searchParams.set("ts",Date.now());
+
+const res=await fetch(url.toString(),{cache:"no-store"});
+
+return res.json();
+
 }
 
-if(!src)return
+async function tick(){
 
 try{
-const audio=new Audio(src)
-const volumeNumber=Number(el.chimeVolume.value)
-audio.volume=Number.isNaN(volumeNumber) ? .65 : Math.max(0,Math.min(1,volumeNumber))
-audio.play()
+
+const state=await fetchState();
+
+applyState(state);
+
 }catch(e){}
-}
-
-function refreshPreview(){
-
-try{
-const payload={
-name:el.name.value,
-bio:el.bio.value,
-links:linkState,
-backgroundColor:el.backgroundColor.value,
-background:buildBackground(),
-heroMedia:buildHeroMedia(),
-chime:buildChime(),
-pillColor:el.pillColor.value,
-innerSurface:buildInnerSurface(),
-contactEmail:el.contactEmail.value,
-contactLabel:el.contactLabel.value,
-live:{
-enabled:el.liveEnabled.checked===true,
-status:el.liveStatus.value==="live" ? "live" : "offline",
-watch_url:el.liveWatchUrl.value.trim(),
-description:el.liveDescription.value.trim()
-}
-}
-
-const mg=buildMediaGateway()
-if(mg) payload.mediaGateway=mg
-
-const supporters=buildSupporters()
-if(supporters) payload.supporters=supporters
-
-const community=buildCommunity()
-if(community) payload.community=community
-
-el.previewFrame.contentWindow.postMessage({
-type:"BASE_PREVIEW",
-payload
-},"*")
-}catch(e){}
-
-}
-
-async function ghGetFileMeta(token,path){
-
-const api=`https://api.github.com/repos/${OWNER}/${REPO}/contents/${ghEncodePath(path)}?ref=${BRANCH}`
-
-const res=await fetch(api,{headers:ghHeaders(token)})
-
-if(!res.ok)throw new Error(`GitHub GET failed (${res.status})`)
-
-return res.json()
-
-}
-
-async function ghPutFile(token,path,sha,contentBase64,message){
-
-const api=`https://api.github.com/repos/${OWNER}/${REPO}/contents/${ghEncodePath(path)}`
-
-const body={
-message,
-content:contentBase64,
-branch:BRANCH
-}
-
-if(sha)body.sha=sha
-
-const res=await fetch(api,{
-method:"PUT",
-headers:ghHeaders(token),
-body:JSON.stringify(body)
-})
-
-if(!res.ok)throw new Error(`GitHub PUT failed (${res.status})`)
-
-return res.json()
-
-}
-
-async function fileToBase64(file){
-return new Promise((resolve,reject)=>{
-const reader=new FileReader()
-reader.onload=()=>resolve(reader.result.split(",")[1])
-reader.onerror=reject
-reader.readAsDataURL(file)
-})
-}
-
-function getSafeMediaThumbExtension(file){
-const name=String(file?.name || "")
-const ext=(name.split(".").pop() || "png").toLowerCase()
-return ["png","jpg","jpeg","webp"].includes(ext) ? ext : "png"
-}
-
-function getSafeMediaExtension(file){
-const name=String(file?.name || "")
-const ext=(name.split(".").pop() || "").toLowerCase()
-const mime=String(file?.type || "").toLowerCase()
-
-if(["mp4","webm","mov","png","jpg","jpeg","webp"].includes(ext)){
-return ext
-}
-
-if(mime==="video/mp4") return "mp4"
-if(mime==="video/webm") return "webm"
-if(mime==="video/quicktime") return "mov"
-if(mime==="image/png") return "png"
-if(mime==="image/jpeg") return "jpg"
-if(mime==="image/webp") return "webp"
-
-return "mp4"
-}
-
-async function uploadMediaThumbnail(token,file,itemId){
-const safeExt=getSafeMediaThumbExtension(file)
-const safeId=String(itemId || `item-${Date.now()}`).replace(/[^a-zA-Z0-9_-]/g,"")
-const fileName=`thumb-${safeId}-${Date.now()}.${safeExt}`
-const repoPath=`Fan App/media/${fileName}`
-const localPath=`./media/${fileName}`
-const base64=await fileToBase64(file)
-
-await ghPutFile(
-token,
-repoPath,
-undefined,
-base64,
-`BASE media thumbnail ${fileName}`
-)
-
-return localPath
-}
-
-async function uploadMediaFile(token,file,itemId){
-const safeExt=getSafeMediaExtension(file)
-const safeId=String(itemId || `item-${Date.now()}`).replace(/[^a-zA-Z0-9_-]/g,"")
-const fileName=`media-${safeId}-${Date.now()}.${safeExt}`
-const repoPath=`Fan App/media/${fileName}`
-const localPath=`./media/${fileName}`
-const base64=await fileToBase64(file)
-
-await ghPutFile(
-token,
-repoPath,
-undefined,
-base64,
-`BASE media file ${fileName}`
-)
-
-return localPath
-}
-
-async function buildMediaGatewayForPublish(token){
-if(!(mediaHydrated || mediaTouched)) return null
-
-ensureDefaultCollection()
-
-const collections=[]
-
-for(const collection of mediaCollections){
-
-const items=[]
-
-const scopedItems=mediaItems.filter(it=>(it.collectionId || mediaCollections[0].id)===collection.id)
-
-for(const it of scopedItems){
-
-let thumbnail=(it.thumbnail||"").trim()
-let url=(it.url||"").trim()
-
-if(it.mediaFile instanceof File){
-log(`Media upload started: ${it.title || "media item"}`)
-url=await uploadMediaFile(token,it.mediaFile,it.id)
-it.url=url
-delete it.mediaFile
-log(`Media uploaded: ${url}`)
-}
-
-if(it.thumbnailFile instanceof File){
-log(`Thumbnail upload started: ${it.title || "media item"}`)
-thumbnail=await uploadMediaThumbnail(token,it.thumbnailFile,it.id)
-it.thumbnail=thumbnail
-delete it.thumbnailFile
-log(`Thumbnail uploaded: ${thumbnail}`)
-}
-
-items.push({
-id:it.id || `item-${Math.random().toString(16).slice(2)}`,
-title:(it.title||"").trim(),
-description:(it.description||"").trim(),
-thumbnail,
-url,
-access:"public"
-})
-
-}
-
-collections.push({
-id:collection.id,
-title:(collection.title||"Latest").trim() || "Latest",
-items
-})
-
-}
-
-const externalMedia=[]
-
-for(const item of externalMediaState){
-
-let thumbnail=(item.thumbnail || "").trim()
-
-if(item.thumbnailFile instanceof File){
-log(`External media thumbnail upload started: ${item.name || "external media"}`)
-thumbnail=await uploadMediaThumbnail(token,item.thumbnailFile,item.id)
-item.thumbnail=thumbnail
-delete item.thumbnailFile
-log(`External media thumbnail uploaded: ${thumbnail}`)
-}
-
-externalMedia.push({
-id:item.id || `external-${Math.random().toString(16).slice(2)}`,
-provider:(item.provider || "custom").trim() || "custom",
-name:(item.name || "").trim(),
-url:(item.url || "").trim(),
-embed:(item.embed || "").trim(),
-thumbnail,
-buttonText:(item.buttonText || "Open Media").trim() || "Open Media",
-enabled:item.enabled===false ? false : true
-})
-
-}
-
-return{
-enabled:el.mediaEnabled.checked===true,
-collections,
-presentation:await buildMediaPresentationForPublish(token),
-externalMedia
-}
-
-}
-
-async function getLatestIconVersion(token){
-const folderPath="Fan App/icons"
-const api=`https://api.github.com/repos/${OWNER}/${REPO}/contents/${ghEncodePath(folderPath)}?ref=${BRANCH}`
-const res=await fetch(api,{headers:ghHeaders(token)})
-
-if(!res.ok) throw new Error(`GitHub icons folder read failed (${res.status})`)
-
-const files=await res.json()
-
-let latest192=null
-let latest512=null
-
-files.forEach(file=>{
-const name=String(file?.name || "")
-
-const match192=name.match(/^icon-192-v(\d+)\.png$/)
-const match512=name.match(/^icon-512-v(\d+)\.png$/)
-
-if(match192){
-const v=parseInt(match192[1],10)
-if(!latest192 || v>latest192.v){
-latest192={v,name}
-}
-}
-
-if(match512){
-const v=parseInt(match512[1],10)
-if(!latest512 || v>latest512.v){
-latest512={v,name}
-}
-}
-})
-
-if(!latest192 || !latest512){
-throw new Error("Versioned icons not found in Fan App/icons")
-}
-
-return{
-icon192Path:`Fan App/icons/${latest192.name}`,
-icon512Path:`Fan App/icons/${latest512.name}`,
-icon192Name:latest192.name,
-icon512Name:latest512.name
-}
-}
-
-async function updateAppIcon(){
-
-try{
-
-const file=el.appIconInput.files[0]
-
-if(!file){
-setPill("bad","STATUS: icon file required")
-log("Icon update blocked: no file selected.")
-return
-}
-
-const token=(el.token.value||"").trim()
-
-if(!token){
-setPill("bad","STATUS: token required")
-log("Icon update blocked: missing creator key.")
-return
-}
-
-setPill("warn","STATUS: uploading icon…")
-log("Icon upload started.")
-
-const base64=await fileToBase64(file)
-
-const latest=await getLatestIconVersion(token)
-
-const v192Match=latest.icon192Name.match(/v(\d+)\.png$/)
-const v512Match=latest.icon512Name.match(/v(\d+)\.png$/)
-
-if(!v192Match || !v512Match){
-throw new Error("Could not parse current icon version.")
-}
-
-const newVersion=Math.max(
-parseInt(v192Match[1],10),
-parseInt(v512Match[1],10)
-)+1
-
-const new192Name=`icon-192-v${newVersion}.png`
-const new512Name=`icon-512-v${newVersion}.png`
-const new192Path=`Fan App/icons/${new192Name}`
-const new512Path=`Fan App/icons/${new512Name}`
-
-await ghPutFile(
-token,
-new192Path,
-undefined,
-base64,
-`BASE icon v${newVersion} (192)`
-)
-
-await ghPutFile(
-token,
-new512Path,
-undefined,
-base64,
-`BASE icon v${newVersion} (512)`
-)
-
-const manifestPath="Fan App/manifest.json"
-const manifestMeta=await ghGetFileMeta(token,manifestPath)
-
-let manifest={}
-try{
-manifest=JSON.parse(fromBase64Utf8(manifestMeta.content))
-}catch(e){
-manifest={}
-}
-
-manifest.icons=[
-{
-src:`icons/${new192Name}`,
-sizes:"192x192",
-type:"image/png"
-},
-{
-src:`icons/${new512Name}`,
-sizes:"512x512",
-type:"image/png"
-}
-]
-
-await ghPutFile(
-token,
-manifestPath,
-manifestMeta.sha,
-toBase64Utf8(JSON.stringify(manifest,null,2)),
-`BASE manifest icon v${newVersion}`
-)
-
-const fanIndexPath="Fan App/index.html"
-const fanIndexMeta=await ghGetFileMeta(token,fanIndexPath)
-let fanIndexHtml=fromBase64Utf8(fanIndexMeta.content)
-
-fanIndexHtml=fanIndexHtml.replace(
-/<link rel="apple-touch-icon" href="icons\/icon-512-v\d+\.png(?:\?v=\d+)?">/g,
-`<link rel="apple-touch-icon" href="icons/${new512Name}">`
-)
-
-fanIndexHtml=fanIndexHtml.replace(
-/<link rel="shortcut icon" href="icons\/icon-192-v\d+\.png(?:\?v=\d+)?">/g,
-`<link rel="shortcut icon" href="icons/${new192Name}">`
-)
-
-fanIndexHtml=fanIndexHtml.replace(
-/<link rel="icon" href="icons\/icon-192-v\d+\.png(?:\?v=\d+)?">/g,
-`<link rel="icon" href="icons/${new192Name}">`
-)
-
-fanIndexHtml=fanIndexHtml.replace(
-/<img id="logo" src="icons\/icon-192-v\d+\.png(?:\?v=\d+)?">/g,
-`<img id="logo" src="icons/${new192Name}">`
-)
-
-await ghPutFile(
-token,
-fanIndexPath,
-fanIndexMeta.sha,
-toBase64Utf8(fanIndexHtml),
-`BASE fan app icon sync v${newVersion}`
-)
-
-setPill("ok","STATUS: icon updated")
-log(`App icon updated successfully → v${newVersion}`)
-
-}catch(e){
-
-setPill("bad","STATUS: icon failed")
-log(e.message)
-
-}
-
-}
-
-
-el.btnAddSupporter.onclick=()=>{
-const type=(el.supporterType.value||"supporter").trim() || "supporter"
-const name=(el.supporterName.value||"").trim()
-const tagline=(el.supporterTagline.value||"").trim()
-const buttonText=(el.supporterButtonText.value||"").trim()
-const description=(el.supporterDesc.value||"").trim()
-const thumbnail=(el.supporterThumbnail.value||"").trim()
-const thumbnailFile=el.supporterThumbFile.files[0] || null
-const url=(el.supporterUrl.value||"").trim()
-const enabled=el.supporterEnabled.checked===true
-
-supporterState.push({
-id:`supporter-${Date.now()}-${Math.random().toString(16).slice(2)}`,
-type,
-name,
-tagline,
-description,
-thumbnail,
-thumbnailFile,
-url,
-buttonText:buttonText || "Visit Supporter",
-enabled
-})
-
-supportersTouched=true
-
-el.supporterType.value="supporter"
-el.supporterName.value=""
-el.supporterTagline.value=""
-el.supporterButtonText.value=""
-el.supporterDesc.value=""
-el.supporterThumbFile.value=""
-el.supporterThumbnail.value=""
-el.supporterUrl.value=""
-el.supporterEnabled.checked=true
-
-renderSupporters()
-markDirty()
-}
-
-el.btnClearSupporters.onclick=()=>{
-supporterState=[]
-supportersTouched=true
-renderSupporters()
-markDirty()
-}
-
-el.addLinkBtn.onclick=()=>{
-const label=(el.linkLabelInput.value||"").trim()
-const url=(el.linkUrlInput.value||"").trim()
-
-if(!url)return
-
-linkState.push({label:label||url,url})
-
-el.linkLabelInput.value=""
-el.linkUrlInput.value=""
-
-renderLinks()
-markDirty()
-}
-
-el.clearLinksBtn.onclick=()=>{
-linkState=[]
-renderLinks()
-markDirty()
-}
-
-el.btnAddCollection.onclick=()=>{
-const title=(el.mediaCollectionTitle.value||"").trim()
-
-if(!title)return
-
-ensureDefaultCollection()
-
-const collection={
-id:makeCollectionId(),
-title
-}
-
-mediaCollections.push(collection)
 
-el.mediaCollectionTitle.value=""
-mediaTouched=true
-renderMediaList()
-el.mediaCollectionSelect.value=collection.id
-markDirty()
 }
 
-el.btnRemoveCollection.onclick=()=>{
-ensureDefaultCollection()
-
-const selected=el.mediaCollectionSelect.value
-
-if(mediaCollections.length<=1){
-log("At least one media collection is required.")
-return
-}
-
-const fallback=mediaCollections.find(c=>c.id!==selected)
-
-if(!fallback)return
-
-mediaItems=mediaItems.map(item=>{
-if((item.collectionId || mediaCollections[0].id)===selected){
-return{
-...item,
-collectionId:fallback.id
-}
-}
-return item
-})
-
-mediaCollections=mediaCollections.filter(c=>c.id!==selected)
-
-mediaTouched=true
-renderMediaList()
-el.mediaCollectionSelect.value=fallback.id
-markDirty()
-}
-
-el.btnAddMedia.onclick=()=>{
-ensureDefaultCollection()
-
-const title=(el.mediaTitle.value||"").trim()
-const url=(el.mediaUrl.value||"").trim()
-const mediaFile=el.mediaFile.files[0] || null
-const thumbnail=(el.mediaThumb.value||"").trim()
-const thumbnailFile=el.mediaThumbFile.files[0] || null
-const description=(el.mediaDesc.value||"").trim()
-const collectionId=el.mediaCollectionSelect.value || mediaCollections[0].id
-
-if(!title)return
-
-mediaItems.push({
-id:`item-${Date.now()}-${Math.random().toString(16).slice(2)}`,
-collectionId,
-title,
-description,
-thumbnail,
-thumbnailFile,
-mediaFile,
-url,
-access:"public"
-})
-
-mediaTouched=true
-
-el.mediaTitle.value=""
-el.mediaUrl.value=""
-el.mediaFile.value=""
-el.mediaThumb.value=""
-el.mediaThumbFile.value=""
-el.mediaDesc.value=""
-
-renderMediaList()
-el.mediaCollectionSelect.value=collectionId
-markDirty()
-}
-
-el.btnClearMedia.onclick=()=>{
-mediaItems=[]
-mediaTouched=true
-renderMediaList()
-markDirty()
-}
-
-el.btnAddExternalMedia.onclick=()=>{
-const provider=(el.externalMediaProvider.value || "custom").trim() || "custom"
-const name=(el.externalMediaName.value || "").trim()
-const url=(el.externalMediaUrl.value || "").trim()
-const embed=(el.externalMediaEmbed.value || "").trim()
-const thumbnail=(el.externalMediaThumbnail.value || "").trim()
-const thumbnailFile=el.externalMediaThumbFile.files[0] || null
-const buttonText=(el.externalMediaButtonText.value || "").trim() || "Open Media"
-const enabled=el.externalMediaEnabled.checked===true
-
-if(!name && !url && !embed)return
-
-externalMediaState.push({
-id:`external-${Date.now()}-${Math.random().toString(16).slice(2)}`,
-provider,
-name,
-url,
-embed,
-thumbnail,
-thumbnailFile,
-buttonText,
-enabled
-})
-
-mediaTouched=true
-
-el.externalMediaProvider.value="custom"
-el.externalMediaName.value=""
-el.externalMediaUrl.value=""
-el.externalMediaEmbed.value=""
-el.externalMediaThumbFile.value=""
-el.externalMediaThumbnail.value=""
-el.externalMediaButtonText.value=""
-el.externalMediaEnabled.checked=true
-
-renderExternalMediaList()
-markDirty()
-}
-
-el.btnClearExternalMedia.onclick=()=>{
-externalMediaState=[]
-mediaTouched=true
-renderExternalMediaList()
-markDirty()
-}
-
-el.btnLoad.onclick=async()=>{
-
-try{
-
-setPill("warn","STATUS: loading…")
-
-const state=await fetchState()
-
-el.name.value=state.name||""
-el.bio.value=state.bio||""
-el.contactEmail.value=state.contactEmail||""
-el.contactLabel.value=state.contactLabel||""
-el.liveEnabled.checked=state.live?.enabled===true
-el.liveStatus.value=(state.live?.status==="live") ? "live" : "offline"
-el.liveWatchUrl.value=state.live?.watch_url||""
-el.liveDescription.value=state.live?.description||""
-el.backgroundColor.value=state.backgroundColor||"#000000"
-hydrateBackground(state)
-hydrateHeroMedia(state)
-hydrateChime(state)
-el.pillColor.value=state.pillColor||"#caa300"
-hydrateInnerSurface(state)
-linkState=Array.isArray(state.links)?state.links:[]
-hydrateMediaGateway(state)
-hydrateSupporters(state)
-hydrateCommunity(state)
-
-renderLinks()
-
-hasLoadedState=true
-clearDirty()
-await syncLoadedSha()
-
-setPill("warn","STATUS: loaded")
-log("Loaded current state.")
-
-}catch(e){
-
-setPill("bad","STATUS: load failed")
-log(e.message)
-
-}
-
-}
-
-el.btnPublish.onclick=async()=>{
-
-if(isPublishing){
-log("Publish blocked: publish already in progress.")
-return
-}
-
-const token=(el.token.value||"").trim()
-
-if(!token){
-setPill("bad","STATUS: token required")
-log("Publish blocked: missing creator key.")
-enablePublishIfReady()
-return
-}
-
-if(!isDirty){
-log("Publish blocked: no changes to publish.")
-enablePublishIfReady()
-return
-}
-
-if(!loadedSha){
-setPill("bad","STATUS: sha required")
-log("Publish blocked: missing loaded SHA. Reload current state.")
-enablePublishIfReady()
-return
-}
-
-if(shaConflict){
-setPill("bad","STATUS: remote changed")
-log("Publish blocked: remote content changed. Reload current state.")
-enablePublishIfReady()
-return
-}
-
-try{
-
-setPublishBusy(true)
-setPill("warn","STATUS: publishing…")
-log("Publish started.")
-
-let icon192Name=null
-let icon512Name=null
-
-const iconFile=el.appIconInput.files[0]
-
-if(iconFile){
-log("Icon detected. Publish will update icons, manifest, and fan app HTML together.")
-
-const base64=await fileToBase64(iconFile)
-
-const latest=await getLatestIconVersion(token)
-
-const v192Match=latest.icon192Name.match(/v(\d+)\.png$/)
-const v512Match=latest.icon512Name.match(/v(\d+)\.png$/)
-
-if(!v192Match || !v512Match){
-throw new Error("Could not parse current icon version.")
-}
-
-const newVersion=Math.max(
-parseInt(v192Match[1],10),
-parseInt(v512Match[1],10)
-)+1
-
-icon192Name=`icon-192-v${newVersion}.png`
-icon512Name=`icon-512-v${newVersion}.png`
-
-await ghPutFile(
-token,
-`Fan App/icons/${icon192Name}`,
-undefined,
-base64,
-`BASE icon v${newVersion} (192)`
-)
-
-await ghPutFile(
-token,
-`Fan App/icons/${icon512Name}`,
-undefined,
-base64,
-`BASE icon v${newVersion} (512)`
-)
-
-const manifestPath="Fan App/manifest.json"
-const manifestMeta=await ghGetFileMeta(token,manifestPath)
-
-let manifest={}
-try{
-manifest=JSON.parse(fromBase64Utf8(manifestMeta.content))
-}catch(e){
-manifest={}
-}
-
-manifest.icons=[
-{
-src:`icons/${icon192Name}`,
-sizes:"192x192",
-type:"image/png"
-},
-{
-src:`icons/${icon512Name}`,
-sizes:"512x512",
-type:"image/png"
-}
-]
-
-await ghPutFile(
-token,
-manifestPath,
-manifestMeta.sha,
-toBase64Utf8(JSON.stringify(manifest,null,2)),
-`BASE manifest icon v${newVersion}`
-)
-
-}else{
-const latest=await getLatestIconVersion(token)
-icon192Name=latest.icon192Name
-icon512Name=latest.icon512Name
-}
-
-const meta=await ghGetFileMeta(token,TARGET_PATH)
-
-if(!meta?.sha){
-throw new Error("GitHub SHA missing.")
-}
-
-if(meta.sha !== loadedSha){
-shaConflict=true
-el.lastSha.textContent=`sha: ${meta.sha}`
-setPill("bad","STATUS: remote changed")
-log("Publish blocked: remote content changed. Reload current state.")
-enablePublishIfReady()
-return
-}
-
-let existing={}
-try{
-existing=JSON.parse(fromBase64Utf8(meta.content))
-}catch(e){
-existing={}
-}
-
-const merged={
-...existing,
-name:el.name.value.trim(),
-bio:el.bio.value.trim(),
-contactEmail:el.contactEmail.value.trim(),
-contactLabel:el.contactLabel.value.trim(),
-live:{
-enabled:el.liveEnabled.checked===true,
-status:el.liveStatus.value==="live" ? "live" : "offline",
-watch_url:el.liveWatchUrl.value.trim(),
-description:el.liveDescription.value.trim()
-},
-links:linkState,
-backgroundColor:el.backgroundColor.value,
-background:await buildBackgroundForPublish(token),
-heroMedia:await buildHeroMediaForPublish(token),
-chime:await buildChimeForPublish(token),
-pillColor:el.pillColor.value,
-innerSurface:await buildInnerSurfaceForPublish(token)
-}
-
-const mg=await buildMediaGatewayForPublish(token)
-if(mg){
-merged.mediaGateway=mg
-}
-
-const supporters=await buildSupportersForPublish(token)
-if(supporters){
-merged.supporters=supporters
-}
-
-const community=await buildCommunityForPublish(token)
-if(community){
-merged.community=community
-}
-
-const result=await ghPutFile(
-token,
-TARGET_PATH,
-meta.sha,
-toBase64Utf8(JSON.stringify(merged,null,2)),
-"BASE publish"
-)
-
-const fanIndexPath="Fan App/index.html"
-const fanIndexMeta=await ghGetFileMeta(token,fanIndexPath)
-let fanIndexHtml=fromBase64Utf8(fanIndexMeta.content)
-
-const appName=escapeHtml(el.name.value.trim() || "App")
-const cacheVersion=Date.now()
-
-fanIndexHtml=fanIndexHtml.replace(
-/<title>.*?<\/title>/,
-`<title>${appName}</title>`
-)
-
-fanIndexHtml=fanIndexHtml.replace(
-/<meta name="apple-mobile-web-app-title" content=".*?">/g,
-`<meta name="apple-mobile-web-app-title" content="${appName}">`
-)
-
-fanIndexHtml=fanIndexHtml.replace(
-/<meta name="application-name" content=".*?">/g,
-`<meta name="application-name" content="${appName}">`
-)
-
-fanIndexHtml=fanIndexHtml.replace(
-/<link rel="manifest" href="manifest\.json(?:\?v=\d+)?">/g,
-`<link rel="manifest" href="manifest.json?v=${cacheVersion}">`
-)
-
-fanIndexHtml=fanIndexHtml.replace(
-/<link rel="apple-touch-icon"[^>]*>/g,
-`<link rel="apple-touch-icon" sizes="512x512" href="icons/${icon512Name}?v=${cacheVersion}">`
-)
-
-fanIndexHtml=fanIndexHtml.replace(
-/<link rel="shortcut icon"[^>]*>/g,
-`<link rel="shortcut icon" type="image/png" href="icons/${icon192Name}?v=${cacheVersion}">`
-)
-
-fanIndexHtml=fanIndexHtml.replace(
-/<link rel="icon"[^>]*>/g,
-`<link rel="icon" type="image/png" sizes="192x192" href="icons/${icon192Name}?v=${cacheVersion}">`
-)
-
-fanIndexHtml=fanIndexHtml.replace(
-/<img id="logo" src="icons\/icon-192-v\d+\.png(?:\?v=\d+)?">/g,
-`<img id="logo" src="icons/${icon192Name}?v=${cacheVersion}">`
-)
-
-await ghPutFile(
-token,
-fanIndexPath,
-fanIndexMeta.sha,
-toBase64Utf8(fanIndexHtml),
-"BASE HTML sync"
-)
-
-if(result?.content?.sha){
-loadedSha=result.content.sha
-shaConflict=false
-el.lastSha.textContent=`sha: ${result.content.sha}`
-}
-
-el.appIconInput.value=""
-
-clearDirty()
-setPill("ok","STATUS: published")
-log("Publish success.")
-
-}catch(e){
-
-setPill("bad","STATUS: publish failed")
-log(e.message)
-
-}finally{
-
-setPublishBusy(false)
-
-}
-
-}
-
-el.token.addEventListener("input",async()=>{
-const t=(el.token.value||"").trim()
-
-if(t){
-localStorage.setItem(LS_TOKEN,t)
-}else{
-localStorage.removeItem(LS_TOKEN)
-}
-
-if(hasLoadedState){
-await syncLoadedSha()
-}else{
-enablePublishIfReady()
-}
-})
-
-el.btnResetToken.addEventListener("click",()=>{
-localStorage.removeItem(LS_TOKEN)
-el.token.value=""
-hasLoadedState=false
-clearDirty()
-clearShaState()
-setPublishBusy(false)
-setPill("warn","STATUS: ready")
-log("Creator key reset.")
-refreshPreview()
-})
-
-el.name.addEventListener("input",markDirty)
-el.bio.addEventListener("input",markDirty)
-el.contactEmail.addEventListener("input",markDirty)
-el.contactLabel.addEventListener("input",markDirty)
-el.liveEnabled.addEventListener("change",markDirty)
-el.liveStatus.addEventListener("change",markDirty)
-el.liveWatchUrl.addEventListener("input",markDirty)
-el.liveDescription.addEventListener("input",markDirty)
-el.backgroundColor.addEventListener("input",markDirty)
-el.backgroundType.addEventListener("change",markDirty)
-el.backgroundFile.addEventListener("change",markDirty)
-el.backgroundUrl.addEventListener("input",markDirty)
-el.chimeEnabled.addEventListener("change",markDirty)
-el.chimeFile.addEventListener("change",markDirty)
-el.chimeUrl.addEventListener("input",markDirty)
-el.chimeVolume.addEventListener("input",markDirty)
-el.btnPreviewChime.onclick=previewChime
-el.btnClearChime.onclick=()=>{
-el.chimeEnabled.checked=false
-el.chimeFile.value=""
-el.chimeUrl.value=""
-el.chimeVolume.value="0.65"
-markDirty()
-}
-el.pillColor.addEventListener("input",markDirty)
-el.innerSurfaceStyle.addEventListener("change",markDirty)
-el.innerSurfaceColor.addEventListener("input",markDirty)
-el.innerSurfaceFile.addEventListener("change",markDirty)
-el.innerSurfaceUrl.addEventListener("input",markDirty)
-el.heroMediaType.addEventListener("change",markDirty)
-el.heroMediaFile.addEventListener("change",markDirty)
-el.heroMediaUrl.addEventListener("input",markDirty)
-el.heroMediaAnimation.addEventListener("change",markDirty)
-
-el.supporterType.addEventListener("change",()=>{supportersTouched=true;markDirty()})
-el.supporterName.addEventListener("input",()=>{supportersTouched=true;markDirty()})
-el.supporterTagline.addEventListener("input",()=>{supportersTouched=true;markDirty()})
-el.supporterButtonText.addEventListener("input",()=>{supportersTouched=true;markDirty()})
-el.supporterDesc.addEventListener("input",()=>{supportersTouched=true;markDirty()})
-el.supporterThumbnail.addEventListener("input",()=>{supportersTouched=true;markDirty()})
-el.supporterUrl.addEventListener("input",()=>{supportersTouched=true;markDirty()})
-el.supporterEnabled.addEventListener("change",()=>{supportersTouched=true;markDirty()})
-el.supporterThumbFile.addEventListener("change",()=>{supportersTouched=true;markDirty()})
-
-el.btnAddCommunity.onclick=()=>{
-communityTouched=true
-markDirty()
-log("Community staged for publish.")
-}
-
-el.btnClearCommunity.onclick=()=>{
-el.communityEnabled.checked=false
-el.communityProvider.value="custom"
-el.communityName.value=""
-el.communityIcon.value=""
-el.communityIconFile.value=""
-el.communityButtonText.value="Enter Community"
-el.communityUrl.value=""
-el.communityEmbed.value=""
-communityTouched=true
-markDirty()
-log("Community removed from publish state.")
-}
-
-el.communityEnabled.addEventListener("change",()=>{communityTouched=true;markDirty()})
-el.communityProvider.addEventListener("change",()=>{communityTouched=true;markDirty()})
-el.communityName.addEventListener("input",()=>{communityTouched=true;markDirty()})
-el.communityIcon.addEventListener("input",()=>{communityTouched=true;markDirty()})
-el.communityIconFile.addEventListener("change",()=>{communityTouched=true;markDirty()})
-el.communityButtonText.addEventListener("input",()=>{communityTouched=true;markDirty()})
-el.communityUrl.addEventListener("input",()=>{communityTouched=true;markDirty()})
-el.communityEmbed.addEventListener("input",()=>{communityTouched=true;markDirty()})
-
-el.mediaEnabled.addEventListener("change",()=>{
-mediaTouched=true
-markDirty()
-})
-
-el.mediaCollectionSelect.addEventListener("change",()=>{
-renderMediaList()
-})
-
-el.mediaCollectionTitle.addEventListener("input",()=>{
-mediaTouched=true
-markDirty()
-})
-
-el.externalMediaEnabled.addEventListener("change",()=>{mediaTouched=true;markDirty()})
-el.externalMediaProvider.addEventListener("change",()=>{mediaTouched=true;markDirty()})
-el.externalMediaName.addEventListener("input",()=>{mediaTouched=true;markDirty()})
-el.externalMediaUrl.addEventListener("input",()=>{mediaTouched=true;markDirty()})
-el.externalMediaEmbed.addEventListener("input",()=>{mediaTouched=true;markDirty()})
-el.externalMediaThumbFile.addEventListener("change",()=>{mediaTouched=true;markDirty()})
-el.externalMediaThumbnail.addEventListener("input",()=>{mediaTouched=true;markDirty()})
-el.externalMediaButtonText.addEventListener("input",()=>{mediaTouched=true;markDirty()})
-el.mediaCardStyle.addEventListener("change",()=>{mediaTouched=true;markDirty()})
-el.mediaCardColor.addEventListener("input",()=>{mediaTouched=true;markDirty()})
-el.mediaCardFile.addEventListener("change",()=>{mediaTouched=true;markDirty()})
-el.mediaCardUrl.addEventListener("input",()=>{mediaTouched=true;markDirty()})
-el.mediaCardAnimation.addEventListener("change",()=>{mediaTouched=true;markDirty()})
-
-el.previewFrame.addEventListener("load",()=>{
-refreshPreview()
-})
-
-function initModules(){
-
-document.querySelectorAll(".moduleToggle").forEach(btn=>{
-btn.addEventListener("click",()=>{
-const block=btn.closest(".moduleBlock")
-if(block){
-block.classList.toggle("open")
-}
-})
-})
-
-}
-
-function init(){
-
-initModules()
-
-el.repoLabel.textContent=`${OWNER}/${REPO}@${BRANCH}`
-el.contentUrl.value=DEFAULT_CONTENT_URL
-
-const saved=(localStorage.getItem(LS_TOKEN)||"").trim()
-if(saved){
-el.token.value=saved
-localStorage.setItem(LS_TOKEN,saved)
-}else{
-localStorage.removeItem(LS_TOKEN)
-}
-
-ensureDefaultCollection()
-renderLinks()
-renderMediaList()
-renderExternalMediaList()
-renderSupporters()
-hydrateCommunity({})
-hydrateBackground({})
-hydrateChime({})
-communityHydrated=false
-communityTouched=false
-setPublishBusy(false)
-clearDirty()
-clearShaState()
-refreshPreview()
-
-}
-
-document.querySelectorAll(".dashboardTab").forEach(tab=>{
-tab.addEventListener("click",()=>{
-const page=tab.dataset.page
-
-document.querySelectorAll(".dashboardTab").forEach(x=>{
-x.classList.toggle("active",x===tab)
-})
-
-document.querySelectorAll(".page").forEach(x=>{
-x.classList.remove("active")
-})
-
-const target=document.getElementById(`page-${page}`)
-if(target){
-target.classList.add("active")
-}
-})
-})
+tick();
 
-init()
+setInterval(tick,POLL_INTERVAL);
 
 </script>
-<div style="text-align:center; font-size:11px; opacity:0.5; margin-top:40px;">
-  Powered by BASE
-</div>
+
 </body>
 </html>
