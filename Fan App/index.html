@@ -1349,7 +1349,6 @@ i
 <section id="supportersSection" class="hidden">
 <div class="supportersCard">
 <div class="supportersInnerSurface innerSurface">
-<div class="h1">Supporters</div>
 <div id="supportersList" class="supportersList"></div>
 </div>
 </div>
@@ -3693,6 +3692,15 @@ thumb.textContent=fallback;
 const body=document.createElement("div");
 body.className="supporterBody";
 
+if(item.type){
+
+const type=document.createElement("div");
+type.className="supporterType";
+type.textContent=item.type;
+body.appendChild(type);
+
+}
+
 if(item.name){
 
 const name=document.createElement("div");
@@ -3702,14 +3710,6 @@ body.appendChild(name);
 
 }
 
-if(item.description){
-
-const desc=document.createElement("div");
-desc.className="supporterDesc";
-desc.textContent=item.description;
-body.appendChild(desc);
-
-}
 
 inner.appendChild(thumb);
 inner.appendChild(body);
