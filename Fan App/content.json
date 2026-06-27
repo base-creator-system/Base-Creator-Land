@@ -105,7 +105,7 @@
       }
     ]
   },
-  "pillColor": "#e32400",
+  "pillColor": "#b51a00",
   "live": {
     "enabled": true,
     "status": "live",
@@ -170,7 +170,7 @@
     "enabled": true,
     "type": "image",
     "url": "./media/hero-image-1782304362799.png",
-    "animation": "pulse"
+    "animation": "spin"
   },
   "innerSurface": {
     "style": "video",
