@@ -167,6 +167,66 @@ animation-name:heroSpinFlat;
 100%{transform:rotate(360deg)}
 }
 
+
+/* LAUNCH INTRO */
+
+body.launchIntroPending .top,
+body.launchIntroPending #communitySection,
+body.launchIntroPending #supportersSection,
+body.launchIntroPending #view-home,
+body.launchIntroPending #view-media,
+body.launchIntroPending #view-links,
+body.launchIntroPending .baseFooter,
+body.launchIntroPending .tabs{
+opacity:0;
+pointer-events:none;
+}
+
+body.launchIntroPending .hero{
+opacity:0;
+transform:scale(.96);
+}
+
+body.launchIntroReady .hero{
+animation:baseLaunchHeroIntro .58s cubic-bezier(.2,.8,.2,1) both;
+}
+
+body.launchIntroDone .top,
+body.launchIntroDone #communitySection:not(.hidden),
+body.launchIntroDone #supportersSection:not(.hidden),
+body.launchIntroDone #view-home:not(.hidden),
+body.launchIntroDone #view-media:not(.hidden),
+body.launchIntroDone #view-links:not(.hidden),
+body.launchIntroDone .baseFooter,
+body.launchIntroDone .tabs{
+animation:baseLaunchContentIn .34s ease-out both;
+}
+
+@keyframes baseLaunchHeroIntro{
+0%{opacity:0;transform:scale(.92) translateY(8px)}
+100%{opacity:1;transform:scale(1) translateY(0)}
+}
+
+@keyframes baseLaunchContentIn{
+0%{opacity:0;transform:translateY(8px)}
+100%{opacity:1;transform:translateY(0)}
+}
+
+@media (prefers-reduced-motion: reduce){
+body.launchIntroReady .hero,
+body.launchIntroDone .top,
+body.launchIntroDone #communitySection:not(.hidden),
+body.launchIntroDone #supportersSection:not(.hidden),
+body.launchIntroDone #view-home:not(.hidden),
+body.launchIntroDone #view-media:not(.hidden),
+body.launchIntroDone #view-links:not(.hidden),
+body.launchIntroDone .baseFooter,
+body.launchIntroDone .tabs{
+animation:none;
+}
+}
+
+
 body.liveActive .wrap{
 display:flex;
 flex-direction:column;
@@ -1254,7 +1314,7 @@ min-height:100%;
 </style>
 </head>
 
-<body>
+<body class="launchIntroPending">
 
 <div id="appBackground" class="appBackground" aria-hidden="true"></div>
 
@@ -1457,6 +1517,9 @@ let supportersRuntimeSignature=""
 let supportersRuntimeIndex=0
 let supportersRuntimeTimer=null
 let supportersRuntimePausedUntil=0
+let activeLinksRenderSignature=""
+let launchIntroResolved=false
+let launchIntroTimer=null
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -1843,6 +1906,65 @@ applyHeroAnimation(img,heroAnimation);
 hero.appendChild(img);
 
 }
+
+
+function hasLaunchHero(d){
+
+const heroData=(d && (d.hero || d.heroMedia)) || {};
+
+if(heroData.enabled===false) return false;
+
+const config=getHeroConfig(d || {});
+
+return !!config;
+
+}
+
+function finishLaunchIntro(animateContent){
+
+if(launchIntroTimer){
+clearTimeout(launchIntroTimer);
+launchIntroTimer=null;
+}
+
+launchIntroResolved=true;
+
+document.body.classList.remove("launchIntroPending","launchIntroReady");
+
+if(animateContent===true){
+document.body.classList.add("launchIntroDone");
+}
+
+}
+
+function runLaunchIntro(d){
+
+if(launchIntroResolved) return;
+
+if(activeView==="live" || !hasLaunchHero(d)){
+finishLaunchIntro(false);
+return;
+}
+
+const reducedMotion=window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+if(reducedMotion){
+finishLaunchIntro(false);
+return;
+}
+
+document.body.classList.add("launchIntroReady");
+
+if(launchIntroTimer){
+clearTimeout(launchIntroTimer);
+}
+
+launchIntroTimer=setTimeout(()=>{
+finishLaunchIntro(true);
+},680);
+
+}
+
 
 function getChimeConfig(d){
 
@@ -3460,6 +3582,7 @@ renderLinks(d);
 renderMedia(d);
 applyGlobalCardPresentation(d);
 applyInnerSurfacePresentation(d);
+runLaunchIntro(d);
 
 }
 
@@ -3585,15 +3708,6 @@ const name=document.createElement("div");
 name.className="supporterName";
 name.textContent=item.name;
 body.appendChild(name);
-
-}
-
-if(item.tagline){
-
-const tagline=document.createElement("div");
-tagline.className="supporterTagline";
-tagline.textContent=item.tagline;
-body.appendChild(tagline);
 
 }
 
@@ -3741,9 +3855,19 @@ function renderLinks(d){
 
 const container=document.getElementById("links");
 
-container.innerHTML="";
-
 const links=Array.isArray(d.links)?d.links:[];
+
+const renderSignature=JSON.stringify({
+links:links,
+innerSurface:d.innerSurfacePresentation || d.innerSurface || d.innerCardPresentation || d.innerCardStyle || d.contentSurfacePresentation || d.contentSurface || null
+});
+
+if(renderSignature===activeLinksRenderSignature && container.children.length>0){
+return;
+}
+
+activeLinksRenderSignature=renderSignature;
+container.innerHTML="";
 
 links.forEach(item=>{
 
