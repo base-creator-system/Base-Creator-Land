@@ -1099,7 +1099,8 @@ border-radius:inherit;
 }
 
 .mediaPresentationLayer img,
-.mediaPresentationLayer video{
+.mediaPresentationLayer video,
+.mediaPresentationLayer canvas{
 width:100%;
 height:100%;
 object-fit:cover;
@@ -1520,6 +1521,7 @@ let supportersRuntimeIndex=0
 let supportersRuntimeTimer=null
 let supportersRuntimePausedUntil=0
 let activeLinksRenderSignature=""
+let sharedPresentationVideoCache={}
 let launchIntroResolved=false
 let launchIntroTimer=null
 
@@ -2684,6 +2686,173 @@ return null;
 
 }
 
+function drawSharedPresentationVideoCover(video,canvas){
+
+const rect=canvas.getBoundingClientRect();
+const ratio=window.devicePixelRatio || 1;
+const width=Math.max(1,Math.round(rect.width * ratio));
+const height=Math.max(1,Math.round(rect.height * ratio));
+
+if(canvas.width!==width){
+canvas.width=width;
+}
+
+if(canvas.height!==height){
+canvas.height=height;
+}
+
+const videoWidth=video.videoWidth || 1;
+const videoHeight=video.videoHeight || 1;
+const canvasRatio=width / height;
+const videoRatio=videoWidth / videoHeight;
+
+let sourceX=0;
+let sourceY=0;
+let sourceWidth=videoWidth;
+let sourceHeight=videoHeight;
+
+if(videoRatio > canvasRatio){
+sourceWidth=videoHeight * canvasRatio;
+sourceX=(videoWidth - sourceWidth) / 2;
+}else{
+sourceHeight=videoWidth / canvasRatio;
+sourceY=(videoHeight - sourceHeight) / 2;
+}
+
+const ctx=canvas.getContext("2d");
+
+if(!ctx) return;
+
+ctx.clearRect(0,0,width,height);
+ctx.drawImage(video,sourceX,sourceY,sourceWidth,sourceHeight,0,0,width,height);
+
+}
+
+function runSharedPresentationVideoLoop(state){
+
+if(!state || state.canvases.size===0){
+if(state){
+state.frame=null;
+}
+return;
+}
+
+if(state.video && state.video.readyState >= 2){
+state.canvases.forEach(canvas=>{
+if(canvas && canvas.isConnected){
+drawSharedPresentationVideoCover(state.video,canvas);
+}
+});
+}
+
+state.frame=requestAnimationFrame(()=>{
+runSharedPresentationVideoLoop(state);
+});
+
+}
+
+function getSharedPresentationVideoState(src){
+
+if(!src) return null;
+
+let state=sharedPresentationVideoCache[src];
+
+if(state){
+return state;
+}
+
+const video=document.createElement("video");
+video.src=src;
+video.autoplay=true;
+video.loop=true;
+video.muted=true;
+video.defaultMuted=true;
+video.playsInline=true;
+video.controls=false;
+video.disablePictureInPicture=true;
+video.setAttribute("autoplay","");
+video.setAttribute("loop","");
+video.setAttribute("muted","");
+video.setAttribute("playsinline","");
+video.setAttribute("webkit-playsinline","");
+video.setAttribute("aria-hidden","true");
+video.preload="auto";
+video.style.position="fixed";
+video.style.width="1px";
+video.style.height="1px";
+video.style.left="-9999px";
+video.style.top="-9999px";
+video.style.opacity="0";
+video.style.pointerEvents="none";
+
+document.body.appendChild(video);
+
+state={
+video:video,
+canvases:new Set(),
+frame:null
+};
+
+sharedPresentationVideoCache[src]=state;
+
+try{
+const playPromise=video.play();
+if(playPromise && typeof playPromise.catch==="function"){
+playPromise.catch(()=>{});
+}
+}catch(e){}
+
+return state;
+
+}
+
+function registerSharedPresentationCanvas(src,canvas){
+
+const state=getSharedPresentationVideoState(src);
+
+if(!state || !canvas) return;
+
+canvas.dataset.sharedPresentationVideo=src;
+state.canvases.add(canvas);
+
+if(!state.frame){
+runSharedPresentationVideoLoop(state);
+}
+
+}
+
+function unregisterSharedPresentationLayer(layer){
+
+if(!layer) return;
+
+layer.querySelectorAll("canvas[data-shared-presentation-video]").forEach(canvas=>{
+
+const src=canvas.dataset.sharedPresentationVideo;
+const state=sharedPresentationVideoCache[src];
+
+if(state){
+state.canvases.delete(canvas);
+
+if(state.canvases.size===0 && state.frame){
+cancelAnimationFrame(state.frame);
+state.frame=null;
+}
+
+}
+
+});
+
+}
+
+function removeMediaPresentationLayers(layers){
+
+layers.forEach(layer=>{
+unregisterSharedPresentationLayer(layer);
+layer.remove();
+});
+
+}
+
 function applyMediaPresentation(card,config,scope){
 
 if(!card) return;
@@ -2694,7 +2863,7 @@ card.style.background="";
 card.classList.remove("cardPresented","mediaPresented","innerPresented");
 
 if(!config){
-layers.forEach(layer=>layer.remove());
+removeMediaPresentationLayers(layers);
 delete card.dataset.presentationKey;
 return;
 }
@@ -2716,7 +2885,7 @@ config.type==="color" ? (config.color || "") : ""
 
 if(config.type==="color"){
 card.style.background=config.color || "";
-layers.forEach(layer=>layer.remove());
+removeMediaPresentationLayers(layers);
 card.dataset.presentationKey=presentationKey;
 return;
 }
@@ -2731,15 +2900,15 @@ if(
 currentLayer &&
 currentLayer.dataset.presentationKey===presentationKey &&
 ((config.type==="wallpaper" && currentLayer.querySelector("img")) ||
-(config.type==="video" && currentLayer.querySelector("video")))
+(config.type==="video" && currentLayer.querySelector("canvas[data-shared-presentation-video]")))
 ){
 if(layers.length>1){
-layers.slice(1).forEach(layer=>layer.remove());
+removeMediaPresentationLayers(layers.slice(1));
 }
 return;
 }
 
-layers.forEach(layer=>layer.remove());
+removeMediaPresentationLayers(layers);
 
 if(config.type==="wallpaper" && config.src){
 
@@ -2765,38 +2934,19 @@ const layer=document.createElement("div");
 layer.className="mediaPresentationLayer";
 layer.dataset.presentationKey=presentationKey;
 
-const video=document.createElement("video");
-video.src=config.src;
-video.autoplay=true;
-video.loop=true;
-video.muted=true;
-video.defaultMuted=true;
-video.playsInline=true;
-video.controls=false;
-video.disablePictureInPicture=true;
-video.setAttribute("autoplay","");
-video.setAttribute("loop","");
-video.setAttribute("muted","");
-video.setAttribute("playsinline","");
-video.setAttribute("webkit-playsinline","");
-video.setAttribute("aria-hidden","true");
-video.preload="auto";
-video.style.background="transparent";
+const canvas=document.createElement("canvas");
+canvas.setAttribute("aria-hidden","true");
 
-layer.appendChild(video);
+layer.appendChild(canvas);
 card.insertBefore(layer,card.firstChild);
 card.dataset.presentationKey=presentationKey;
 
-try{
-const playPromise=video.play();
-if(playPromise && typeof playPromise.catch==="function"){
-playPromise.catch(()=>{});
-}
-}catch(e){}
+registerSharedPresentationCanvas(config.src,canvas);
 
 }
 
 }
+
 
 function getGlobalCardPresentationConfig(d){
 
