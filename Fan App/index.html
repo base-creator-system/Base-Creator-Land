@@ -1112,6 +1112,38 @@ inset:0;
 background:rgba(0,0,0,.36);
 }
 
+.sharedInnerSurfaceVideoLayer{
+position:fixed;
+inset:0;
+z-index:0;
+pointer-events:none;
+display:none;
+overflow:hidden;
+background:transparent;
+-webkit-mask-repeat:no-repeat;
+mask-repeat:no-repeat;
+}
+
+.sharedInnerSurfaceVideoLayer.active{
+display:block;
+}
+
+.sharedInnerSurfaceVideoLayer video{
+position:absolute;
+inset:0;
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+}
+
+.sharedInnerSurfaceVideoLayer::after{
+content:"";
+position:absolute;
+inset:0;
+background:rgba(0,0,0,.36);
+}
+
 .mediaSectionLabel{
 font-size:12px;
 font-weight:900;
@@ -1317,6 +1349,7 @@ min-height:100%;
 <body class="launchIntroPending">
 
 <div id="appBackground" class="appBackground" aria-hidden="true"></div>
+<div id="sharedInnerSurfaceVideoLayer" class="sharedInnerSurfaceVideoLayer" aria-hidden="true"></div>
 
 <div class="wrap">
 
@@ -1519,6 +1552,9 @@ let supportersRuntimePausedUntil=0
 let activeLinksRenderSignature=""
 let launchIntroResolved=false
 let launchIntroTimer=null
+let sharedInnerSurfaceVideoAsset=""
+let sharedInnerSurfaceVideoEl=null
+let sharedInnerSurfaceVideoMaskFrame=null
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -2681,6 +2717,202 @@ return null;
 
 }
 
+function clearSharedInnerSurfaceFlag(card){
+
+if(!card) return;
+
+delete card.dataset.sharedInnerVideo;
+
+}
+
+function ensureSharedInnerSurfaceVideoLayer(){
+
+const layer=document.getElementById("sharedInnerSurfaceVideoLayer");
+
+if(!layer) return null;
+
+return layer;
+
+}
+
+function resumeSharedInnerSurfaceVideo(){
+
+if(!sharedInnerSurfaceVideoEl) return;
+
+if(document.hidden) return;
+
+try{
+
+sharedInnerSurfaceVideoEl.muted=true;
+sharedInnerSurfaceVideoEl.defaultMuted=true;
+sharedInnerSurfaceVideoEl.setAttribute("muted","");
+sharedInnerSurfaceVideoEl.setAttribute("playsinline","");
+sharedInnerSurfaceVideoEl.setAttribute("webkit-playsinline","");
+
+const playPromise=sharedInnerSurfaceVideoEl.play();
+
+if(playPromise && typeof playPromise.catch==="function"){
+playPromise.catch(()=>{});
+}
+
+}catch(e){}
+
+}
+
+function scheduleSharedInnerSurfaceVideoMask(){
+
+if(sharedInnerSurfaceVideoMaskFrame) return;
+
+sharedInnerSurfaceVideoMaskFrame=requestAnimationFrame(()=>{
+sharedInnerSurfaceVideoMaskFrame=null;
+applySharedInnerSurfaceVideoMask();
+});
+
+}
+
+function applySharedInnerSurfaceVideoMask(){
+
+const layer=ensureSharedInnerSurfaceVideoLayer();
+
+if(!layer || !sharedInnerSurfaceVideoAsset){
+return;
+}
+
+const surfaces=Array.from(document.querySelectorAll('.innerSurface.innerPresented[data-shared-inner-video="true"]'));
+const masks=[];
+const positions=[];
+const sizes=[];
+
+surfaces.forEach(surface=>{
+
+if(surface.offsetParent===null) return;
+
+const rect=surface.getBoundingClientRect();
+const left=Math.max(0,rect.left);
+const top=Math.max(0,rect.top);
+const right=Math.min(window.innerWidth,rect.right);
+const bottom=Math.min(window.innerHeight,rect.bottom);
+const width=Math.max(0,right-left);
+const height=Math.max(0,bottom-top);
+
+if(width<=0 || height<=0) return;
+
+masks.push("linear-gradient(#000,#000)");
+positions.push(`${left}px ${top}px`);
+sizes.push(`${width}px ${height}px`);
+
+});
+
+if(masks.length===0){
+layer.classList.remove("active");
+return;
+}
+
+layer.style.webkitMaskImage=masks.join(",");
+layer.style.maskImage=masks.join(",");
+layer.style.webkitMaskPosition=positions.join(",");
+layer.style.maskPosition=positions.join(",");
+layer.style.webkitMaskSize=sizes.join(",");
+layer.style.maskSize=sizes.join(",");
+layer.style.webkitMaskRepeat="no-repeat";
+layer.style.maskRepeat="no-repeat";
+layer.classList.add("active");
+
+resumeSharedInnerSurfaceVideo();
+
+}
+
+function applySharedInnerSurfaceVideo(config){
+
+const layer=ensureSharedInnerSurfaceVideoLayer();
+
+if(!layer || !config || config.type!=="video" || !config.src) return;
+
+const assetKey=config.src;
+
+if(assetKey!==sharedInnerSurfaceVideoAsset){
+
+sharedInnerSurfaceVideoAsset=assetKey;
+layer.innerHTML="";
+
+const video=document.createElement("video");
+video.src=config.src;
+video.autoplay=true;
+video.loop=true;
+video.muted=true;
+video.defaultMuted=true;
+video.playsInline=true;
+video.controls=false;
+video.disablePictureInPicture=true;
+video.setAttribute("autoplay","");
+video.setAttribute("loop","");
+video.setAttribute("muted","");
+video.setAttribute("playsinline","");
+video.setAttribute("webkit-playsinline","");
+video.setAttribute("aria-hidden","true");
+video.preload="auto";
+
+layer.appendChild(video);
+sharedInnerSurfaceVideoEl=video;
+
+video.addEventListener("pause",()=>{
+setTimeout(resumeSharedInnerSurfaceVideo,250);
+});
+
+video.addEventListener("stalled",()=>{
+setTimeout(resumeSharedInnerSurfaceVideo,250);
+});
+
+video.addEventListener("suspend",()=>{
+setTimeout(resumeSharedInnerSurfaceVideo,250);
+});
+
+video.addEventListener("ended",()=>{
+try{
+video.currentTime=0;
+}catch(e){}
+setTimeout(resumeSharedInnerSurfaceVideo,250);
+});
+
+}
+
+scheduleSharedInnerSurfaceVideoMask();
+resumeSharedInnerSurfaceVideo();
+
+}
+
+function disableSharedInnerSurfaceVideoIfUnused(){
+
+const layer=ensureSharedInnerSurfaceVideoLayer();
+
+if(!layer) return;
+
+const active=document.querySelector('.innerSurface.innerPresented[data-shared-inner-video="true"]');
+
+if(active) return;
+
+layer.classList.remove("active");
+layer.style.webkitMaskImage="";
+layer.style.maskImage="";
+layer.style.webkitMaskPosition="";
+layer.style.maskPosition="";
+layer.style.webkitMaskSize="";
+layer.style.maskSize="";
+
+}
+
+document.addEventListener("scroll",scheduleSharedInnerSurfaceVideoMask,{passive:true});
+window.addEventListener("resize",scheduleSharedInnerSurfaceVideoMask);
+window.addEventListener("pageshow",scheduleSharedInnerSurfaceVideoMask);
+document.addEventListener("visibilitychange",()=>{
+if(!document.hidden){
+setTimeout(()=>{
+scheduleSharedInnerSurfaceVideoMask();
+resumeSharedInnerSurfaceVideo();
+},250);
+}
+});
+
 function applyMediaPresentation(card,config,scope){
 
 if(!card) return;
@@ -2692,6 +2924,8 @@ card.classList.remove("cardPresented","mediaPresented","innerPresented");
 
 if(!config){
 layers.forEach(layer=>layer.remove());
+clearSharedInnerSurfaceFlag(card);
+disableSharedInnerSurfaceVideoIfUnused();
 return;
 }
 
@@ -2716,9 +2950,22 @@ config.color || ""
 
 if(config.type==="color"){
 layers.forEach(layer=>layer.remove());
+clearSharedInnerSurfaceFlag(card);
 card.dataset.presentationKey=presentationKey;
+disableSharedInnerSurfaceVideoIfUnused();
 return;
 }
+
+if(scope==="inner" && config.type==="video" && config.src){
+layers.forEach(layer=>layer.remove());
+card.dataset.sharedInnerVideo="true";
+card.dataset.presentationKey=presentationKey;
+applySharedInnerSurfaceVideo(config);
+return;
+}
+
+clearSharedInnerSurfaceFlag(card);
+disableSharedInnerSurfaceVideoIfUnused();
 
 const currentLayer=layers[0] || null;
 
@@ -2841,6 +3088,9 @@ const config=getInnerSurfacePresentationConfig(d);
 document.querySelectorAll(".innerSurface").forEach(surface=>{
 applyMediaPresentation(surface,config,"inner");
 });
+
+scheduleSharedInnerSurfaceVideoMask();
+disableSharedInnerSurfaceVideoIfUnused();
 
 }
 
