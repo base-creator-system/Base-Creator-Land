@@ -194,9 +194,6 @@ animation:baseLaunchHeroIntro .58s cubic-bezier(.2,.8,.2,1) both;
 body.launchIntroDone .top,
 body.launchIntroDone #communitySection:not(.hidden),
 body.launchIntroDone #supportersSection:not(.hidden),
-body.launchIntroDone #view-home:not(.hidden),
-body.launchIntroDone #view-media:not(.hidden),
-body.launchIntroDone #view-links:not(.hidden),
 body.launchIntroDone .baseFooter,
 body.launchIntroDone .tabs{
 animation:baseLaunchContentIn .34s ease-out both;
@@ -217,9 +214,6 @@ body.launchIntroReady .hero,
 body.launchIntroDone .top,
 body.launchIntroDone #communitySection:not(.hidden),
 body.launchIntroDone #supportersSection:not(.hidden),
-body.launchIntroDone #view-home:not(.hidden),
-body.launchIntroDone #view-media:not(.hidden),
-body.launchIntroDone #view-links:not(.hidden),
 body.launchIntroDone .baseFooter,
 body.launchIntroDone .tabs{
 animation:none;
@@ -1510,6 +1504,8 @@ let chimePending=false
 let communityExpanded=false
 let liveDescriptionExpanded=false
 let activeView="home"
+let viewScrollPositions={home:0,media:0,links:0,live:0}
+let restoringViewScroll=false
 let currentState=null
 let activeHeroAsset=""
 let activeHeroVideo=null
@@ -1521,6 +1517,7 @@ let supportersRuntimeIndex=0
 let supportersRuntimeTimer=null
 let supportersRuntimePausedUntil=0
 let activeLinksRenderSignature=""
+let activeConnectRenderSignature=""
 let sharedPresentationVideoCache={}
 let launchIntroResolved=false
 let launchIntroTimer=null
@@ -2733,7 +2730,7 @@ ctx.drawImage(video,sourceX,sourceY,sourceWidth,sourceHeight,0,0,width,height);
 
 }
 
-function runSharedPresentationVideoLoop(state){
+function runSharedPresentationVideoLoop(state,timestamp){
 
 if(!state || state.canvases.size===0){
 if(state){
@@ -2742,16 +2739,30 @@ state.frame=null;
 return;
 }
 
+if(document.hidden){
+state.frame=requestAnimationFrame((nextTimestamp)=>{
+runSharedPresentationVideoLoop(state,nextTimestamp);
+});
+return;
+}
+
+const now=timestamp || performance.now();
+const frameDelay=1000/15;
+
+if(!state.lastDraw || now-state.lastDraw>=frameDelay){
+state.lastDraw=now;
+
 if(state.video && state.video.readyState >= 2){
 state.canvases.forEach(canvas=>{
-if(canvas && canvas.isConnected){
+if(canvas && canvas.isConnected && canvas.offsetWidth>0 && canvas.offsetHeight>0){
 drawSharedPresentationVideoCover(state.video,canvas);
 }
 });
 }
+}
 
-state.frame=requestAnimationFrame(()=>{
-runSharedPresentationVideoLoop(state);
+state.frame=requestAnimationFrame((nextTimestamp)=>{
+runSharedPresentationVideoLoop(state,nextTimestamp);
 });
 
 }
@@ -2802,7 +2813,8 @@ document.body.appendChild(video);
 state={
 video:video,
 canvases:new Set(),
-frame:null
+frame:null,
+lastDraw:0
 };
 
 sharedPresentationVideoCache[src]=state;
@@ -3517,7 +3529,36 @@ document.querySelectorAll(".tab").forEach(t=>{
 t.onclick=()=>setView(t.dataset.id)
 })
 
+function getViewScrollY(){
+return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+}
+
+function saveActiveViewScroll(){
+if(activeView && !restoringViewScroll){
+viewScrollPositions[activeView]=getViewScrollY();
+}
+}
+
+function restoreViewScroll(id){
+const y=viewScrollPositions[id] || 0;
+restoringViewScroll=true;
+requestAnimationFrame(()=>{
+window.scrollTo(0,y);
+requestAnimationFrame(()=>{
+restoringViewScroll=false;
+});
+});
+}
+
 function setView(id){
+
+if(!views[id])return;
+
+if(id===activeView){
+return;
+}
+
+saveActiveViewScroll();
 
 activeView=id
 
@@ -3545,6 +3586,8 @@ if(currentState){
 applyState(currentState)
 }
 
+restoreViewScroll(id);
+
 }
 
 function applyState(d){
@@ -3565,7 +3608,13 @@ applyChime(d);
 applyCardAnimation(d);
 
 const mount=document.getElementById("connectMount");
+const connectSignature=JSON.stringify({
+email:String(d.contactEmail||""),
+label:String(d.contactLabel||"")
+});
 
+if(connectSignature!==activeConnectRenderSignature){
+activeConnectRenderSignature=connectSignature;
 mount.innerHTML="";
 
 if(d.contactEmail){
@@ -3577,6 +3626,8 @@ a.href=`mailto:${d.contactEmail}`;
 a.textContent=d.contactLabel||"Connect";
 
 mount.appendChild(a);
+
+}
 
 }
 
