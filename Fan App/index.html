@@ -1505,6 +1505,7 @@ let communityExpanded=false
 let liveDescriptionExpanded=false
 let activeView="home"
 let viewScrollPositions={}
+let viewVisited={home:true}
 let viewScrollRestorationPending=false
 let currentState=null
 let activeHeroAsset=""
@@ -3540,11 +3541,10 @@ viewScrollPositions[activeView]=getViewScrollY();
 }
 
 function restoreViewScroll(id){
-if(!Object.prototype.hasOwnProperty.call(viewScrollPositions,id)){
-return;
-}
+const hasSavedPosition=Object.prototype.hasOwnProperty.call(viewScrollPositions,id);
+const y=hasSavedPosition ? viewScrollPositions[id] : 0;
 
-const y=viewScrollPositions[id];
+viewVisited[id]=true;
 viewScrollRestorationPending=true;
 
 requestAnimationFrame(()=>{
