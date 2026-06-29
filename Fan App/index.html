@@ -1504,9 +1504,6 @@ let chimePending=false
 let communityExpanded=false
 let liveDescriptionExpanded=false
 let activeView="home"
-let viewScrollPositions={}
-let viewVisited={home:true}
-let viewScrollRestorationPending=false
 let currentState=null
 let activeHeroAsset=""
 let activeHeroVideo=null
@@ -3530,31 +3527,6 @@ document.querySelectorAll(".tab").forEach(t=>{
 t.onclick=()=>setView(t.dataset.id)
 })
 
-function getViewScrollY(){
-return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-}
-
-function saveActiveViewScroll(){
-if(activeView && !viewScrollRestorationPending){
-viewScrollPositions[activeView]=getViewScrollY();
-}
-}
-
-function restoreViewScroll(id){
-const hasSavedPosition=Object.prototype.hasOwnProperty.call(viewScrollPositions,id);
-const y=hasSavedPosition ? viewScrollPositions[id] : 0;
-
-viewVisited[id]=true;
-viewScrollRestorationPending=true;
-
-requestAnimationFrame(()=>{
-window.scrollTo(0,y);
-requestAnimationFrame(()=>{
-viewScrollRestorationPending=false;
-});
-});
-}
-
 function setView(id){
 
 if(!views[id])return;
@@ -3562,8 +3534,6 @@ if(!views[id])return;
 if(id===activeView){
 return;
 }
-
-saveActiveViewScroll();
 
 activeView=id
 
@@ -3590,8 +3560,6 @@ supportersSection.classList.add("hidden")
 if(currentState){
 applyState(currentState)
 }
-
-restoreViewScroll(id);
 
 }
 
