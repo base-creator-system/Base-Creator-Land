@@ -1504,8 +1504,8 @@ let chimePending=false
 let communityExpanded=false
 let liveDescriptionExpanded=false
 let activeView="home"
-let viewScrollPositions={home:0,media:0,links:0,live:0}
-let restoringViewScroll=false
+let viewScrollPositions={}
+let viewScrollRestorationPending=false
 let currentState=null
 let activeHeroAsset=""
 let activeHeroVideo=null
@@ -3534,18 +3534,23 @@ return window.pageYOffset || document.documentElement.scrollTop || document.body
 }
 
 function saveActiveViewScroll(){
-if(activeView && !restoringViewScroll){
+if(activeView && !viewScrollRestorationPending){
 viewScrollPositions[activeView]=getViewScrollY();
 }
 }
 
 function restoreViewScroll(id){
-const y=viewScrollPositions[id] || 0;
-restoringViewScroll=true;
+if(!Object.prototype.hasOwnProperty.call(viewScrollPositions,id)){
+return;
+}
+
+const y=viewScrollPositions[id];
+viewScrollRestorationPending=true;
+
 requestAnimationFrame(()=>{
 window.scrollTo(0,y);
 requestAnimationFrame(()=>{
-restoringViewScroll=false;
+viewScrollRestorationPending=false;
 });
 });
 }
