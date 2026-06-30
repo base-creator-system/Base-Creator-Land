@@ -227,13 +227,13 @@ display:flex;
 flex-direction:column;
 }
 
+body.liveActive #view-live{
+order:2;
+}
+
 body.liveActive .hero,
 body.liveActive #supportersSection{
 display:none!important;
-}
-
-body.liveActive #view-live{
-order:2;
 }
 
 body.liveActive #communitySection{
@@ -3539,8 +3539,6 @@ if(!views[id])return;
 
 activeView=id
 
-document.body.classList.toggle("liveActive",id==="live")
-
 Object.keys(views).forEach(k=>{
 views[k].classList.toggle("hidden",k!==id)
 })
@@ -3548,6 +3546,8 @@ views[k].classList.toggle("hidden",k!==id)
 document.querySelectorAll(".tab").forEach(t=>{
 t.classList.toggle("active",t.dataset.id===id)
 })
+
+document.body.classList.toggle("liveActive",id==="live")
 
 }
 
