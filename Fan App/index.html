@@ -167,66 +167,6 @@ animation-name:heroSpinFlat;
 100%{transform:rotate(360deg)}
 }
 
-
-/* LAUNCH INTRO */
-
-body.launchIntroPending .top,
-body.launchIntroPending #communitySection,
-body.launchIntroPending #supportersSection,
-body.launchIntroPending #view-home,
-body.launchIntroPending #view-media,
-body.launchIntroPending #view-links,
-body.launchIntroPending .baseFooter,
-body.launchIntroPending .tabs{
-opacity:0;
-pointer-events:none;
-}
-
-body.launchIntroPending .hero{
-opacity:0;
-transform:scale(.96);
-}
-
-body.launchIntroReady .hero{
-animation:baseLaunchHeroIntro .58s cubic-bezier(.2,.8,.2,1) both;
-}
-
-body.launchIntroDone .top,
-body.launchIntroDone #communitySection:not(.hidden),
-body.launchIntroDone #supportersSection:not(.hidden),
-body.launchIntroDone #view-home:not(.hidden),
-body.launchIntroDone #view-media:not(.hidden),
-body.launchIntroDone #view-links:not(.hidden),
-body.launchIntroDone .baseFooter,
-body.launchIntroDone .tabs{
-animation:baseLaunchContentIn .34s ease-out both;
-}
-
-@keyframes baseLaunchHeroIntro{
-0%{opacity:0;transform:scale(.92) translateY(8px)}
-100%{opacity:1;transform:scale(1) translateY(0)}
-}
-
-@keyframes baseLaunchContentIn{
-0%{opacity:0;transform:translateY(8px)}
-100%{opacity:1;transform:translateY(0)}
-}
-
-@media (prefers-reduced-motion: reduce){
-body.launchIntroReady .hero,
-body.launchIntroDone .top,
-body.launchIntroDone #communitySection:not(.hidden),
-body.launchIntroDone #supportersSection:not(.hidden),
-body.launchIntroDone #view-home:not(.hidden),
-body.launchIntroDone #view-media:not(.hidden),
-body.launchIntroDone #view-links:not(.hidden),
-body.launchIntroDone .baseFooter,
-body.launchIntroDone .tabs{
-animation:none;
-}
-}
-
-
 body.liveActive .wrap{
 display:flex;
 flex-direction:column;
@@ -712,52 +652,6 @@ align-items:center;
 justify-content:center;
 flex:0 0 auto;
 white-space:nowrap;
-}
-
-.supportersList.carousel .supporterCard{
-display:none;
-}
-
-.supportersList.carousel .supporterCard.active{
-display:flex;
-animation:supporterFadeIn .28s ease both;
-}
-
-.supportersNav{
-display:flex;
-align-items:center;
-justify-content:center;
-gap:10px;
-margin-top:12px;
-}
-
-.supporterNavBtn{
-width:34px;
-height:34px;
-border-radius:999px;
-border:1px solid var(--stroke);
-background:rgba(255,255,255,0.06);
-color:#fff;
-font-size:18px;
-font-weight:900;
-cursor:pointer;
-display:flex;
-align-items:center;
-justify-content:center;
--webkit-tap-highlight-color:transparent;
-}
-
-.supporterNavCount{
-min-width:54px;
-text-align:center;
-font-size:12px;
-font-weight:800;
-color:var(--muted);
-}
-
-@keyframes supporterFadeIn{
-0%{opacity:0;transform:translateY(2px)}
-100%{opacity:1;transform:translateY(0)}
 }
 
 /* INSTALL INFO MODAL */
@@ -1314,7 +1208,7 @@ min-height:100%;
 </style>
 </head>
 
-<body class="launchIntroPending">
+<body>
 
 <div id="appBackground" class="appBackground" aria-hidden="true"></div>
 
@@ -1513,13 +1407,6 @@ let activeHeroVideo=null
 let activeMediaRenderSignature=""
 let externalMediaRuntimeCache={}
 let externalMediaExpandedState={}
-let supportersRuntimeSignature=""
-let supportersRuntimeIndex=0
-let supportersRuntimeTimer=null
-let supportersRuntimePausedUntil=0
-let activeLinksRenderSignature=""
-let launchIntroResolved=false
-let launchIntroTimer=null
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -1906,65 +1793,6 @@ applyHeroAnimation(img,heroAnimation);
 hero.appendChild(img);
 
 }
-
-
-function hasLaunchHero(d){
-
-const heroData=(d && (d.hero || d.heroMedia)) || {};
-
-if(heroData.enabled===false) return false;
-
-const config=getHeroConfig(d || {});
-
-return !!config;
-
-}
-
-function finishLaunchIntro(animateContent){
-
-if(launchIntroTimer){
-clearTimeout(launchIntroTimer);
-launchIntroTimer=null;
-}
-
-launchIntroResolved=true;
-
-document.body.classList.remove("launchIntroPending","launchIntroReady");
-
-if(animateContent===true){
-document.body.classList.add("launchIntroDone");
-}
-
-}
-
-function runLaunchIntro(d){
-
-if(launchIntroResolved) return;
-
-if(activeView==="live" || !hasLaunchHero(d)){
-finishLaunchIntro(false);
-return;
-}
-
-const reducedMotion=window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-if(reducedMotion){
-finishLaunchIntro(false);
-return;
-}
-
-document.body.classList.add("launchIntroReady");
-
-if(launchIntroTimer){
-clearTimeout(launchIntroTimer);
-}
-
-launchIntroTimer=setTimeout(()=>{
-finishLaunchIntro(true);
-},680);
-
-}
-
 
 function getChimeConfig(d){
 
@@ -2686,13 +2514,14 @@ function applyMediaPresentation(card,config,scope){
 
 if(!card) return;
 
-const layers=Array.from(card.querySelectorAll(":scope > .mediaPresentationLayer"));
+card.querySelectorAll(":scope > .mediaPresentationLayer").forEach(layer=>{
+layer.remove();
+});
 
 card.style.background="";
 card.classList.remove("cardPresented","mediaPresented","innerPresented");
 
 if(!config){
-layers.forEach(layer=>layer.remove());
 return;
 }
 
@@ -2708,40 +2537,14 @@ if(config.color){
 card.style.background=config.color;
 }
 
-const presentationKey=[
-scope || "media",
-config.type || "",
-config.src || "",
-config.color || ""
-].join("|");
-
 if(config.type==="color"){
-layers.forEach(layer=>layer.remove());
-card.dataset.presentationKey=presentationKey;
 return;
 }
-
-const currentLayer=layers[0] || null;
-
-if(
-currentLayer &&
-currentLayer.dataset.presentationKey===presentationKey &&
-((config.type==="wallpaper" && currentLayer.querySelector("img")) ||
-(config.type==="video" && currentLayer.querySelector("video")))
-){
-if(layers.length>1){
-layers.slice(1).forEach(layer=>layer.remove());
-}
-return;
-}
-
-layers.forEach(layer=>layer.remove());
 
 if(config.type==="wallpaper" && config.src){
 
 const layer=document.createElement("div");
 layer.className="mediaPresentationLayer";
-layer.dataset.presentationKey=presentationKey;
 
 const img=document.createElement("img");
 img.src=config.src;
@@ -2749,7 +2552,6 @@ img.alt="";
 
 layer.appendChild(img);
 card.insertBefore(layer,card.firstChild);
-card.dataset.presentationKey=presentationKey;
 
 return;
 
@@ -2759,7 +2561,6 @@ if(config.type==="video" && config.src){
 
 const layer=document.createElement("div");
 layer.className="mediaPresentationLayer";
-layer.dataset.presentationKey=presentationKey;
 
 const video=document.createElement("video");
 video.src=config.src;
@@ -2780,7 +2581,6 @@ video.preload="metadata";
 
 layer.appendChild(video);
 card.insertBefore(layer,card.firstChild);
-card.dataset.presentationKey=presentationKey;
 
 try{
 const playPromise=video.play();
@@ -3582,150 +3382,6 @@ renderLinks(d);
 renderMedia(d);
 applyGlobalCardPresentation(d);
 applyInnerSurfacePresentation(d);
-runLaunchIntro(d);
-
-}
-
-function getSupportersSignature(items){
-
-return JSON.stringify(items.map(item=>({
-type:String(item.type||""),
-name:String(item.name||""),
-tagline:String(item.tagline||""),
-description:String(item.description||""),
-thumbnail:String(item.thumbnail||""),
-url:String(item.url||""),
-buttonText:String(item.buttonText||""),
-enabled:item.enabled===false ? false : true
-})));
-
-}
-
-function stopSupportersAutoRotate(){
-
-if(supportersRuntimeTimer){
-clearInterval(supportersRuntimeTimer);
-supportersRuntimeTimer=null;
-}
-
-}
-
-function showSupporterIndex(index){
-
-const container=document.getElementById("supportersList");
-if(!container)return;
-
-const cards=Array.from(container.querySelectorAll(".supporterCard"));
-if(cards.length===0)return;
-
-supportersRuntimeIndex=((index % cards.length) + cards.length) % cards.length;
-
-cards.forEach((card,i)=>{
-card.classList.toggle("active",i===supportersRuntimeIndex);
-});
-
-const count=container.querySelector(".supporterNavCount");
-if(count){
-count.textContent=`${supportersRuntimeIndex+1} / ${cards.length}`;
-}
-
-}
-
-function pauseSupportersAutoRotate(){
-
-supportersRuntimePausedUntil=Date.now()+12000;
-
-}
-
-function startSupportersAutoRotate(count){
-
-stopSupportersAutoRotate();
-
-if(count<=1)return;
-
-supportersRuntimeTimer=setInterval(()=>{
-
-if(Date.now()<supportersRuntimePausedUntil)return;
-
-showSupporterIndex(supportersRuntimeIndex+1);
-
-},9000);
-
-}
-
-function createSupporterCard(item){
-
-const rawUrl=String(item.url||"").trim();
-const url=safeURL(rawUrl);
-
-const clickable=Boolean(url);
-
-const card=document.createElement(clickable ? "a" : "div");
-card.className="supporterCard";
-
-if(clickable){
-card.href=url;
-card.target="_blank";
-card.rel="noopener";
-}
-
-card.addEventListener("pointerdown",pauseSupportersAutoRotate,{passive:true});
-
-const inner=document.createElement("div");
-inner.className="supporterInnerSurface";
-
-const thumb=document.createElement("div");
-thumb.className="supporterThumb";
-
-if(item.thumbnail){
-
-const img=document.createElement("img");
-img.src=normalizeURL(item.thumbnail);
-thumb.appendChild(img);
-
-}else{
-
-const fallback=String(item.name||item.type||"S").trim().charAt(0).toUpperCase() || "S";
-thumb.textContent=fallback;
-
-}
-
-const body=document.createElement("div");
-body.className="supporterBody";
-
-if(item.name){
-
-const name=document.createElement("div");
-name.className="supporterName";
-name.textContent=item.name;
-body.appendChild(name);
-
-}
-
-if(item.description){
-
-const desc=document.createElement("div");
-desc.className="supporterDesc";
-desc.textContent=item.description;
-body.appendChild(desc);
-
-}
-
-inner.appendChild(thumb);
-inner.appendChild(body);
-
-if(clickable){
-
-const button=document.createElement("div");
-button.className="supporterButton";
-button.textContent=item.buttonText || "Open";
-inner.appendChild(button);
-
-}
-
-card.appendChild(inner);
-
-return card;
 
 }
 
@@ -3734,10 +3390,11 @@ function renderSupporters(d){
 const section=document.getElementById("supportersSection");
 const container=document.getElementById("supportersList");
 
+container.innerHTML="";
+
 if(activeView!=="home"){
 
 section.classList.add("hidden");
-stopSupportersAutoRotate();
 
 return;
 
@@ -3765,80 +3422,97 @@ String(item.buttonText||"").trim()
 
 if(visible.length===0){
 
-container.innerHTML="";
-container.classList.remove("carousel");
 section.classList.add("hidden");
-supportersRuntimeSignature="";
-supportersRuntimeIndex=0;
-stopSupportersAutoRotate();
 
 return;
 
 }
 
-const signature=getSupportersSignature(visible);
+visible.forEach(item=>{
 
-section.classList.remove("hidden");
+const rawUrl=String(item.url||"").trim();
+const url=safeURL(rawUrl);
 
-if(signature===supportersRuntimeSignature && container.dataset.supportersReady==="true"){
-container.classList.toggle("carousel",visible.length>1);
-showSupporterIndex(supportersRuntimeIndex);
-startSupportersAutoRotate(visible.length);
-return;
+const clickable=Boolean(url);
+
+const card=document.createElement(clickable ? "a" : "div");
+card.className="supporterCard";
+
+if(clickable){
+card.href=url;
+card.target="_blank";
+card.rel="noopener";
 }
 
-supportersRuntimeSignature=signature;
-if(supportersRuntimeIndex>=visible.length){
-supportersRuntimeIndex=0;
+const inner=document.createElement("div");
+inner.className="supporterInnerSurface";
+
+const thumb=document.createElement("div");
+thumb.className="supporterThumb";
+
+if(item.thumbnail){
+
+const img=document.createElement("img");
+img.src=normalizeURL(item.thumbnail);
+thumb.appendChild(img);
+
+}else{
+
+const fallback=String(item.name||item.type||"S").trim().charAt(0).toUpperCase() || "S";
+thumb.textContent=fallback;
+
 }
 
-container.innerHTML="";
-container.dataset.supportersReady="true";
-container.classList.toggle("carousel",visible.length>1);
+const body=document.createElement("div");
+body.className="supporterBody";
 
-visible.forEach((item,i)=>{
-const card=createSupporterCard(item);
-card.classList.toggle("active",i===supportersRuntimeIndex);
+
+
+if(item.name){
+
+const name=document.createElement("div");
+name.className="supporterName";
+name.textContent=item.name;
+body.appendChild(name);
+
+}
+
+if(item.tagline){
+
+const tagline=document.createElement("div");
+tagline.className="supporterTagline";
+tagline.textContent=item.tagline;
+body.appendChild(tagline);
+
+}
+
+if(item.description){
+
+const desc=document.createElement("div");
+desc.className="supporterDesc";
+desc.textContent=item.description;
+body.appendChild(desc);
+
+}
+
+inner.appendChild(thumb);
+inner.appendChild(body);
+
+if(clickable){
+
+const button=document.createElement("div");
+button.className="supporterButton";
+button.textContent=item.buttonText || "Open";
+inner.appendChild(button);
+
+}
+
+card.appendChild(inner);
 container.appendChild(card);
+
 });
 
-if(visible.length>1){
-
-const nav=document.createElement("div");
-nav.className="supportersNav";
-
-const prev=document.createElement("button");
-prev.type="button";
-prev.className="supporterNavBtn";
-prev.textContent="‹";
-prev.setAttribute("aria-label","Previous supporter");
-prev.onclick=()=>{
-pauseSupportersAutoRotate();
-showSupporterIndex(supportersRuntimeIndex-1);
-};
-
-const count=document.createElement("div");
-count.className="supporterNavCount";
-
-const next=document.createElement("button");
-next.type="button";
-next.className="supporterNavBtn";
-next.textContent="›";
-next.setAttribute("aria-label","Next supporter");
-next.onclick=()=>{
-pauseSupportersAutoRotate();
-showSupporterIndex(supportersRuntimeIndex+1);
-};
-
-nav.appendChild(prev);
-nav.appendChild(count);
-nav.appendChild(next);
-container.appendChild(nav);
-
-}
-
-showSupporterIndex(supportersRuntimeIndex);
-startSupportersAutoRotate(visible.length);
+section.classList.remove("hidden");
 
 }
 
@@ -3846,19 +3520,9 @@ function renderLinks(d){
 
 const container=document.getElementById("links");
 
-const links=Array.isArray(d.links)?d.links:[];
-
-const renderSignature=JSON.stringify({
-links:links,
-innerSurface:d.innerSurfacePresentation || d.innerSurface || d.innerCardPresentation || d.innerCardStyle || d.contentSurfacePresentation || d.contentSurface || null
-});
-
-if(renderSignature===activeLinksRenderSignature && container.children.length>0){
-return;
-}
-
-activeLinksRenderSignature=renderSignature;
 container.innerHTML="";
+
+const links=Array.isArray(d.links)?d.links:[];
 
 links.forEach(item=>{
 
