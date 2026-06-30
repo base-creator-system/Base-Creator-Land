@@ -6,11 +6,11 @@
 
 <title>DJ MOFIYA APP</title>
 
-<link rel="manifest" href="manifest.json?v=1782480548101">
+<link rel="manifest" href="manifest.json?v=1782350959308">
 <meta name="theme-color" content="#000000">
-<link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512-v37.png?v=1782480548101">
-<link rel="shortcut icon" type="image/png" href="icons/icon-192-v37.png?v=1782480548101">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192-v37.png?v=1782480548101">
+<link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512-v37.png?v=1782350959308">
+<link rel="shortcut icon" type="image/png" href="icons/icon-192-v37.png?v=1782350959308">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192-v37.png?v=1782350959308">
 
 <style>
 :root{
@@ -136,35 +136,17 @@ height:auto;
 background:#000;
 }
 
-.heroSpin,
-.heroSpin3D,
-.heroSpinFlat{
-animation-duration:18s;
-animation-timing-function:linear;
-animation-iteration-count:infinite;
+.heroSpin{
+animation:heroSpin 18s linear infinite;
 transform-origin:center center;
+transform-style:preserve-3d;
+backface-visibility:visible;
 will-change:transform;
 }
 
-.heroSpin,
-.heroSpin3D{
-animation-name:heroSpin3D;
-transform-style:preserve-3d;
-backface-visibility:visible;
-}
-
-.heroSpinFlat{
-animation-name:heroSpinFlat;
-}
-
-@keyframes heroSpin3D{
-0%{transform:perspective(900px) rotateY(0deg)}
-100%{transform:perspective(900px) rotateY(360deg)}
-}
-
-@keyframes heroSpinFlat{
-0%{transform:rotate(0deg)}
-100%{transform:rotate(360deg)}
+@keyframes heroSpin{
+0%{transform:rotateY(0deg)}
+100%{transform:rotateY(360deg)}
 }
 
 body.liveActive .wrap{
@@ -264,9 +246,7 @@ animation:none;
 
 
 @media (prefers-reduced-motion: reduce){
-.heroSpin,
-.heroSpin3D,
-.heroSpinFlat{
+.heroSpin{
 animation:none;
 }
 }
@@ -555,10 +535,6 @@ padding:16px;
 margin:16px 0;
 }
 
-.supportersInnerSurface{
-display:block;
-}
-
 .supportersList{
 display:flex;
 flex-direction:column;
@@ -567,23 +543,15 @@ margin-top:12px;
 }
 
 .supporterCard{
+border:1px solid var(--stroke);
+background:rgba(255,255,255,0.04);
+border-radius:16px;
+padding:12px;
 display:flex;
 align-items:center;
-justify-content:space-between;
-gap:14px;
-width:100%;
-min-width:0;
+gap:12px;
 text-decoration:none;
 color:inherit;
-}
-
-.supporterInnerSurface{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:14px;
-width:100%;
-min-width:0;
 }
 
 .supporterThumb{
@@ -651,7 +619,6 @@ display:inline-flex;
 align-items:center;
 justify-content:center;
 flex:0 0 auto;
-white-space:nowrap;
 }
 
 /* INSTALL INFO MODAL */
@@ -1216,7 +1183,7 @@ min-height:100%;
 
 <div class="top">
 <div class="brand">
-<img id="logo" src="icons/icon-192-v37.png?v=1782480548101">
+<img id="logo" src="icons/icon-192-v37.png?v=1782350959308">
 <div class="name" id="name">Creator</div>
 </div>
 
@@ -1242,10 +1209,8 @@ i
 
 <section id="supportersSection" class="hidden">
 <div class="supportersCard">
-<div class="supportersInnerSurface innerSurface">
 <div class="h1">Supporters</div>
 <div id="supportersList" class="supportersList"></div>
-</div>
 </div>
 </section>
 
@@ -1404,9 +1369,6 @@ let activeView="home"
 let currentState=null
 let activeHeroAsset=""
 let activeHeroVideo=null
-let activeMediaRenderSignature=""
-let externalMediaRuntimeCache={}
-let externalMediaExpandedState={}
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -1647,34 +1609,24 @@ const raw=String(
 (heroData && (heroData.animation || heroData.animationType || heroData.motion || heroData.effect)) ||
 (d && (d.heroAnimation || d.heroAnimationType || d.heroMotion || d.heroEffect)) ||
 ""
-).toLowerCase().replace(/[\s_-]+/g,"").trim();
+).toLowerCase().trim();
 
-if(raw==="spin" || raw==="rotate" || raw==="3d" || raw==="3dspin" || raw==="spin3d" || raw==="rotatey" || raw==="uprightspin" || raw==="uprightturn"){
+if(raw==="spin" || raw==="rotate"){
 return "spin";
-}
-
-if(raw==="flat" || raw==="flatspin" || raw==="record" || raw==="recordspin" || raw==="discspin" || raw==="diskspin" || raw==="rotatez"){
-return "flat";
 }
 
 return "";
 
 }
 
-
 function applyHeroAnimation(element,animationName){
 
 if(!element) return;
 
-element.classList.remove("heroSpin","heroSpin3D","heroSpinFlat");
+element.classList.remove("heroSpin");
 
 if(animationName==="spin"){
-element.classList.add("heroSpin3D");
-return;
-}
-
-if(animationName==="flat"){
-element.classList.add("heroSpinFlat");
+element.classList.add("heroSpin");
 }
 
 }
@@ -2651,8 +2603,7 @@ const config=getGlobalCardPresentationConfig(d);
 
 const selector=[
 ".card",
-".supportersCard",
-".supporterCard"
+".supportersCard"
 ].join(",");
 
 document.querySelectorAll(selector).forEach(card=>{
@@ -2819,113 +2770,15 @@ return label;
 
 }
 
-function getExternalMediaRuntimeKey(item,index){
-
-const raw=String(
-item.id ||
-item.key ||
-item.slug ||
-item.embed ||
-item.embedUrl ||
-item.embedURL ||
-item.embed_url ||
-item.url ||
-item.name ||
-item.title ||
-item.provider ||
-("external-" + index)
-).trim();
-
-return raw || ("external-" + index);
-
-}
-
-function getExternalMediaRuntimeSignature(item){
-
-return JSON.stringify({
-provider:item.provider || "",
-name:item.name || "",
-title:item.title || "",
-description:item.description || item.desc || "",
-thumbnail:item.thumbnail || item.thumb || item.image || "",
-buttonText:item.buttonText || "",
-embed:item.embed || "",
-embedUrl:item.embedUrl || item.embedURL || item.embed_url || "",
-url:item.url || ""
-});
-
-}
-
-function getExternalMediaRuntime(key,item){
-
-const signature=getExternalMediaRuntimeSignature(item);
-const existing=externalMediaRuntimeCache[key];
-
-if(existing && existing.signature===signature){
-return existing;
-}
-
-const mount=document.createElement("div");
-mount.className="externalMediaEmbedMount";
-
-const runtime={
-signature:signature,
-mount:mount,
-rendered:false
-};
-
-externalMediaRuntimeCache[key]=runtime;
-externalMediaExpandedState[key]=false;
-
-return runtime;
-
-}
-
-function pruneExternalMediaRuntimeCache(activeKeys){
-
-Object.keys(externalMediaRuntimeCache).forEach(key=>{
-if(!activeKeys[key]){
-delete externalMediaRuntimeCache[key];
-delete externalMediaExpandedState[key];
-}
-});
-
-}
-
-function getMediaRenderSignature(d){
-
-const gateway=d.mediaGateway || {};
-
-return JSON.stringify({
-mediaGateway:gateway,
-externalMedia:d.externalMedia || null,
-externalMediaItems:d.externalMediaItems || null,
-externalGalleries:d.externalGalleries || null,
-mediaExternal:d.mediaExternal || null,
-cardPresentation:d.cardPresentation || d.mediaPresentation || d.cardStyle || d.cardAnimation || null,
-outerSurface:d.outerSurfacePresentation || d.outerSurface || d.cardSurfacePresentation || d.cardSurface || null,
-innerSurface:d.innerSurfacePresentation || d.innerSurface || d.innerCardPresentation || d.innerCardStyle || d.contentSurfacePresentation || d.contentSurface || null
-});
-
-}
-
 function renderExternalMedia(container,d){
 
 const items=normalizeExternalMediaList(d);
 
-if(items.length===0){
-pruneExternalMediaRuntimeCache({});
-return;
-}
+if(items.length===0) return;
 
 container.appendChild(createMediaSectionLabel("Gallery / Archive"));
 
-const activeKeys={};
-
-items.forEach((item,index)=>{
-
-const runtimeKey=getExternalMediaRuntimeKey(item,index);
-activeKeys[runtimeKey]=true;
+items.forEach(item=>{
 
 const card=document.createElement("div");
 card.className="externalMediaCard";
@@ -2974,6 +2827,23 @@ btn.className="externalMediaExpandBtn";
 btn.type="button";
 btn.textContent=item.buttonText || "Expand";
 
+const mount=document.createElement("div");
+mount.className="externalMediaEmbedMount";
+
+let rendered=false;
+let expanded=false;
+
+btn.onclick=()=>{
+expanded=!expanded;
+mount.classList.toggle("expanded",expanded);
+btn.textContent=expanded ? "Collapse" : (item.buttonText || "Expand");
+
+if(expanded && !rendered){
+renderExternalEmbed(mount,item);
+rendered=true;
+}
+};
+
 const hasEmbed=Boolean(item.embed || item.embedUrl || item.embedURL || item.embed_url);
 const hasUrl=Boolean(safeURL(String(item.url || "").trim()));
 
@@ -2982,48 +2852,18 @@ btn.textContent=item.buttonText || "Open";
 btn.onclick=()=>{
 window.open(safeURL(String(item.url || "").trim()),"_blank","noopener");
 };
-
-}else{
-
-const runtime=getExternalMediaRuntime(runtimeKey,item);
-const mount=runtime.mount;
-const expanded=externalMediaExpandedState[runtimeKey]===true;
-
-mount.classList.toggle("expanded",expanded);
-btn.textContent=expanded ? "Collapse" : (item.buttonText || "Expand");
-
-if(expanded && !runtime.rendered){
-renderExternalEmbed(mount,item);
-runtime.rendered=true;
-}
-
-btn.onclick=()=>{
-const nextExpanded=externalMediaExpandedState[runtimeKey]!==true;
-externalMediaExpandedState[runtimeKey]=nextExpanded;
-mount.classList.toggle("expanded",nextExpanded);
-btn.textContent=nextExpanded ? "Collapse" : (item.buttonText || "Expand");
-
-if(nextExpanded && !runtime.rendered){
-renderExternalEmbed(mount,item);
-runtime.rendered=true;
-}
-};
-
-card.appendChild(mount);
-
 }
 
 top.appendChild(thumb);
 top.appendChild(body);
 top.appendChild(btn);
 
-card.insertBefore(top,card.firstChild);
+card.appendChild(top);
+card.appendChild(mount);
 
 container.appendChild(card);
 
 });
-
-pruneExternalMediaRuntimeCache(activeKeys);
 
 }
 
@@ -3436,16 +3276,13 @@ const url=safeURL(rawUrl);
 const clickable=Boolean(url);
 
 const card=document.createElement(clickable ? "a" : "div");
-card.className="supporterCard";
+card.className="supporterCard innerSurface";
 
 if(clickable){
 card.href=url;
 card.target="_blank";
 card.rel="noopener";
 }
-
-const inner=document.createElement("div");
-inner.className="supporterInnerSurface";
 
 const thumb=document.createElement("div");
 thumb.className="supporterThumb";
@@ -3495,19 +3332,18 @@ body.appendChild(desc);
 
 }
 
-inner.appendChild(thumb);
-inner.appendChild(body);
+card.appendChild(thumb);
+card.appendChild(body);
 
 if(clickable){
 
 const button=document.createElement("div");
 button.className="supporterButton";
 button.textContent=item.buttonText || "Open";
-inner.appendChild(button);
+card.appendChild(button);
 
 }
 
-card.appendChild(inner);
 container.appendChild(card);
 
 });
@@ -3573,23 +3409,13 @@ container.appendChild(a)
 function renderMedia(d){
 
 const container=document.getElementById("mediaSection");
-const renderSignature=getMediaRenderSignature(d);
 
-if(renderSignature===activeMediaRenderSignature && container.children.length>0){
-return;
-}
-
-activeMediaRenderSignature=renderSignature;
 container.innerHTML="";
 
 const gateway=d.mediaGateway || {};
 const enabled=(gateway.enabled!==false);
 
-if(!enabled){
-activeMediaRenderSignature="";
-pruneExternalMediaRuntimeCache({});
-return;
-}
+if(!enabled) return;
 
 const collections=Array.isArray(gateway.collections)?gateway.collections:[];
 
