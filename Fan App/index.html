@@ -3546,6 +3546,7 @@ t.classList.toggle("active",t.dataset.id===id)
 })
 
 const supportersSection=document.getElementById("supportersSection")
+const supportersList=document.getElementById("supportersList")
 const hero=document.querySelector(".hero")
 
 document.body.classList.toggle("liveActive",id==="live")
@@ -3555,10 +3556,18 @@ if(id==="live"){
 hero.classList.add("hidden")
 supportersSection.classList.add("hidden")
 
+}else{
+
+if(activeHeroAsset){
+hero.classList.remove("hidden")
 }
 
-if(currentState){
-applyState(currentState)
+if(id==="home" && supportersList && supportersList.children.length){
+supportersSection.classList.remove("hidden")
+}else{
+supportersSection.classList.add("hidden")
+}
+
 }
 
 }
