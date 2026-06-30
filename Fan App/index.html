@@ -3542,6 +3542,25 @@ document.querySelectorAll(".tab").forEach(t=>{
 t.classList.toggle("active",t.dataset.id===id)
 })
 
+syncViewVisibility();
+
+}
+
+function syncViewVisibility(){
+
+document.body.classList.toggle("liveActive",activeView==="live");
+
+const hero=document.querySelector(".hero");
+if(hero){
+hero.classList.toggle("hidden",activeView==="live");
+}
+
+const supportersSection=document.getElementById("supportersSection");
+if(supportersSection){
+const hasSupporters=supportersSection.dataset.hasSupporters==="true";
+supportersSection.classList.toggle("hidden",activeView!=="home" || !hasSupporters);
+}
+
 }
 
 function applyState(d){
@@ -3755,6 +3774,7 @@ renderMedia(d);
 applyGlobalCardPresentation(d);
 applyInnerSurfacePresentation(d);
 runLaunchIntro(d);
+syncViewVisibility();
 
 }
 
@@ -3932,6 +3952,7 @@ if(visible.length===0){
 
 container.innerHTML="";
 container.classList.remove("carousel");
+section.dataset.hasSupporters="false";
 section.classList.add("hidden");
 supportersRuntimeSignature="";
 supportersRuntimeIndex=0;
@@ -3943,7 +3964,8 @@ return;
 
 const signature=getSupportersSignature(visible);
 
-section.classList.remove("hidden");
+section.dataset.hasSupporters="true";
+section.classList.toggle("hidden",activeView!=="home");
 
 if(signature===supportersRuntimeSignature && container.dataset.supportersReady==="true"){
 container.classList.toggle("carousel",visible.length>1);
