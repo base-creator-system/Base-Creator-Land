@@ -239,16 +239,6 @@ body.liveActive .baseFooter{
 order:4;
 }
 
-body.liveActive .hero{
-display:none!important;
-}
-
-body.viewMediaActive #supportersSection,
-body.viewLinksActive #supportersSection,
-body.liveActive #supportersSection{
-display:none!important;
-}
-
 .card{
 border:1px solid var(--stroke);
 background:var(--card);
@@ -1825,7 +1815,7 @@ const heroAnimation=getHeroAnimationName(d,heroData);
 const heroDisabled=heroData.enabled===false;
 const config=getHeroConfig(d);
 
-if(heroDisabled){
+if(activeView==="live" || heroDisabled){
 stopHeroVideo();
 activeHeroAsset="";
 hero.innerHTML="";
@@ -1951,7 +1941,7 @@ function runLaunchIntro(d){
 
 if(launchIntroResolved) return;
 
-if(!hasLaunchHero(d)){
+if(activeView==="live" || !hasLaunchHero(d)){
 finishLaunchIntro(false);
 return;
 }
@@ -3544,6 +3534,8 @@ if(!views[id])return;
 
 activeView=id
 
+document.body.classList.toggle("liveActive",id==="live")
+
 Object.keys(views).forEach(k=>{
 views[k].classList.toggle("hidden",k!==id)
 })
@@ -3551,11 +3543,6 @@ views[k].classList.toggle("hidden",k!==id)
 document.querySelectorAll(".tab").forEach(t=>{
 t.classList.toggle("active",t.dataset.id===id)
 })
-
-document.body.classList.toggle("viewHomeActive",id==="home")
-document.body.classList.toggle("viewMediaActive",id==="media")
-document.body.classList.toggle("viewLinksActive",id==="links")
-document.body.classList.toggle("liveActive",id==="live")
 
 }
 
@@ -3924,6 +3911,16 @@ const container=document.getElementById("supportersList");
 
 
 const supporters=Array.isArray(d.supporters)?d.supporters:[];
+
+if(activeView!=="home"){
+container.innerHTML="";
+container.classList.remove("carousel");
+section.classList.add("hidden");
+supportersRuntimeSignature="";
+supportersRuntimeIndex=0;
+stopSupportersAutoRotate();
+return;
+}
 
 const visible=supporters.filter(item=>{
 
