@@ -1,3 +1,5 @@
+Fan app
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,11 +8,11 @@
 
 <title>DJ MOFIYA APP</title>
 
-<link rel="manifest" href="manifest.json?v=1782350959308">
+<link rel="manifest" href="manifest.json?v=1780934824725">
 <meta name="theme-color" content="#000000">
-<link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512-v37.png?v=1782350959308">
-<link rel="shortcut icon" type="image/png" href="icons/icon-192-v37.png?v=1782350959308">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192-v37.png?v=1782350959308">
+<link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512-v37.png?v=1780934824725">
+<link rel="shortcut icon" type="image/png" href="icons/icon-192-v37.png?v=1780934824725">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192-v37.png?v=1780934824725">
 
 <style>
 :root{
@@ -30,46 +32,12 @@ background:var(--bg);
 color:var(--text);
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
 overflow-x:hidden;
-min-height:100vh;
-}
-
-.appBackground{
-position:fixed;
-inset:0;
-z-index:0;
-overflow:hidden;
-pointer-events:none;
-display:none;
-background:transparent;
-}
-
-.appBackground.active{
-display:block;
-}
-
-.appBackground img,
-.appBackground video{
-position:absolute;
-inset:0;
-width:100%;
-height:100%;
-object-fit:cover;
-display:block;
-}
-
-.appBackground::after{
-content:"";
-position:absolute;
-inset:0;
-background:rgba(0,0,0,.42);
 }
 
 .wrap{
 max-width:720px;
 margin:0 auto;
 padding:20px 16px 100px;
-position:relative;
-z-index:1;
 }
 
 .top{
@@ -117,53 +85,15 @@ cursor:pointer;
 
 .hero{
 margin:8px 0 18px;
-border-radius:0;
-border:none;
-background:transparent;
-overflow:visible;
-perspective:1000px;
-perspective-origin:center center;
+border-radius:18px;
+border:1px solid var(--stroke);
+background:rgba(255,255,255,0.03);
+overflow:hidden;
 }
 
-.hero img,
-.hero video{
+.hero img{
 width:100%;
 display:block;
-}
-
-.hero video{
-height:auto;
-background:#000;
-}
-
-.heroSpin{
-animation:heroSpin 18s linear infinite;
-transform-origin:center center;
-transform-style:preserve-3d;
-backface-visibility:visible;
-will-change:transform;
-}
-
-@keyframes heroSpin{
-0%{transform:rotateY(0deg)}
-100%{transform:rotateY(360deg)}
-}
-
-body.liveActive .wrap{
-display:flex;
-flex-direction:column;
-}
-
-body.liveActive #view-live{
-order:2;
-}
-
-body.liveActive #communitySection{
-order:3;
-}
-
-body.liveActive .baseFooter{
-order:4;
 }
 
 .card{
@@ -172,88 +102,6 @@ background:var(--card);
 border-radius:18px;
 padding:16px;
 margin:16px 0;
-}
-
-#communitySection .card{
-padding:6px;
-margin:4px 0;
-}
-
-body.cardAnimFloat .card,
-body.cardAnimFloat .supportersCard,
-body.cardAnimFloat .supporterCard,
-body.cardAnimFloat .collectionCard,
-body.cardAnimFloat .media-card,
-body.cardAnimFloat .row{
-animation:baseCardFloat 6s ease-in-out infinite;
-}
-
-body.cardAnimPulse .card,
-body.cardAnimPulse .supportersCard,
-body.cardAnimPulse .supporterCard,
-body.cardAnimPulse .collectionCard,
-body.cardAnimPulse .media-card,
-body.cardAnimPulse .row{
-animation:baseCardPulse 4.5s ease-in-out infinite;
-}
-
-body.cardAnimGlow .card,
-body.cardAnimGlow .supportersCard,
-body.cardAnimGlow .supporterCard,
-body.cardAnimGlow .collectionCard,
-body.cardAnimGlow .media-card,
-body.cardAnimGlow .row{
-animation:baseCardGlow 5s ease-in-out infinite;
-}
-
-@keyframes baseCardFloat{
-0%,100%{transform:translateY(0)}
-50%{transform:translateY(-3px)}
-}
-
-@keyframes baseCardPulse{
-0%,100%{transform:scale(1)}
-50%{transform:scale(1.01)}
-}
-
-@keyframes baseCardGlow{
-0%,100%{box-shadow:0 0 0 rgba(255,255,255,0)}
-50%{box-shadow:0 0 22px rgba(255,255,255,.10)}
-}
-
-@media (prefers-reduced-motion: reduce){
-body.cardAnimFloat .card,
-body.cardAnimFloat .supportersCard,
-body.cardAnimFloat .supporterCard,
-body.cardAnimFloat .collectionCard,
-body.cardAnimFloat .media-card,
-body.cardAnimFloat .row,
-body.cardAnimPulse .card,
-body.cardAnimPulse .supportersCard,
-body.cardAnimPulse .supporterCard,
-body.cardAnimPulse .collectionCard,
-body.cardAnimPulse .media-card,
-body.cardAnimPulse .row,
-body.cardAnimGlow .card,
-body.cardAnimGlow .supportersCard,
-body.cardAnimGlow .supporterCard,
-body.cardAnimGlow .collectionCard,
-body.cardAnimGlow .media-card,
-body.cardAnimGlow .row{
-animation:none;
-}
-}
-
-
-@media (prefers-reduced-motion: reduce){
-.heroSpin{
-animation:none;
-}
-}
-
-#communitySection .h1{
-font-size:16px;
-margin:0;
 }
 
 .h1{
@@ -324,7 +172,7 @@ color:var(--text);
 background:rgba(255,255,255,0.12);
 }
 
-.card,.media-card,.row,.innerSurface,.pill,.media-btn,.btn,.tab,.liveDescriptionToggle{
+.card,.media-card,.row,.pill,.media-btn,.btn,.tab{
 -webkit-tap-highlight-color:transparent;
 }
 
@@ -340,23 +188,6 @@ padding:14px;
 margin:14px 0;
 text-decoration:none;
 color:inherit;
-}
-
-.innerSurface{
-border:1px solid var(--stroke);
-background:rgba(255,255,255,0.04);
-border-radius:16px;
-padding:14px;
-text-decoration:none;
-color:inherit;
-}
-
-.homeInnerSurface{
-margin-bottom:0;
-}
-
-.homeInnerSurface + #connectMount .btn{
-margin-top:12px;
 }
 
 .left{
@@ -392,9 +223,6 @@ cursor:pointer;
 }
 
 .media-btn{
-height:30px;
-padding:0 12px;
-font-size:12px;
 margin-left:auto;
 flex:0 0 auto;
 }
@@ -418,111 +246,6 @@ font-weight:600;
 .baseFooter a{
 color:var(--muted);
 text-decoration:none;
-}
-
-/* LIVE */
-
-.livePlayer{
-position:relative;
-padding-top:56.25%;
-overflow:hidden;
-background:#000;
-}
-
-.livePlayer iframe{
-position:absolute;
-inset:0;
-width:100%;
-height:100%;
-border:0;
-background:#000;
-}
-
-.liveDescription{
-margin-top:12px;
-color:var(--muted);
-font-size:13px;
-line-height:1.4;
-}
-
-.liveDescriptionToggle{
-display:flex;
-align-items:center;
-justify-content:center;
-width:max-content;
-min-height:26px;
-padding:0 12px;
-border-radius:999px;
-border:1px solid var(--stroke);
-background:rgba(255,255,255,0.05);
-color:var(--text);
-font-weight:800;
-font-size:12px;
-cursor:pointer;
-margin:8px auto 0;
--webkit-tap-highlight-color:transparent;
-}
-
-/* COMMUNITY */
-
-.communityHeader{
-display:flex;
-align-items:center;
-gap:8px;
-margin-bottom:2px;
-}
-
-.communityIcon{
-width:32px;
-height:32px;
-border-radius:12px;
-border:1px solid var(--stroke);
-object-fit:cover;
-display:none;
-background:rgba(255,255,255,0.05);
-flex:0 0 auto;
-}
-
-.communityEmbedMount{
-width:100%;
-margin-top:12px;
-overflow:hidden;
-border-radius:14px;
-height:110px;
-max-height:110px;
-transition:height .25s ease,max-height .25s ease;
-}
-
-.communityEmbedMount.expanded{
-height:420px;
-max-height:55vh;
-}
-
-.communityExpandBtn{
-display:inline-flex;
-align-items:center;
-justify-content:center;
-width:100%;
-height:30px;
-border-radius:999px;
-border:1px solid var(--stroke);
-background:var(--pillColor);
-color:#fff;
-font-weight:800;
-font-size:12px;
-cursor:pointer;
-margin-top:4px;
--webkit-tap-highlight-color:transparent;
-}
-
-.communityEmbedMount iframe{
-width:100%;
-height:420px;
-max-height:55vh;
-border:none;
-border-radius:14px;
-background:#000;
-display:block;
 }
 
 /* SUPPORTERS */
@@ -742,17 +465,14 @@ line-height:1.45;
 .collectionCard{
 border:1px solid var(--stroke);
 background:var(--card);
-border-radius:18px;
+border-radius:20px;
 padding:16px;
-margin:16px 0;
-cursor:pointer;
-}
-
-.collectionInner{
+margin:14px 0;
 display:flex;
 align-items:center;
 justify-content:space-between;
 gap:14px;
+cursor:pointer;
 }
 
 .collectionLeft{
@@ -776,8 +496,8 @@ margin-top:4px;
 }
 
 .collectionArrow{
-height:32px;
-padding:0 12px;
+height:38px;
+padding:0 18px;
 border-radius:999px;
 display:flex;
 align-items:center;
@@ -785,34 +505,20 @@ justify-content:center;
 background:var(--pillColor);
 color:#fff;
 font-weight:700;
-font-size:12px;
+font-size:13px;
 flex:0 0 auto;
 }
-
-
 
 /* COLLECTION VIEW */
 
 .collectionView{
 position:fixed;
 inset:0;
-background:transparent;
+background:#000;
 z-index:9998;
 display:none;
 flex-direction:column;
 overflow:hidden;
-}
-
-body.collectionOpen .wrap,
-body.collectionOpen .tabs,
-body.mediaRuntimeOpen .wrap,
-body.mediaRuntimeOpen .tabs{
-visibility:hidden;
-}
-
-body.mediaRuntimeOpen .collectionView{
-visibility:hidden;
-pointer-events:none;
 }
 
 .collectionView.active{
@@ -826,8 +532,7 @@ align-items:center;
 justify-content:space-between;
 padding:0 16px;
 border-bottom:1px solid rgba(255,255,255,.08);
-background:rgba(0,0,0,.72);
-backdrop-filter:blur(12px);
+background:#000;
 flex:0 0 auto;
 }
 
@@ -861,22 +566,16 @@ padding:16px;
 
 .media-card{
 border:1px solid var(--stroke);
-background:rgba(255,255,255,0.04);
-border-radius:16px;
-padding:14px;
-margin:14px 0;
+background:var(--card);
+border-radius:18px;
+padding:12px;
+margin:10px 0;
 display:flex;
 align-items:center;
 gap:10px;
 width:100%;
 min-width:0;
 overflow:hidden;
-cursor:pointer;
-}
-
-.media-card.selected{
-background:rgba(255,255,255,0.10);
-border-color:rgba(255,255,255,0.28);
 }
 
 .media-thumb{
@@ -921,178 +620,12 @@ overflow:hidden;
 text-overflow:ellipsis;
 }
 
-
-/* MEDIA PRESENTATION */
-
-.card.cardPresented,
-.supportersCard.cardPresented,
-.supporterCard.cardPresented,
-.row.cardPresented,
-.innerSurface.innerPresented,
-.collectionCard.mediaPresented,
-.media-card.mediaPresented,
-.externalMediaCard.mediaPresented{
-position:relative;
-isolation:isolate;
-overflow:hidden;
-}
-
-.card.cardPresented > *:not(.mediaPresentationLayer),
-.supportersCard.cardPresented > *:not(.mediaPresentationLayer),
-.supporterCard.cardPresented > *:not(.mediaPresentationLayer),
-.row.cardPresented > *:not(.mediaPresentationLayer),
-.innerSurface.innerPresented > *:not(.mediaPresentationLayer),
-.collectionCard.mediaPresented > *:not(.mediaPresentationLayer),
-.media-card.mediaPresented > *:not(.mediaPresentationLayer),
-.externalMediaCard.mediaPresented > *:not(.mediaPresentationLayer){
-position:relative;
-z-index:2;
-}
-
-.mediaPresentationLayer{
-position:absolute;
-inset:0;
-z-index:0;
-pointer-events:none;
-overflow:hidden;
-background:transparent;
-}
-
-.mediaPresentationLayer img,
-.mediaPresentationLayer video{
-width:100%;
-height:100%;
-object-fit:cover;
-display:block;
-}
-
-.mediaPresentationLayer::after{
-content:"";
-position:absolute;
-inset:0;
-background:rgba(0,0,0,.36);
-}
-
-.mediaSectionLabel{
-font-size:12px;
-font-weight:900;
-letter-spacing:.6px;
-text-transform:uppercase;
-color:var(--muted);
-margin:18px 2px 8px;
-}
-
-.externalMediaCard{
-border:1px solid var(--stroke);
-background:var(--card);
-border-radius:18px;
-padding:16px;
-margin:16px 0;
-}
-
-.externalMediaTop{
-display:flex;
-align-items:center;
-gap:12px;
-}
-
-.externalMediaThumb{
-width:54px;
-height:54px;
-border-radius:14px;
-overflow:hidden;
-border:1px solid var(--stroke);
-background:rgba(255,255,255,0.05);
-flex:0 0 auto;
-display:grid;
-place-items:center;
-font-weight:900;
-}
-
-.externalMediaThumb img{
-width:100%;
-height:100%;
-object-fit:cover;
-display:block;
-}
-
-.externalMediaBody{
-flex:1;
-min-width:0;
-}
-
-.externalMediaProvider{
-font-size:11px;
-font-weight:900;
-text-transform:uppercase;
-letter-spacing:.4px;
-color:var(--muted);
-margin-bottom:3px;
-}
-
-.externalMediaTitle{
-font-size:15px;
-font-weight:850;
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis;
-}
-
-.externalMediaDescription{
-font-size:12px;
-color:var(--muted);
-margin-top:3px;
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis;
-}
-
-.externalMediaExpandBtn{
-height:32px;
-padding:0 14px;
-border:none;
-border-radius:999px;
-background:var(--pillColor);
-color:#fff;
-font-size:12px;
-font-weight:800;
-cursor:pointer;
-flex:0 0 auto;
-}
-
-.externalMediaEmbedMount{
-width:100%;
-margin-top:12px;
-height:0;
-max-height:0;
-overflow:hidden;
-border-radius:16px;
-transition:height .25s ease,max-height .25s ease;
-background:transparent;
-}
-
-.externalMediaEmbedMount.expanded{
-height:520px;
-max-height:65vh;
-}
-
-.externalMediaEmbedMount iframe,
-.externalMediaEmbedMount picflow-gallery{
-width:100%;
-height:520px;
-max-height:65vh;
-border:none;
-border-radius:16px;
-background:#000;
-display:block;
-}
-
 /* INTERNAL MEDIA RUNTIME */
 
 .mediaRuntime{
 position:fixed;
 inset:0;
-background:transparent;
+background:#000;
 z-index:9999;
 display:none;
 flex-direction:column;
@@ -1109,8 +642,7 @@ align-items:center;
 justify-content:space-between;
 padding:0 16px;
 border-bottom:1px solid rgba(255,255,255,.08);
-background:rgba(0,0,0,.72);
-backdrop-filter:blur(12px);
+background:#000;
 flex:0 0 auto;
 }
 
@@ -1141,31 +673,20 @@ display:flex;
 align-items:center;
 justify-content:center;
 overflow:hidden;
-background:transparent;
+background:#000;
 position:relative;
 }
 
 .mediaRuntime video,
-.mediaRuntime iframe,
-.mediaRuntime img{
+.mediaRuntime iframe{
 width:100%;
 height:100%;
 border:none;
-background:transparent;
+background:#000;
 }
 
-.mediaRuntime video,
-.mediaRuntime img{
+.mediaRuntime video{
 object-fit:contain;
-}
-
-.mediaRuntime img{
-max-width:100%;
-max-height:100%;
-width:auto;
-height:auto;
-display:block;
-border-radius:18px;
 }
 
 .mediaRuntime iframe{
@@ -1177,13 +698,11 @@ min-height:100%;
 
 <body>
 
-<div id="appBackground" class="appBackground" aria-hidden="true"></div>
-
 <div class="wrap">
 
 <div class="top">
 <div class="brand">
-<img id="logo" src="icons/icon-192-v37.png?v=1782350959308">
+<img id="logo" src="icons/icon-192-v37.png?v=1780934824725">
 <div class="name" id="name">Creator</div>
 </div>
 
@@ -1192,20 +711,9 @@ i
 </button>
 </div>
 
-<div class="hero"></div>
-
-<section id="communitySection" class="hidden">
-<div class="card">
-<div class="communityHeader">
-<img id="communityIcon" class="communityIcon" src="" alt="">
-<div class="h1" id="communityTitle">Community</div>
+<div class="hero">
+<img id="heroImg" src="icons/icon-512-v37.png?v=1780934824725">
 </div>
-<p class="p" id="communityDescription">Join the community.</p>
-<a id="communityBtn" class="btn" href="#" target="_blank" rel="noopener">Enter Community</a>
-<div id="communityEmbedMount" class="communityEmbedMount hidden"></div>
-<button id="communityExpandBtn" class="communityExpandBtn hidden" type="button">Expand</button>
-</div>
-</section>
 
 <section id="supportersSection" class="hidden">
 <div class="supportersCard">
@@ -1216,10 +724,8 @@ i
 
 <section id="view-home">
 <div class="card">
-<div class="homeInnerSurface innerSurface">
 <div class="h1">Home</div>
 <p class="p" id="bio"></p>
-</div>
 <div id="connectMount"></div>
 </div>
 </section>
@@ -1234,18 +740,20 @@ i
 </div>
 </section>
 
+<section id="view-community" class="hidden">
+<div class="card">
+<div class="h1" id="communityTitle">Community</div>
+<p class="p" id="communityDescription">Join the community.</p>
+<a id="communityBtn" class="btn" href="#" target="_blank" rel="noopener">Enter Community</a>
+</div>
+</section>
 
 <section id="view-live" class="hidden">
-<p class="p hidden" id="liveStatus"></p>
-<div id="livePlayer" class="livePlayer hidden">
-<iframe
-id="liveFrame"
-allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
-allowfullscreen="true">
-</iframe>
+<div class="card">
+<div class="h1">Live</div>
+<p class="p" id="liveStatus"></p>
+<a id="liveBtn" class="btn" href="./live.html">Watch Live</a>
 </div>
-<button id="liveDescriptionToggle" class="liveDescriptionToggle hidden" type="button">▼ Description</button>
-<p class="liveDescription hidden" id="liveDescription"></p>
 </section>
 
 <div class="baseFooter">Powered by BASE</div>
@@ -1257,6 +765,7 @@ allowfullscreen="true">
 <div class="tab active" data-id="home">Home</div>
 <div class="tab" data-id="media">Media</div>
 <div class="tab" data-id="links">Links</div>
+<div id="communityTab" class="tab hidden" data-id="community">Community</div>
 <div class="tab" data-id="live">Live</div>
 </div>
 </nav>
@@ -1355,20 +864,6 @@ const CONTENT_URL="./content.json"
 const POLL_INTERVAL=15000
 
 let previewMode=false
-let activeCommunityEmbed=""
-let activeBackgroundAsset=""
-let activeBackgroundVideo=null
-let backgroundVideoRecoveryTimer=null
-let activeChimeAsset=""
-let chimeAudio=null
-let chimePlayed=false
-let chimePending=false
-let communityExpanded=false
-let liveDescriptionExpanded=false
-let activeView="home"
-let currentState=null
-let activeHeroAsset=""
-let activeHeroVideo=null
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -1451,634 +946,6 @@ url=url.replace("/view","/preview")
 }
 
 return url
-}
-
-
-function safeAssetURL(url){
-
-if(!url) return "";
-
-const normalized=normalizeURL(url);
-const safe=safeURL(normalized);
-
-if(!safe || safe.startsWith("mailto:")) return "";
-
-return safe;
-
-}
-
-function isImageAsset(url){
-
-if(!url) return false;
-
-const clean=url.toLowerCase().split("?")[0];
-
-return(
-clean.endsWith(".jpg") ||
-clean.endsWith(".jpeg") ||
-clean.endsWith(".png") ||
-clean.endsWith(".gif") ||
-clean.endsWith(".webp") ||
-clean.endsWith(".svg")
-);
-
-}
-
-function isVideoAsset(url){
-
-if(!url) return false;
-
-const clean=url.toLowerCase().split("?")[0];
-
-return(
-clean.endsWith(".mp4") ||
-clean.endsWith(".webm") ||
-clean.endsWith(".mov") ||
-clean.endsWith(".m4v")
-);
-
-}
-
-
-function isAudioAsset(url){
-
-if(!url) return false;
-
-const clean=url.toLowerCase().split("?")[0];
-
-return(
-clean.endsWith(".mp3") ||
-clean.endsWith(".m4a") ||
-clean.endsWith(".wav") ||
-clean.endsWith(".ogg") ||
-clean.endsWith(".aac") ||
-clean.endsWith(".webm")
-);
-
-}
-
-
-function getAppIconSource(d){
-
-const rawUrl=String(
-(d.appIcon && (d.appIcon.url || d.appIcon.image || d.appIcon.src)) ||
-d.appIcon ||
-d.icon ||
-d.logo ||
-d.icon192 ||
-d.icon512 ||
-""
-).trim();
-
-return safeAssetURL(rawUrl);
-
-}
-
-function applyAppIcon(d){
-
-const logo=document.getElementById("logo");
-const iconSource=getAppIconSource(d);
-
-if(iconSource){
-logo.src=iconSource;
-}
-
-}
-
-function getHeroConfig(d){
-
-const hero=d.hero || d.heroMedia || {};
-
-if(hero.enabled===false) return null;
-
-const rawImage=String(
-hero.image ||
-hero.url ||
-hero.src ||
-d.heroImage ||
-d.heroImageUrl ||
-d.hero_media_image ||
-""
-).trim();
-
-const rawVideo=String(
-hero.video ||
-d.heroVideo ||
-d.heroVideoUrl ||
-d.hero_media_video ||
-""
-).trim();
-
-let type=String(hero.type || hero.kind || "").toLowerCase().trim();
-let src="";
-
-if(type==="video"){
-src=safeAssetURL(rawVideo || rawImage);
-}else if(type==="image"){
-src=safeAssetURL(rawImage || rawVideo);
-}else if(rawVideo){
-src=safeAssetURL(rawVideo);
-type="video";
-}else if(rawImage){
-src=safeAssetURL(rawImage);
-type="image";
-}
-
-if(!src) return null;
-
-if(type!=="video" && type!=="image"){
-if(isVideoAsset(src)){
-type="video";
-}else if(isImageAsset(src)){
-type="image";
-}else{
-type="image";
-}
-}
-
-return{
-type:type,
-src:src
-};
-
-}
-
-function getHeroAnimationName(d,heroData){
-
-const raw=String(
-(heroData && (heroData.animation || heroData.animationType || heroData.motion || heroData.effect)) ||
-(d && (d.heroAnimation || d.heroAnimationType || d.heroMotion || d.heroEffect)) ||
-""
-).toLowerCase().trim();
-
-if(raw==="spin" || raw==="rotate"){
-return "spin";
-}
-
-return "";
-
-}
-
-function applyHeroAnimation(element,animationName){
-
-if(!element) return;
-
-element.classList.remove("heroSpin");
-
-if(animationName==="spin"){
-element.classList.add("heroSpin");
-}
-
-}
-
-function stopHeroVideo(){
-
-if(activeHeroVideo){
-try{
-activeHeroVideo.pause();
-}catch(e){}
-}
-
-activeHeroVideo=null;
-
-}
-
-function applyHero(d){
-
-const hero=document.querySelector(".hero");
-
-if(!hero) return;
-
-const heroData=d.hero || d.heroMedia || {};
-const heroAnimation=getHeroAnimationName(d,heroData);
-const heroDisabled=heroData.enabled===false;
-const config=getHeroConfig(d);
-
-if(activeView==="live" || heroDisabled){
-stopHeroVideo();
-activeHeroAsset="";
-hero.innerHTML="";
-hero.classList.add("hidden");
-return;
-}
-
-if(!config){
-
-const fallbackSrc="icons/icon-512-v37.png?v=1782058053694";
-const assetKey="fallback|" + fallbackSrc + "|" + heroAnimation;
-
-stopHeroVideo();
-hero.classList.remove("hidden");
-
-if(assetKey===activeHeroAsset){
-return;
-}
-
-activeHeroAsset=assetKey;
-hero.innerHTML="";
-
-const img=document.createElement("img");
-img.src=fallbackSrc;
-img.alt="";
-
-applyHeroAnimation(img,heroAnimation);
-
-hero.appendChild(img);
-
-return;
-
-}
-
-const assetKey=config.type + "|" + config.src + "|" + heroAnimation;
-
-hero.classList.remove("hidden");
-
-if(assetKey===activeHeroAsset){
-return;
-}
-
-activeHeroAsset=assetKey;
-hero.innerHTML="";
-
-if(config.type==="video"){
-
-const video=document.createElement("video");
-video.src=config.src;
-video.autoplay=true;
-video.loop=true;
-video.muted=true;
-video.defaultMuted=true;
-video.playsInline=true;
-video.controls=false;
-video.disablePictureInPicture=true;
-video.setAttribute("autoplay","");
-video.setAttribute("loop","");
-video.setAttribute("muted","");
-video.setAttribute("playsinline","");
-video.setAttribute("webkit-playsinline","");
-video.preload="auto";
-
-applyHeroAnimation(video,heroAnimation);
-
-hero.appendChild(video);
-activeHeroVideo=video;
-
-try{
-const playPromise=video.play();
-if(playPromise && typeof playPromise.catch==="function"){
-playPromise.catch(()=>{});
-}
-}catch(e){}
-
-return;
-
-}
-
-stopHeroVideo();
-
-const img=document.createElement("img");
-img.src=config.src;
-img.alt="";
-
-applyHeroAnimation(img,heroAnimation);
-
-hero.appendChild(img);
-
-}
-
-function getChimeConfig(d){
-
-const chime=d.chime || d.appChime || d.openChime || {};
-
-if(chime.enabled!==true) return null;
-
-const rawUrl=String(
-chime.url ||
-chime.file ||
-chime.audio ||
-d.chimeUrl ||
-d.appChimeUrl ||
-""
-).trim();
-
-const src=safeAssetURL(rawUrl);
-
-if(!src) return null;
-
-const volumeNumber=Number(chime.volume);
-let volume=.65;
-
-if(!Number.isNaN(volumeNumber)){
-volume=Math.max(0,Math.min(1,volumeNumber));
-}
-
-return{
-src:src,
-volume:volume
-};
-
-}
-
-function playChime(){
-
-if(!chimeAudio || chimePlayed) return;
-
-try{
-
-chimeAudio.currentTime=0;
-
-const result=chimeAudio.play();
-
-if(result && typeof result.then==="function"){
-
-result.then(()=>{
-chimePlayed=true;
-chimePending=false;
-}).catch(()=>{
-chimePending=true;
-});
-
-}else{
-chimePlayed=true;
-chimePending=false;
-}
-
-}catch(e){
-chimePending=true;
-}
-
-}
-
-function unlockChime(){
-
-if(chimePending && !chimePlayed){
-playChime();
-}
-
-}
-
-document.addEventListener("pointerdown",unlockChime,{passive:true});
-document.addEventListener("keydown",unlockChime);
-
-function applyCardAnimation(d){
-
-const raw=String(
-(d.cardAnimation && (d.cardAnimation.type || d.cardAnimation.name || d.cardAnimation.style)) ||
-(d.animation && (d.animation.type || d.animation.name || d.animation.style)) ||
-d.cardAnimation ||
-d.animation ||
-""
-).toLowerCase().trim();
-
-document.body.classList.remove("cardAnimFloat","cardAnimPulse","cardAnimGlow");
-
-if(raw==="float"){
-document.body.classList.add("cardAnimFloat");
-return;
-}
-
-if(raw==="pulse"){
-document.body.classList.add("cardAnimPulse");
-return;
-}
-
-if(raw==="glow"){
-document.body.classList.add("cardAnimGlow");
-return;
-}
-
-}
-
-function applyChime(d){
-
-const config=getChimeConfig(d);
-
-if(!config){
-activeChimeAsset="";
-chimeAudio=null;
-chimePlayed=false;
-chimePending=false;
-return;
-}
-
-if(config.src!==activeChimeAsset){
-activeChimeAsset=config.src;
-chimePlayed=false;
-chimePending=false;
-chimeAudio=new Audio();
-chimeAudio.preload="auto";
-chimeAudio.volume=config.volume;
-chimeAudio.src=config.src;
-}
-
-if(!chimePlayed && !chimePending){
-playChime();
-}
-
-}
-
-function getBackgroundConfig(d){
-
-const background=d.background || {};
-
-if(background.enabled===false) return null;
-
-const rawUrl=String(
-background.url ||
-background.image ||
-background.video ||
-d.backgroundImage ||
-d.backgroundVideo ||
-""
-).trim();
-
-const src=safeAssetURL(rawUrl);
-
-if(!src) return null;
-
-let type=String(background.type || "").toLowerCase().trim();
-
-if(!type){
-
-if(background.video || d.backgroundVideo || isVideoAsset(src)){
-type="video";
-}else if(background.image || d.backgroundImage || isImageAsset(src)){
-type="image";
-}
-
-}
-
-if(type!=="video" && type!=="image"){
-return null;
-}
-
-return{
-type:type,
-src:src
-};
-
-}
-
-
-function stopBackgroundVideoRecovery(){
-
-if(backgroundVideoRecoveryTimer){
-clearInterval(backgroundVideoRecoveryTimer);
-backgroundVideoRecoveryTimer=null;
-}
-
-activeBackgroundVideo=null;
-
-}
-
-function resumeBackgroundVideo(){
-
-const video=activeBackgroundVideo;
-
-if(!video) return;
-
-if(document.hidden) return;
-
-try{
-
-video.muted=true;
-video.defaultMuted=true;
-video.setAttribute("muted","");
-video.setAttribute("playsinline","");
-video.setAttribute("webkit-playsinline","");
-
-const playPromise=video.play();
-
-if(playPromise && typeof playPromise.catch==="function"){
-playPromise.catch(()=>{});
-}
-
-}catch(e){}
-
-}
-
-function startBackgroundVideoRecovery(video){
-
-stopBackgroundVideoRecovery();
-
-activeBackgroundVideo=video;
-
-video.addEventListener("pause",()=>{
-setTimeout(resumeBackgroundVideo,250);
-});
-
-video.addEventListener("stalled",()=>{
-setTimeout(resumeBackgroundVideo,250);
-});
-
-video.addEventListener("suspend",()=>{
-setTimeout(resumeBackgroundVideo,250);
-});
-
-video.addEventListener("ended",()=>{
-try{
-video.currentTime=0;
-}catch(e){}
-setTimeout(resumeBackgroundVideo,250);
-});
-
-backgroundVideoRecoveryTimer=setInterval(()=>{
-
-if(!activeBackgroundVideo || document.hidden) return;
-
-if(activeBackgroundVideo.paused || activeBackgroundVideo.readyState < 2){
-resumeBackgroundVideo();
-}
-
-},3000);
-
-resumeBackgroundVideo();
-
-}
-
-document.addEventListener("visibilitychange",()=>{
-
-if(!document.hidden){
-setTimeout(resumeBackgroundVideo,250);
-}
-
-});
-
-window.addEventListener("pageshow",()=>{
-setTimeout(resumeBackgroundVideo,250);
-});
-
-function applyBackground(d){
-
-const appBackground=document.getElementById("appBackground");
-
-if(d.backgroundColor){
-document.body.style.background=d.backgroundColor;
-}else{
-document.body.style.background="var(--bg)";
-}
-
-const config=getBackgroundConfig(d);
-
-if(!config){
-stopBackgroundVideoRecovery();
-activeBackgroundAsset="";
-appBackground.innerHTML="";
-appBackground.classList.remove("active");
-return;
-}
-
-const assetKey=config.type + "|" + config.src;
-
-if(assetKey===activeBackgroundAsset){
-appBackground.classList.add("active");
-return;
-}
-
-activeBackgroundAsset=assetKey;
-appBackground.innerHTML="";
-
-if(config.type==="image"){
-
-stopBackgroundVideoRecovery();
-
-const img=document.createElement("img");
-img.src=config.src;
-img.alt="";
-
-appBackground.appendChild(img);
-appBackground.classList.add("active");
-
-return;
-
-}
-
-if(config.type==="video"){
-
-const video=document.createElement("video");
-video.src=config.src;
-video.autoplay=true;
-video.loop=true;
-video.muted=true;
-video.defaultMuted=true;
-video.playsInline=true;
-video.controls=false;
-video.disablePictureInPicture=true;
-video.setAttribute("autoplay","");
-video.setAttribute("loop","");
-video.setAttribute("muted","");
-video.setAttribute("playsinline","");
-video.setAttribute("webkit-playsinline","");
-video.setAttribute("aria-hidden","true");
-video.preload="auto";
-
-appBackground.appendChild(video);
-appBackground.classList.add("active");
-
-startBackgroundVideoRecovery(video);
-
-}
-
 }
 
 function isVideoUrl(url){
@@ -2177,29 +1044,13 @@ function getEmbedConfig(url){
 
 if(!url) return null
 
-const lower=url.toLowerCase().split("?")[0]
-
-if(
-lower.endsWith(".jpg") ||
-lower.endsWith(".jpeg") ||
-lower.endsWith(".png") ||
-lower.endsWith(".gif") ||
-lower.endsWith(".webp") ||
-lower.endsWith(".svg")
-){
-
-return{
-type:"image",
-src:url
-}
-
-}
+const lower=url.toLowerCase()
 
 if(
 lower.endsWith(".mp4") ||
 lower.endsWith(".webm") ||
 lower.endsWith(".mov") ||
-lower.endsWith(".m4v")
+url.includes("./media/")
 ){
 
 return{
@@ -2259,58 +1110,23 @@ function closeMediaRuntime(){
 mediaRuntime.classList.remove("active")
 mediaRuntimeBody.innerHTML=""
 
-document.body.classList.remove("mediaRuntimeOpen")
-
-if(!collectionView.classList.contains("active")){
 document.body.style.overflow=""
-}else{
-document.body.style.overflow="hidden"
-}
 
 }
 
 function openMediaRuntime(item){
 
-if(!item) return
-
-const rawSource=String(
-item.embedUrl ||
-item.embedURL ||
-item.embed_url ||
-item.embed ||
-item.url ||
-""
-).trim()
-
-const source=safeAssetURL(rawSource)
-
-if(!source) return
+if(!item || !item.url) return
 
 mediaRuntimeBody.innerHTML=""
 
 document.body.style.overflow="hidden"
 
-mediaRuntimeTitle.textContent=item.title || item.name || "Media"
+mediaRuntimeTitle.textContent=item.title || "Media"
 
-const config=getEmbedConfig(source)
+const config=getEmbedConfig(item.url)
 
 if(!config) return
-
-if(config.type==="image"){
-
-const img=document.createElement("img")
-
-img.src=config.src
-img.alt=item.title || item.name || "Media"
-
-mediaRuntimeBody.appendChild(img)
-
-document.body.classList.add("mediaRuntimeOpen")
-mediaRuntime.classList.add("active")
-
-return
-
-}
 
 if(config.type==="video"){
 
@@ -2324,7 +1140,6 @@ video.src=config.src
 
 mediaRuntimeBody.appendChild(video)
 
-document.body.classList.add("mediaRuntimeOpen")
 mediaRuntime.classList.add("active")
 
 return
@@ -2346,7 +1161,6 @@ iframe.referrerPolicy="strict-origin-when-cross-origin"
 
 mediaRuntimeBody.appendChild(iframe)
 
-document.body.classList.add("mediaRuntimeOpen")
 mediaRuntime.classList.add("active")
 
 return
@@ -2359,514 +1173,6 @@ window.open(config.src,"_blank","noopener")
 
 mediaRuntimeClose.onclick=closeMediaRuntime
 
-
-function firstMediaPresentationSource(){
-
-for(let i=0;i<arguments.length;i++){
-const obj=arguments[i];
-if(!obj || typeof obj!=="object") continue;
-
-const direct=obj.mediaPresentation || obj.cardPresentation || obj.presentation || obj.cardStyle || obj.mediaCard || obj.mediaCardPresentation || null;
-
-if(direct && typeof direct==="object") return direct;
-
-if(
-obj.mediaCardColor || obj.cardColor || obj.color ||
-obj.mediaCardWallpaper || obj.cardWallpaper || obj.wallpaper || obj.backgroundImage || obj.image ||
-obj.mediaCardVideo || obj.cardVideo || obj.video || obj.backgroundVideo
-){
-return obj;
-}
-
-}
-
-return null;
-
-}
-
-function getMediaPresentationConfig(){
-
-const source=firstMediaPresentationSource.apply(null,arguments);
-
-if(!source || source.enabled===false) return null;
-
-const style=String(
-source.style ||
-source.cardStyle ||
-source.type ||
-source.kind ||
-source.mode ||
-source.value ||
-""
-).toLowerCase().trim();
-
-if(
-style==="default" ||
-style==="base" ||
-style==="none" ||
-style==="off" ||
-style==="transparent"
-){
-return null;
-}
-
-const rawColor=String(
-source.color ||
-source.cardColor ||
-source.mediaCardColor ||
-source.backgroundColor ||
-""
-).trim();
-
-const rawWallpaper=String(
-source.wallpaper ||
-source.cardWallpaper ||
-source.mediaCardWallpaper ||
-source.backgroundImage ||
-source.image ||
-""
-).trim();
-
-const rawVideo=String(
-source.video ||
-source.cardVideo ||
-source.mediaCardVideo ||
-source.backgroundVideo ||
-""
-).trim();
-
-const video=safeAssetURL(rawVideo);
-const wallpaper=safeAssetURL(rawWallpaper);
-
-if(video && (style==="video" || isVideoAsset(video) || !rawColor && !wallpaper)){
-return{type:"video",src:video,color:rawColor};
-}
-
-if(wallpaper && (style==="wallpaper" || style==="image" || isImageAsset(wallpaper) || !rawColor)){
-return{type:"wallpaper",src:wallpaper,color:rawColor};
-}
-
-if(rawColor){
-return{type:"color",color:rawColor};
-}
-
-if(video){
-return{type:"video",src:video,color:rawColor};
-}
-
-if(wallpaper){
-return{type:"wallpaper",src:wallpaper,color:rawColor};
-}
-
-return null;
-
-}
-
-function applyMediaPresentation(card,config,scope){
-
-if(!card) return;
-
-card.querySelectorAll(":scope > .mediaPresentationLayer").forEach(layer=>{
-layer.remove();
-});
-
-card.style.background="";
-card.classList.remove("cardPresented","mediaPresented","innerPresented");
-
-if(!config){
-return;
-}
-
-if(scope==="global"){
-card.classList.add("cardPresented");
-}else if(scope==="inner"){
-card.classList.add("innerPresented");
-}else{
-card.classList.add("mediaPresented");
-}
-
-if(config.color){
-card.style.background=config.color;
-}
-
-if(config.type==="color"){
-return;
-}
-
-if(config.type==="wallpaper" && config.src){
-
-const layer=document.createElement("div");
-layer.className="mediaPresentationLayer";
-
-const img=document.createElement("img");
-img.src=config.src;
-img.alt="";
-
-layer.appendChild(img);
-card.insertBefore(layer,card.firstChild);
-
-return;
-
-}
-
-if(config.type==="video" && config.src){
-
-const layer=document.createElement("div");
-layer.className="mediaPresentationLayer";
-
-const video=document.createElement("video");
-video.src=config.src;
-video.autoplay=true;
-video.loop=true;
-video.muted=true;
-video.defaultMuted=true;
-video.playsInline=true;
-video.controls=false;
-video.disablePictureInPicture=true;
-video.setAttribute("autoplay","");
-video.setAttribute("loop","");
-video.setAttribute("muted","");
-video.setAttribute("playsinline","");
-video.setAttribute("webkit-playsinline","");
-video.setAttribute("aria-hidden","true");
-video.preload="metadata";
-
-layer.appendChild(video);
-card.insertBefore(layer,card.firstChild);
-
-try{
-const playPromise=video.play();
-if(playPromise && typeof playPromise.catch==="function"){
-playPromise.catch(()=>{});
-}
-}catch(e){}
-
-}
-
-}
-
-function getGlobalCardPresentationConfig(d){
-
-if(!d) return null;
-
-const gateway=d.mediaGateway || {};
-
-return getMediaPresentationConfig(
-d.cardPresentation,
-d.mediaPresentation,
-d.mediaCardPresentation,
-d.cardStyle,
-gateway.cardPresentation,
-gateway.mediaPresentation,
-gateway.mediaCardPresentation,
-gateway.cardStyle
-);
-
-}
-
-function getInnerSurfacePresentationConfig(d){
-
-if(!d) return null;
-
-const gateway=d.mediaGateway || {};
-
-return getMediaPresentationConfig(
-d.innerSurfacePresentation,
-d.innerSurface,
-d.innerCardPresentation,
-d.innerCardStyle,
-d.contentSurfacePresentation,
-d.contentSurface,
-gateway.innerSurfacePresentation,
-gateway.innerSurface,
-gateway.innerCardPresentation,
-gateway.innerCardStyle,
-gateway.contentSurfacePresentation,
-gateway.contentSurface
-);
-
-}
-
-function applyInnerSurfacePresentation(d){
-
-const config=getInnerSurfacePresentationConfig(d);
-
-document.querySelectorAll(".innerSurface").forEach(surface=>{
-applyMediaPresentation(surface,config,"inner");
-});
-
-}
-
-function applyGlobalCardPresentation(d){
-
-const config=getGlobalCardPresentationConfig(d);
-
-const selector=[
-".card",
-".supportersCard"
-].join(",");
-
-document.querySelectorAll(selector).forEach(card=>{
-applyMediaPresentation(card,config,"global");
-});
-
-}
-
-function normalizeExternalMediaList(d){
-
-const gateway=d.mediaGateway || {};
-const possible=[
-
-gateway.externalMedia,
-gateway.external,
-gateway.externalItems,
-gateway.externalMediaItems,
-gateway.providers,
-gateway.galleries,
-d.externalMedia,
-d.externalMediaItems,
-d.externalGalleries,
-d.mediaExternal
-
-];
-
-let output=[];
-
-possible.forEach(value=>{
-
-if(!value) return;
-
-if(Array.isArray(value)){
-output=output.concat(value);
-return;
-}
-
-if(Array.isArray(value.items)){
-output=output.concat(value.items);
-return;
-}
-
-if(Array.isArray(value.collections)){
-output=output.concat(value.collections);
-return;
-}
-
-if(typeof value==="object"){
-output.push(value);
-}
-
-});
-
-return output.filter(item=>{
-if(!item || item.enabled===false) return false;
-return Boolean(
-String(item.name||item.title||item.provider||"").trim() ||
-String(item.url||item.embed||item.embedUrl||item.embedURL||item.embed_url||"").trim()
-);
-});
-
-}
-
-function ensurePicflowScript(){
-
-if(window.picflow) return;
-
-window.picflow=true;
-
-const script=document.createElement("script");
-script.src="https://picflow.com/embed/main.js";
-script.type="module";
-script.defer=true;
-document.head.appendChild(script);
-
-}
-
-function renderPicflowEmbed(mount,embedValue){
-
-const idMatch=embedValue.match(/id=["']([^"']+)["']/i);
-const tenantMatch=embedValue.match(/tenant=["']([^"']+)["']/i);
-const lightboxMatch=embedValue.match(/lightbox=["']([^"']+)["']/i);
-
-if(idMatch && tenantMatch){
-ensurePicflowScript();
-
-const gallery=document.createElement("picflow-gallery");
-gallery.setAttribute("id",idMatch[1]);
-gallery.setAttribute("tenant",tenantMatch[1]);
-gallery.setAttribute("no-padding","true");
-gallery.setAttribute("no-background","true");
-gallery.setAttribute("show-cover","true");
-
-if(lightboxMatch){
-gallery.setAttribute("lightbox",lightboxMatch[1]);
-}
-
-mount.appendChild(gallery);
-return true;
-}
-
-if(embedValue.includes("picflow.com/embed/main.js") || embedValue.includes("<picflow-gallery")){
-mount.innerHTML=embedValue;
-ensurePicflowScript();
-return true;
-}
-
-return false;
-
-}
-
-function renderExternalEmbed(mount,item){
-
-mount.innerHTML="";
-
-const embedValue=String(
-item.embed ||
-item.embedUrl ||
-item.embedURL ||
-item.embed_url ||
-""
-).trim();
-
-if(embedValue){
-
-if(renderPicflowEmbed(mount,embedValue)){
-return;
-}
-
-const safeEmbed=safeURL(embedValue);
-
-if(safeEmbed){
-const iframe=document.createElement("iframe");
-iframe.src=safeEmbed;
-iframe.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen";
-iframe.allowFullscreen=true;
-iframe.referrerPolicy="strict-origin-when-cross-origin";
-mount.appendChild(iframe);
-return;
-}
-
-}
-
-const rawUrl=String(item.url || "").trim();
-const safe=safeURL(rawUrl);
-
-if(safe){
-const iframe=document.createElement("iframe");
-iframe.src=safe;
-iframe.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen";
-iframe.allowFullscreen=true;
-iframe.referrerPolicy="strict-origin-when-cross-origin";
-mount.appendChild(iframe);
-}
-
-}
-
-function createMediaSectionLabel(text){
-
-const label=document.createElement("div");
-label.className="mediaSectionLabel";
-label.textContent=text;
-return label;
-
-}
-
-function renderExternalMedia(container,d){
-
-const items=normalizeExternalMediaList(d);
-
-if(items.length===0) return;
-
-container.appendChild(createMediaSectionLabel("Gallery / Archive"));
-
-items.forEach(item=>{
-
-const card=document.createElement("div");
-card.className="externalMediaCard";
-
-const presentation=getMediaPresentationConfig(item,d.mediaGateway || {}) || getGlobalCardPresentationConfig(d);
-applyMediaPresentation(card,presentation);
-
-const top=document.createElement("div");
-top.className="externalMediaTop innerSurface";
-applyMediaPresentation(top,getInnerSurfacePresentationConfig(d),"inner");
-
-const thumb=document.createElement("div");
-thumb.className="externalMediaThumb";
-
-if(item.thumbnail || item.thumb || item.image){
-const img=document.createElement("img");
-img.src=normalizeURL(item.thumbnail || item.thumb || item.image);
-thumb.appendChild(img);
-}else{
-thumb.textContent="↗";
-}
-
-const body=document.createElement("div");
-body.className="externalMediaBody";
-
-const provider=document.createElement("div");
-provider.className="externalMediaProvider";
-provider.textContent=item.provider || "External Media";
-
-const title=document.createElement("div");
-title.className="externalMediaTitle";
-title.textContent=item.name || item.title || item.provider || "Gallery";
-
-body.appendChild(provider);
-body.appendChild(title);
-
-if(item.description || item.desc){
-const desc=document.createElement("div");
-desc.className="externalMediaDescription";
-desc.textContent=item.description || item.desc;
-body.appendChild(desc);
-}
-
-const btn=document.createElement("button");
-btn.className="externalMediaExpandBtn";
-btn.type="button";
-btn.textContent=item.buttonText || "Expand";
-
-const mount=document.createElement("div");
-mount.className="externalMediaEmbedMount";
-
-let rendered=false;
-let expanded=false;
-
-btn.onclick=()=>{
-expanded=!expanded;
-mount.classList.toggle("expanded",expanded);
-btn.textContent=expanded ? "Collapse" : (item.buttonText || "Expand");
-
-if(expanded && !rendered){
-renderExternalEmbed(mount,item);
-rendered=true;
-}
-};
-
-const hasEmbed=Boolean(item.embed || item.embedUrl || item.embedURL || item.embed_url);
-const hasUrl=Boolean(safeURL(String(item.url || "").trim()));
-
-if(!hasEmbed && hasUrl){
-btn.textContent=item.buttonText || "Open";
-btn.onclick=()=>{
-window.open(safeURL(String(item.url || "").trim()),"_blank","noopener");
-};
-}
-
-top.appendChild(thumb);
-top.appendChild(body);
-top.appendChild(btn);
-
-card.appendChild(top);
-card.appendChild(mount);
-
-container.appendChild(card);
-
-});
-
-}
-
 /* COLLECTION VIEW */
 
 const collectionView=document.getElementById("collectionView")
@@ -2878,7 +1184,6 @@ collectionBack.onclick=()=>{
 
 collectionView.classList.remove("active")
 
-document.body.classList.remove("collectionOpen")
 document.body.style.overflow=""
 
 }
@@ -2886,11 +1191,6 @@ document.body.style.overflow=""
 function openCollection(collection){
 
 if(!collection) return
-
-const rootState=currentState || {};
-const gateway=rootState.mediaGateway || {};
-const appPresentation=getGlobalCardPresentationConfig(rootState);
-const collectionPresentation=getMediaPresentationConfig(collection,gateway) || appPresentation;
 
 collectionHeaderTitle.textContent=collection.title || "Collection"
 
@@ -2901,15 +1201,7 @@ document.body.style.overflow="hidden"
 ;(collection.items || []).forEach(item=>{
 
 const card=document.createElement("div")
-card.className="media-card innerSurface"
-applyMediaPresentation(card,getMediaPresentationConfig(item,collection,gateway) || collectionPresentation,"inner")
-
-card.onclick=()=>{
-collectionBody.querySelectorAll(".media-card.selected").forEach(activeCard=>{
-activeCard.classList.remove("selected")
-})
-card.classList.add("selected")
-}
+card.className="media-card"
 
 const thumb=document.createElement("div")
 thumb.className="media-thumb"
@@ -2950,23 +1242,41 @@ body.appendChild(desc)
 card.appendChild(thumb)
 card.appendChild(body)
 
-if(item.url || item.embed || item.embedUrl || item.embedURL || item.embed_url){
+if(item.access==="public" && item.url){
 
 const btn=document.createElement("button")
 
 btn.className="media-btn"
-btn.textContent=item.buttonText || "View"
+btn.textContent="Open"
 
-btn.onclick=(event)=>{
-event.stopPropagation()
-collectionBody.querySelectorAll(".media-card.selected").forEach(activeCard=>{
-activeCard.classList.remove("selected")
-})
-card.classList.add("selected")
+btn.onclick=()=>{
+
+const safe=safeURL(item.url)
+
+if(!safe) return
+
+if(isVideoUrl(safe)){
+
 openMediaRuntime(item)
+
+}else{
+
+window.open(safe,"_blank","noopener")
+
+}
+
 }
 
 card.appendChild(btn)
+
+}else{
+
+const locked=document.createElement("div")
+
+locked.className="media-btn media-locked"
+locked.textContent="Locked"
+
+card.appendChild(locked)
 
 }
 
@@ -2974,7 +1284,6 @@ collectionBody.appendChild(card)
 
 })
 
-document.body.classList.add("collectionOpen")
 collectionView.classList.add("active")
 
 }
@@ -2983,6 +1292,7 @@ const views={
 home:document.getElementById("view-home"),
 media:document.getElementById("view-media"),
 links:document.getElementById("view-links"),
+community:document.getElementById("view-community"),
 live:document.getElementById("view-live")
 }
 
@@ -2992,8 +1302,6 @@ t.onclick=()=>setView(t.dataset.id)
 
 function setView(id){
 
-activeView=id
-
 Object.keys(views).forEach(k=>{
 views[k].classList.toggle("hidden",k!==id)
 })
@@ -3002,40 +1310,20 @@ document.querySelectorAll(".tab").forEach(t=>{
 t.classList.toggle("active",t.dataset.id===id)
 })
 
-const supportersSection=document.getElementById("supportersSection")
-const hero=document.querySelector(".hero")
-
-document.body.classList.toggle("liveActive",id==="live")
-
-if(id==="live"){
-
-hero.classList.add("hidden")
-supportersSection.classList.add("hidden")
-
-}
-
-if(currentState){
-applyState(currentState)
-}
-
 }
 
 function applyState(d){
 
 if(!d)return;
 
-currentState=d;
-
 document.getElementById("name").textContent=d.name||"";
 document.getElementById("bio").textContent=d.bio||"";
 
 document.documentElement.style.setProperty('--pillColor',d.pillColor||"#000");
 
-applyAppIcon(d);
-applyHero(d);
-applyBackground(d);
-applyChime(d);
-applyCardAnimation(d);
+if(d.backgroundColor){
+document.body.style.background=d.backgroundColor;
+}
 
 const mount=document.getElementById("connectMount");
 
@@ -3054,174 +1342,41 @@ mount.appendChild(a);
 }
 
 const liveStatus=document.getElementById("liveStatus");
-const livePlayer=document.getElementById("livePlayer");
-const liveFrame=document.getElementById("liveFrame");
-const liveDescription=document.getElementById("liveDescription");
-const liveDescriptionToggle=document.getElementById("liveDescriptionToggle");
 
 if(d.live && d.live.enabled){
 liveStatus.textContent=d.live.status==="live"?"Live now":"Offline";
-
-const liveURL=safeURL(d.live.watch_url || "");
-
-if(liveURL){
-livePlayer.classList.remove("hidden");
-
-if(liveFrame.src!==liveURL){
-liveFrame.src=liveURL;
-}
-
-}else{
-livePlayer.classList.add("hidden");
-liveFrame.removeAttribute("src");
-}
-
-if(String(d.live.description || "").trim()){
-liveDescription.textContent=d.live.description;
-liveDescriptionToggle.classList.remove("hidden");
-liveDescriptionToggle.textContent=liveDescriptionExpanded ? "▲ Description" : "▼ Description";
-liveDescription.classList.toggle("hidden",!liveDescriptionExpanded);
-liveDescriptionToggle.onclick=()=>{
-liveDescriptionExpanded=!liveDescriptionExpanded;
-liveDescriptionToggle.textContent=liveDescriptionExpanded ? "▲ Description" : "▼ Description";
-liveDescription.classList.toggle("hidden",!liveDescriptionExpanded);
-};
-}else{
-liveDescriptionExpanded=false;
-liveDescription.textContent="";
-liveDescription.classList.add("hidden");
-liveDescriptionToggle.classList.add("hidden");
-liveDescriptionToggle.onclick=null;
-}
-
 }else{
 liveStatus.textContent="Unavailable";
-livePlayer.classList.add("hidden");
-liveFrame.removeAttribute("src");
-liveDescriptionExpanded=false;
-liveDescription.textContent="";
-liveDescription.classList.add("hidden");
-liveDescriptionToggle.classList.add("hidden");
-liveDescriptionToggle.onclick=null;
 }
 
 
-const communitySection=document.getElementById("communitySection");
+const communityTab=document.getElementById("communityTab");
 const community=d.community||{};
 
-const communityTitle=document.getElementById("communityTitle");
-const communityDescription=document.getElementById("communityDescription");
+if(community.enabled===true && community.url){
+
+communityTab.classList.remove("hidden");
+
+document.getElementById("communityTitle").textContent=community.name || "Community";
+document.getElementById("communityDescription").textContent=(community.provider || "Community") + " Community";
+
 const communityBtn=document.getElementById("communityBtn");
-const communityIcon=document.getElementById("communityIcon");
-const communityEmbedMount=document.getElementById("communityEmbedMount");
-const communityExpandBtn=document.getElementById("communityExpandBtn");
-
-communityEmbedMount.classList.add("hidden");
-communityEmbedMount.classList.toggle("expanded",communityExpanded);
-communityExpandBtn.classList.add("hidden");
-communityDescription.classList.remove("hidden");
-communityBtn.classList.remove("hidden");
-communityBtn.href="#";
-
-if(community.enabled===true && (community.embed || community.url)){
-
-communitySection.classList.remove("hidden");
-
-communityTitle.textContent=community.name || "Community";
-
-if(community.icon){
-communityIcon.src=normalizeURL(community.icon);
-communityIcon.style.display="block";
-}else{
-communityIcon.removeAttribute("src");
-communityIcon.style.display="none";
-}
-
-if(community.embed){
-
-communityDescription.classList.add("hidden");
-communityBtn.classList.add("hidden");
-communityEmbedMount.classList.remove("hidden");
-communityEmbedMount.classList.toggle("expanded",communityExpanded);
-communityExpandBtn.classList.remove("hidden");
-communityExpandBtn.textContent=communityExpanded ? "Collapse" : "Expand";
-communityExpandBtn.onclick=()=>{
-
-communityExpanded=!communityExpanded;
-communityEmbedMount.classList.toggle("expanded",communityExpanded);
-communityExpandBtn.textContent=communityExpanded ? "Collapse" : "Expand";
-
-};
-
-const embedValue=String(community.embed || "").trim();
-
-if(embedValue!==activeCommunityEmbed){
-
-activeCommunityEmbed=embedValue;
-communityEmbedMount.innerHTML="";
-
-if(embedValue.includes("minnit.chat")){
-
-const span=document.createElement("span");
-span.style.display="none";
-span.className="minnit-chat-sembed";
-span.setAttribute("data-chatname",embedValue);
-span.setAttribute("data-style","width:100%; height:420px; max-height:55vh;");
-span.setAttribute("data-version","1.55");
-span.textContent="Chat";
-
-communityEmbedMount.appendChild(span);
-
-const script=document.createElement("script");
-script.src="https://minnit.chat/js/embed.js?c=1772345192";
-script.defer=true;
-
-communityEmbedMount.appendChild(script);
-
-}else{
-
-const safeEmbed=safeURL(embedValue);
-
-if(safeEmbed){
-
-const iframe=document.createElement("iframe");
-iframe.src=safeEmbed;
-iframe.allow="clipboard-write; encrypted-media; fullscreen";
-iframe.referrerPolicy="strict-origin-when-cross-origin";
-
-communityEmbedMount.appendChild(iframe);
-
-}
-
-}
-
-}
-
-}else{
-
-communityExpanded=false;
-communityEmbedMount.classList.remove("expanded");
-communityExpandBtn.classList.add("hidden");
-communityDescription.textContent=(community.provider || "Community") + " Community";
 communityBtn.textContent=community.buttonText || "Enter Community";
 communityBtn.href=safeURL(community.url) || "#";
 
-}
-
 }else{
 
-communityExpanded=false;
-communityEmbedMount.classList.remove("expanded");
-communityExpandBtn.classList.add("hidden");
-communitySection.classList.add("hidden");
+communityTab.classList.add("hidden");
+
+if(document.querySelector('.tab.active')?.dataset.id==="community"){
+setView("home");
+}
 
 }
 
 renderSupporters(d);
 renderLinks(d);
 renderMedia(d);
-applyGlobalCardPresentation(d);
-applyInnerSurfacePresentation(d);
 
 }
 
@@ -3231,14 +1386,6 @@ const section=document.getElementById("supportersSection");
 const container=document.getElementById("supportersList");
 
 container.innerHTML="";
-
-if(activeView!=="home"){
-
-section.classList.add("hidden");
-
-return;
-
-}
 
 const supporters=Array.isArray(d.supporters)?d.supporters:[];
 
@@ -3276,7 +1423,7 @@ const url=safeURL(rawUrl);
 const clickable=Boolean(url);
 
 const card=document.createElement(clickable ? "a" : "div");
-card.className="supporterCard innerSurface";
+card.className="supporterCard";
 
 if(clickable){
 card.href=url;
@@ -3368,7 +1515,7 @@ if(!url)return;
 
 const a=document.createElement("a");
 
-a.className="row innerSurface";
+a.className="row";
 a.href=url;
 a.target="_blank";
 a.rel="noopener";
@@ -3412,29 +1559,16 @@ const container=document.getElementById("mediaSection");
 
 container.innerHTML="";
 
-const gateway=d.mediaGateway || {};
-const enabled=(gateway.enabled!==false);
+if(!d.mediaGateway||!d.mediaGateway.enabled)return;
 
-if(!enabled) return;
-
-const collections=Array.isArray(gateway.collections)?gateway.collections:[];
-
-if(collections.length>0){
-container.appendChild(createMediaSectionLabel("Featured Media"));
-}
+const collections=d.mediaGateway.collections||[];
 
 collections.forEach(collection=>{
 
 const card=document.createElement("div")
 card.className="collectionCard"
 
-applyMediaPresentation(card,getMediaPresentationConfig(collection,gateway) || getGlobalCardPresentationConfig(d),"global")
-
 card.onclick=()=>openCollection(collection)
-
-const inner=document.createElement("div")
-inner.className="collectionInner innerSurface"
-applyMediaPresentation(inner,getInnerSurfacePresentationConfig(d),"inner")
 
 const left=document.createElement("div")
 left.className="collectionLeft"
@@ -3457,15 +1591,12 @@ const arrow=document.createElement("div")
 arrow.className="collectionArrow"
 arrow.textContent="Open"
 
-inner.appendChild(left)
-inner.appendChild(arrow)
-card.appendChild(inner)
+card.appendChild(left)
+card.appendChild(arrow)
 
 container.appendChild(card)
 
 })
-
-renderExternalMedia(container,d)
 
 }
 
