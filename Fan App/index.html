@@ -1815,7 +1815,7 @@ const heroAnimation=getHeroAnimationName(d,heroData);
 const heroDisabled=heroData.enabled===false;
 const config=getHeroConfig(d);
 
-if(heroDisabled){
+if(activeView==="live" || heroDisabled){
 stopHeroVideo();
 activeHeroAsset="";
 hero.innerHTML="";
@@ -1941,7 +1941,7 @@ function runLaunchIntro(d){
 
 if(launchIntroResolved) return;
 
-if(!hasLaunchHero(d)){
+if(activeView==="live" || !hasLaunchHero(d)){
 finishLaunchIntro(false);
 return;
 }
@@ -3532,6 +3532,10 @@ function setView(id){
 
 if(!views[id])return;
 
+if(id===activeView){
+return;
+}
+
 activeView=id
 
 Object.keys(views).forEach(k=>{
@@ -3541,6 +3545,31 @@ views[k].classList.toggle("hidden",k!==id)
 document.querySelectorAll(".tab").forEach(t=>{
 t.classList.toggle("active",t.dataset.id===id)
 })
+
+const supportersSection=document.getElementById("supportersSection")
+const supportersList=document.getElementById("supportersList")
+const hero=document.querySelector(".hero")
+
+document.body.classList.toggle("liveActive",id==="live")
+
+if(id==="live"){
+
+hero.classList.add("hidden")
+supportersSection.classList.add("hidden")
+
+}else{
+
+if(activeHeroAsset){
+hero.classList.remove("hidden")
+}
+
+if(id==="home" && supportersList && supportersList.children.length){
+supportersSection.classList.remove("hidden")
+}else{
+supportersSection.classList.add("hidden")
+}
+
+}
 
 }
 
@@ -3907,6 +3936,14 @@ function renderSupporters(d){
 const section=document.getElementById("supportersSection");
 const container=document.getElementById("supportersList");
 
+if(activeView!=="home"){
+
+section.classList.add("hidden");
+stopSupportersAutoRotate();
+
+return;
+
+}
 
 const supporters=Array.isArray(d.supporters)?d.supporters:[];
 
