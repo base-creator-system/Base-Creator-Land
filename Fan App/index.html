@@ -6,11 +6,11 @@
 
 <title>DJ MOFIYA APP</title>
 
-<link rel="manifest" href="manifest.json?v=1782582136177">
+<link rel="manifest" href="manifest.json?v=1782480548101">
 <meta name="theme-color" content="#000000">
-<link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512-v37.png?v=1782582136177">
-<link rel="shortcut icon" type="image/png" href="icons/icon-192-v37.png?v=1782582136177">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192-v37.png?v=1782582136177">
+<link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512-v37.png?v=1782480548101">
+<link rel="shortcut icon" type="image/png" href="icons/icon-192-v37.png?v=1782480548101">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192-v37.png?v=1782480548101">
 
 <style>
 :root{
@@ -194,6 +194,9 @@ animation:baseLaunchHeroIntro .58s cubic-bezier(.2,.8,.2,1) both;
 body.launchIntroDone .top,
 body.launchIntroDone #communitySection:not(.hidden),
 body.launchIntroDone #supportersSection:not(.hidden),
+body.launchIntroDone #view-home:not(.hidden),
+body.launchIntroDone #view-media:not(.hidden),
+body.launchIntroDone #view-links:not(.hidden),
 body.launchIntroDone .baseFooter,
 body.launchIntroDone .tabs{
 animation:baseLaunchContentIn .34s ease-out both;
@@ -214,6 +217,9 @@ body.launchIntroReady .hero,
 body.launchIntroDone .top,
 body.launchIntroDone #communitySection:not(.hidden),
 body.launchIntroDone #supportersSection:not(.hidden),
+body.launchIntroDone #view-home:not(.hidden),
+body.launchIntroDone #view-media:not(.hidden),
+body.launchIntroDone #view-links:not(.hidden),
 body.launchIntroDone .baseFooter,
 body.launchIntroDone .tabs{
 animation:none;
@@ -1089,17 +1095,14 @@ z-index:0;
 pointer-events:none;
 overflow:hidden;
 background:transparent;
-border-radius:inherit;
 }
 
 .mediaPresentationLayer img,
-.mediaPresentationLayer video,
-.mediaPresentationLayer canvas{
+.mediaPresentationLayer video{
 width:100%;
 height:100%;
 object-fit:cover;
 display:block;
-border-radius:inherit;
 }
 
 .mediaPresentationLayer::after{
@@ -1107,7 +1110,6 @@ content:"";
 position:absolute;
 inset:0;
 background:rgba(0,0,0,.36);
-border-radius:inherit;
 }
 
 .mediaSectionLabel{
@@ -1320,7 +1322,7 @@ min-height:100%;
 
 <div class="top">
 <div class="brand">
-<img id="logo" src="icons/icon-192-v37.png?v=1782582136177">
+<img id="logo" src="icons/icon-192-v37.png?v=1782480548101">
 <div class="name" id="name">Creator</div>
 </div>
 
@@ -1347,6 +1349,7 @@ i
 <section id="supportersSection" class="hidden">
 <div class="supportersCard">
 <div class="supportersInnerSurface innerSurface">
+<div class="h1">Supporters</div>
 <div id="supportersList" class="supportersList"></div>
 </div>
 </div>
@@ -1515,8 +1518,6 @@ let supportersRuntimeIndex=0
 let supportersRuntimeTimer=null
 let supportersRuntimePausedUntil=0
 let activeLinksRenderSignature=""
-let activeConnectRenderSignature=""
-let sharedPresentationVideoCache={}
 let launchIntroResolved=false
 let launchIntroTimer=null
 
@@ -2681,200 +2682,6 @@ return null;
 
 }
 
-function drawSharedPresentationVideoCover(video,canvas){
-
-if(!video || !canvas || !canvas.isConnected) return;
-
-const cssWidth=canvas.offsetWidth;
-const cssHeight=canvas.offsetHeight;
-
-if(cssWidth<=0 || cssHeight<=0){
-return;
-}
-
-const ratio=window.devicePixelRatio || 1;
-const width=Math.max(1,Math.round(cssWidth * ratio));
-const height=Math.max(1,Math.round(cssHeight * ratio));
-
-const ctx=canvas.getContext("2d");
-
-if(!ctx) return;
-
-if(canvas.width!==width || canvas.height!==height){
-canvas.width=width;
-canvas.height=height;
-}
-
-const videoWidth=video.videoWidth || 1;
-const videoHeight=video.videoHeight || 1;
-const canvasRatio=width / height;
-const videoRatio=videoWidth / videoHeight;
-
-let sourceX=0;
-let sourceY=0;
-let sourceWidth=videoWidth;
-let sourceHeight=videoHeight;
-
-if(videoRatio > canvasRatio){
-sourceWidth=videoHeight * canvasRatio;
-sourceX=(videoWidth - sourceWidth) / 2;
-}else{
-sourceHeight=videoWidth / canvasRatio;
-sourceY=(videoHeight - sourceHeight) / 2;
-}
-
-ctx.clearRect(0,0,width,height);
-ctx.drawImage(video,sourceX,sourceY,sourceWidth,sourceHeight,0,0,width,height);
-
-}
-
-function runSharedPresentationVideoLoop(state,timestamp){
-
-if(!state || state.canvases.size===0){
-if(state){
-state.frame=null;
-}
-return;
-}
-
-if(document.hidden){
-state.frame=requestAnimationFrame((nextTimestamp)=>{
-runSharedPresentationVideoLoop(state,nextTimestamp);
-});
-return;
-}
-
-const now=timestamp || performance.now();
-const frameDelay=1000/15;
-
-if(!state.lastDraw || now-state.lastDraw>=frameDelay){
-state.lastDraw=now;
-
-if(state.video && state.video.readyState >= 2){
-state.canvases.forEach(canvas=>{
-if(canvas && canvas.isConnected && canvas.offsetWidth>0 && canvas.offsetHeight>0){
-drawSharedPresentationVideoCover(state.video,canvas);
-}
-});
-}
-}
-
-state.frame=requestAnimationFrame((nextTimestamp)=>{
-runSharedPresentationVideoLoop(state,nextTimestamp);
-});
-
-}
-
-function getSharedPresentationVideoState(src){
-
-if(!src) return null;
-
-let state=sharedPresentationVideoCache[src];
-
-if(state){
-return state;
-}
-
-const video=document.createElement("video");
-video.src=src;
-video.autoplay=true;
-video.loop=true;
-video.muted=true;
-video.defaultMuted=true;
-video.playsInline=true;
-video.controls=false;
-video.disablePictureInPicture=true;
-video.setAttribute("autoplay","");
-video.setAttribute("loop","");
-video.setAttribute("muted","");
-video.setAttribute("playsinline","");
-video.setAttribute("webkit-playsinline","");
-video.setAttribute("aria-hidden","true");
-video.preload="auto";
-video.style.position="fixed";
-video.style.width="1px";
-video.style.height="1px";
-video.style.left="-9999px";
-video.style.top="-9999px";
-video.style.opacity="0";
-video.style.pointerEvents="none";
-
-video.addEventListener("loadeddata",()=>{
-const state=sharedPresentationVideoCache[src];
-if(state && !state.frame && state.canvases.size>0){
-runSharedPresentationVideoLoop(state);
-}
-});
-
-document.body.appendChild(video);
-
-state={
-video:video,
-canvases:new Set(),
-frame:null,
-lastDraw:0
-};
-
-sharedPresentationVideoCache[src]=state;
-
-try{
-const playPromise=video.play();
-if(playPromise && typeof playPromise.catch==="function"){
-playPromise.catch(()=>{});
-}
-}catch(e){}
-
-return state;
-
-}
-
-function registerSharedPresentationCanvas(src,canvas){
-
-const state=getSharedPresentationVideoState(src);
-
-if(!state || !canvas) return;
-
-canvas.dataset.sharedPresentationVideo=src;
-state.canvases.add(canvas);
-
-if(!state.frame){
-runSharedPresentationVideoLoop(state);
-}
-
-}
-
-function unregisterSharedPresentationLayer(layer){
-
-if(!layer) return;
-
-layer.querySelectorAll("canvas[data-shared-presentation-video]").forEach(canvas=>{
-
-const src=canvas.dataset.sharedPresentationVideo;
-const state=sharedPresentationVideoCache[src];
-
-if(state){
-state.canvases.delete(canvas);
-
-if(state.canvases.size===0 && state.frame){
-cancelAnimationFrame(state.frame);
-state.frame=null;
-}
-
-}
-
-});
-
-}
-
-function removeMediaPresentationLayers(layers){
-
-layers.forEach(layer=>{
-unregisterSharedPresentationLayer(layer);
-layer.remove();
-});
-
-}
-
 function applyMediaPresentation(card,config,scope){
 
 if(!card) return;
@@ -2885,8 +2692,7 @@ card.style.background="";
 card.classList.remove("cardPresented","mediaPresented","innerPresented");
 
 if(!config){
-removeMediaPresentationLayers(layers);
-delete card.dataset.presentationKey;
+layers.forEach(layer=>layer.remove());
 return;
 }
 
@@ -2898,22 +2704,21 @@ card.classList.add("innerPresented");
 card.classList.add("mediaPresented");
 }
 
+if(config.color){
+card.style.background=config.color;
+}
+
 const presentationKey=[
 scope || "media",
 config.type || "",
 config.src || "",
-config.type==="color" ? (config.color || "") : ""
+config.color || ""
 ].join("|");
 
 if(config.type==="color"){
-card.style.background=config.color || "";
-removeMediaPresentationLayers(layers);
+layers.forEach(layer=>layer.remove());
 card.dataset.presentationKey=presentationKey;
 return;
-}
-
-if(config.type==="wallpaper" || config.type==="video"){
-card.style.background="transparent";
 }
 
 const currentLayer=layers[0] || null;
@@ -2922,15 +2727,15 @@ if(
 currentLayer &&
 currentLayer.dataset.presentationKey===presentationKey &&
 ((config.type==="wallpaper" && currentLayer.querySelector("img")) ||
-(config.type==="video" && currentLayer.querySelector("canvas[data-shared-presentation-video]")))
+(config.type==="video" && currentLayer.querySelector("video")))
 ){
 if(layers.length>1){
-removeMediaPresentationLayers(layers.slice(1));
+layers.slice(1).forEach(layer=>layer.remove());
 }
 return;
 }
 
-removeMediaPresentationLayers(layers);
+layers.forEach(layer=>layer.remove());
 
 if(config.type==="wallpaper" && config.src){
 
@@ -2956,19 +2761,37 @@ const layer=document.createElement("div");
 layer.className="mediaPresentationLayer";
 layer.dataset.presentationKey=presentationKey;
 
-const canvas=document.createElement("canvas");
-canvas.setAttribute("aria-hidden","true");
+const video=document.createElement("video");
+video.src=config.src;
+video.autoplay=true;
+video.loop=true;
+video.muted=true;
+video.defaultMuted=true;
+video.playsInline=true;
+video.controls=false;
+video.disablePictureInPicture=true;
+video.setAttribute("autoplay","");
+video.setAttribute("loop","");
+video.setAttribute("muted","");
+video.setAttribute("playsinline","");
+video.setAttribute("webkit-playsinline","");
+video.setAttribute("aria-hidden","true");
+video.preload="metadata";
 
-layer.appendChild(canvas);
+layer.appendChild(video);
 card.insertBefore(layer,card.firstChild);
 card.dataset.presentationKey=presentationKey;
 
-registerSharedPresentationCanvas(config.src,canvas);
+try{
+const playPromise=video.play();
+if(playPromise && typeof playPromise.catch==="function"){
+playPromise.catch(()=>{});
+}
+}catch(e){}
 
 }
 
 }
-
 
 function getGlobalCardPresentationConfig(d){
 
@@ -3529,12 +3352,6 @@ t.onclick=()=>setView(t.dataset.id)
 
 function setView(id){
 
-if(!views[id])return;
-
-if(id===activeView){
-return;
-}
-
 activeView=id
 
 Object.keys(views).forEach(k=>{
@@ -3546,7 +3363,6 @@ t.classList.toggle("active",t.dataset.id===id)
 })
 
 const supportersSection=document.getElementById("supportersSection")
-const supportersList=document.getElementById("supportersList")
 const hero=document.querySelector(".hero")
 
 document.body.classList.toggle("liveActive",id==="live")
@@ -3556,18 +3372,10 @@ if(id==="live"){
 hero.classList.add("hidden")
 supportersSection.classList.add("hidden")
 
-}else{
-
-if(activeHeroAsset){
-hero.classList.remove("hidden")
 }
 
-if(id==="home" && supportersList && supportersList.children.length){
-supportersSection.classList.remove("hidden")
-}else{
-supportersSection.classList.add("hidden")
-}
-
+if(currentState){
+applyState(currentState)
 }
 
 }
@@ -3590,13 +3398,7 @@ applyChime(d);
 applyCardAnimation(d);
 
 const mount=document.getElementById("connectMount");
-const connectSignature=JSON.stringify({
-email:String(d.contactEmail||""),
-label:String(d.contactLabel||"")
-});
 
-if(connectSignature!==activeConnectRenderSignature){
-activeConnectRenderSignature=connectSignature;
 mount.innerHTML="";
 
 if(d.contactEmail){
@@ -3608,8 +3410,6 @@ a.href=`mailto:${d.contactEmail}`;
 a.textContent=d.contactLabel||"Connect";
 
 mount.appendChild(a);
-
-}
 
 }
 
@@ -3893,15 +3693,6 @@ thumb.textContent=fallback;
 const body=document.createElement("div");
 body.className="supporterBody";
 
-if(item.type){
-
-const type=document.createElement("div");
-type.className="supporterType";
-type.textContent=item.type;
-body.appendChild(type);
-
-}
-
 if(item.name){
 
 const name=document.createElement("div");
@@ -3911,6 +3702,14 @@ body.appendChild(name);
 
 }
 
+if(item.description){
+
+const desc=document.createElement("div");
+desc.className="supporterDesc";
+desc.textContent=item.description;
+body.appendChild(desc);
+
+}
 
 inner.appendChild(thumb);
 inner.appendChild(body);
