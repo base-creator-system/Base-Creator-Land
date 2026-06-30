@@ -231,11 +231,6 @@ body.liveActive #view-live{
 order:2;
 }
 
-body.liveActive .hero,
-body.liveActive #supportersSection{
-display:none!important;
-}
-
 body.liveActive #communitySection{
 order:3;
 }
@@ -3546,8 +3541,6 @@ views[k].classList.toggle("hidden",k!==id)
 document.querySelectorAll(".tab").forEach(t=>{
 t.classList.toggle("active",t.dataset.id===id)
 })
-
-document.body.classList.toggle("liveActive",id==="live")
 
 }
 
