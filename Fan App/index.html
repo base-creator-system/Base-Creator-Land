@@ -1333,6 +1333,14 @@ i
 
 <div class="hero"></div>
 
+<section id="view-home">
+<div class="card">
+<div class="homeInnerSurface innerSurface">
+<div class="h1">Home</div>
+<p class="p" id="bio"></p>
+</div>
+</div>
+
 <section id="communitySection" class="hidden">
 <div class="card">
 <div class="communityHeader">
@@ -1346,7 +1354,6 @@ i
 </div>
 </section>
 
-<section id="view-home">
 <section id="supportersSection" class="hidden">
 <div class="supportersCard">
 <div class="supportersInnerSurface innerSurface">
@@ -1355,13 +1362,7 @@ i
 </div>
 </section>
 
-<div class="card">
-<div class="homeInnerSurface innerSurface">
-<div class="h1">Home</div>
-<p class="p" id="bio"></p>
-</div>
 <div id="connectMount"></div>
-</div>
 </section>
 
 <section id="view-media" class="hidden">
@@ -1814,11 +1815,6 @@ const heroData=d.hero || d.heroMedia || {};
 const heroAnimation=getHeroAnimationName(d,heroData);
 const heroDisabled=heroData.enabled===false;
 const config=getHeroConfig(d);
-
-if(activeView==="live"){
-hero.classList.add("hidden");
-return;
-}
 
 if(heroDisabled){
 stopHeroVideo();
@@ -3533,6 +3529,46 @@ document.querySelectorAll(".tab").forEach(t=>{
 t.onclick=()=>setView(t.dataset.id)
 })
 
+function placeSharedSections(){
+
+const hero=document.querySelector(".hero");
+const communitySection=document.getElementById("communitySection");
+
+if(hero){
+hero.classList.toggle("hidden",activeView==="live");
+}
+
+if(!communitySection)return;
+
+if(activeView==="media" && views.media){
+views.media.appendChild(communitySection);
+return;
+}
+
+if(activeView==="links" && views.links){
+views.links.appendChild(communitySection);
+return;
+}
+
+if(activeView==="live" && views.live){
+views.live.appendChild(communitySection);
+return;
+}
+
+if(views.home){
+const supportersSection=document.getElementById("supportersSection");
+const connectMount=document.getElementById("connectMount");
+views.home.appendChild(communitySection);
+if(supportersSection){
+views.home.appendChild(supportersSection);
+}
+if(connectMount){
+views.home.appendChild(connectMount);
+}
+}
+
+}
+
 function setView(id){
 
 if(!views[id])return;
@@ -3543,16 +3579,11 @@ Object.keys(views).forEach(k=>{
 views[k].classList.toggle("hidden",k!==id)
 })
 
-document.body.classList.toggle("liveActive",id==="live")
-
-const hero=document.querySelector(".hero")
-if(hero){
-hero.classList.toggle("hidden",id==="live")
-}
-
 document.querySelectorAll(".tab").forEach(t=>{
 t.classList.toggle("active",t.dataset.id===id)
 })
+
+placeSharedSections();
 
 }
 
@@ -3766,6 +3797,7 @@ renderLinks(d);
 renderMedia(d);
 applyGlobalCardPresentation(d);
 applyInnerSurfacePresentation(d);
+placeSharedSections();
 runLaunchIntro(d);
 
 }
