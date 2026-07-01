@@ -1829,7 +1829,7 @@ const fallbackSrc="icons/icon-512-v37.png?v=1782058053694";
 const assetKey="fallback|" + fallbackSrc + "|" + heroAnimation;
 
 stopHeroVideo();
-hero.classList.remove("hidden");
+hero.classList.toggle("hidden",activeView==="live");
 
 if(assetKey===activeHeroAsset){
 return;
@@ -1852,7 +1852,7 @@ return;
 
 const assetKey=config.type + "|" + config.src + "|" + heroAnimation;
 
-hero.classList.remove("hidden");
+hero.classList.toggle("hidden",activeView==="live");
 
 if(assetKey===activeHeroAsset){
 return;
@@ -3542,6 +3542,18 @@ document.querySelectorAll(".tab").forEach(t=>{
 t.classList.toggle("active",t.dataset.id===id)
 })
 
+const hero=document.querySelector(".hero");
+if(hero){
+hero.classList.toggle("hidden",id==="live");
+}
+
+const supportersSection=document.getElementById("supportersSection");
+if(supportersSection && supportersSection.dataset.hasVisibleSupporters==="true"){
+supportersSection.classList.toggle("hidden",id!=="home");
+}
+
+document.body.classList.toggle("liveActive",id==="live");
+
 }
 
 function applyState(d){
@@ -3932,6 +3944,7 @@ if(visible.length===0){
 
 container.innerHTML="";
 container.classList.remove("carousel");
+section.dataset.hasVisibleSupporters="false";
 section.classList.add("hidden");
 supportersRuntimeSignature="";
 supportersRuntimeIndex=0;
@@ -3943,7 +3956,8 @@ return;
 
 const signature=getSupportersSignature(visible);
 
-section.classList.remove("hidden");
+section.dataset.hasVisibleSupporters="true";
+section.classList.toggle("hidden",activeView!=="home");
 
 if(signature===supportersRuntimeSignature && container.dataset.supportersReady==="true"){
 container.classList.toggle("carousel",visible.length>1);
