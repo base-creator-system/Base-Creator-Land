@@ -1340,29 +1340,6 @@ i
 <p class="p" id="bio"></p>
 </div>
 </div>
-
-<section id="communitySection" class="hidden">
-<div class="card">
-<div class="communityHeader">
-<img id="communityIcon" class="communityIcon" src="" alt="">
-<div class="h1" id="communityTitle">Community</div>
-</div>
-<p class="p" id="communityDescription">Join the community.</p>
-<a id="communityBtn" class="btn" href="#" target="_blank" rel="noopener">Enter Community</a>
-<div id="communityEmbedMount" class="communityEmbedMount hidden"></div>
-<button id="communityExpandBtn" class="communityExpandBtn hidden" type="button">Expand</button>
-</div>
-</section>
-
-<section id="supportersSection" class="hidden">
-<div class="supportersCard">
-<div class="supportersInnerSurface innerSurface">
-<div id="supportersList" class="supportersList"></div>
-</div>
-</div>
-</section>
-
-<div id="connectMount"></div>
 </section>
 
 <section id="view-media" class="hidden">
@@ -1387,6 +1364,29 @@ allowfullscreen="true">
 <button id="liveDescriptionToggle" class="liveDescriptionToggle hidden" type="button">▼ Description</button>
 <p class="liveDescription hidden" id="liveDescription"></p>
 </section>
+
+<section id="communitySection" class="hidden">
+<div class="card">
+<div class="communityHeader">
+<img id="communityIcon" class="communityIcon" src="" alt="">
+<div class="h1" id="communityTitle">Community</div>
+</div>
+<p class="p" id="communityDescription">Join the community.</p>
+<a id="communityBtn" class="btn" href="#" target="_blank" rel="noopener">Enter Community</a>
+<div id="communityEmbedMount" class="communityEmbedMount hidden"></div>
+<button id="communityExpandBtn" class="communityExpandBtn hidden" type="button">Expand</button>
+</div>
+</section>
+
+<section id="supportersSection" class="hidden">
+<div class="supportersCard">
+<div class="supportersInnerSurface innerSurface">
+<div id="supportersList" class="supportersList"></div>
+</div>
+</div>
+</section>
+
+<div id="connectMount" class="hidden"></div>
 
 <div class="baseFooter">Powered by BASE</div>
 
@@ -3529,49 +3529,6 @@ document.querySelectorAll(".tab").forEach(t=>{
 t.onclick=()=>setView(t.dataset.id)
 })
 
-function placeSharedSections(){
-
-const hero=document.querySelector(".hero");
-const communitySection=document.getElementById("communitySection");
-const supportersSection=document.getElementById("supportersSection");
-const connectMount=document.getElementById("connectMount");
-
-if(hero){
-hero.classList.toggle("hidden",activeView==="live");
-if(activeView!=="live" && views[activeView]){
-views[activeView].insertBefore(hero,views[activeView].firstChild);
-}
-}
-
-if(!communitySection)return;
-
-if(activeView==="media" && views.media){
-views.media.appendChild(communitySection);
-return;
-}
-
-if(activeView==="links" && views.links){
-views.links.appendChild(communitySection);
-return;
-}
-
-if(activeView==="live" && views.live){
-views.live.appendChild(communitySection);
-return;
-}
-
-if(views.home){
-views.home.appendChild(communitySection);
-if(supportersSection){
-views.home.appendChild(supportersSection);
-}
-if(connectMount){
-views.home.appendChild(connectMount);
-}
-}
-
-}
-
 function setView(id){
 
 if(!views[id])return;
@@ -3586,7 +3543,21 @@ document.querySelectorAll(".tab").forEach(t=>{
 t.classList.toggle("active",t.dataset.id===id)
 })
 
-placeSharedSections();
+document.body.classList.toggle("liveActive",id==="live");
+
+const hero=document.querySelector(".hero");
+if(hero){
+hero.classList.toggle("hidden",id==="live");
+}
+
+const connectMount=document.getElementById("connectMount");
+if(connectMount){
+connectMount.classList.toggle("hidden",id!=="home");
+}
+
+if(currentState){
+renderSupporters(currentState);
+}
 
 }
 
@@ -3800,7 +3771,17 @@ renderLinks(d);
 renderMedia(d);
 applyGlobalCardPresentation(d);
 applyInnerSurfacePresentation(d);
-placeSharedSections();
+
+const activeHero=document.querySelector(".hero");
+if(activeHero){
+activeHero.classList.toggle("hidden",activeView==="live");
+}
+
+const activeConnectMount=document.getElementById("connectMount");
+if(activeConnectMount){
+activeConnectMount.classList.toggle("hidden",activeView!=="home");
+}
+
 runLaunchIntro(d);
 
 }
@@ -3974,6 +3955,11 @@ String(item.buttonText||"").trim()
 );
 
 });
+
+if(activeView!=="home"){
+section.classList.add("hidden");
+return;
+}
 
 if(visible.length===0){
 
