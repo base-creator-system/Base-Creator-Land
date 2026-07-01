@@ -3542,18 +3542,6 @@ document.querySelectorAll(".tab").forEach(t=>{
 t.classList.toggle("active",t.dataset.id===id)
 })
 
-document.body.classList.toggle("liveActive",id==="live")
-
-const hero=document.querySelector(".hero")
-if(hero){
-hero.classList.toggle("hidden",id==="live")
-}
-
-const supportersSection=document.getElementById("supportersSection")
-if(supportersSection){
-supportersSection.classList.toggle("hidden",id!=="home")
-}
-
 }
 
 function applyState(d){
@@ -3569,12 +3557,6 @@ document.documentElement.style.setProperty('--pillColor',d.pillColor||"#000");
 
 applyAppIcon(d);
 applyHero(d);
-
-const hero=document.querySelector(".hero")
-if(hero){
-hero.classList.toggle("hidden",activeView==="live")
-}
-
 applyBackground(d);
 applyChime(d);
 applyCardAnimation(d);
@@ -3768,12 +3750,6 @@ communitySection.classList.add("hidden");
 }
 
 renderSupporters(d);
-
-const supportersSection=document.getElementById("supportersSection")
-if(supportersSection && activeView!=="home"){
-supportersSection.classList.add("hidden")
-}
-
 renderLinks(d);
 renderMedia(d);
 applyGlobalCardPresentation(d);
