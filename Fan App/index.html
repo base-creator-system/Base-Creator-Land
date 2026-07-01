@@ -3533,9 +3533,14 @@ function placeSharedSections(){
 
 const hero=document.querySelector(".hero");
 const communitySection=document.getElementById("communitySection");
+const supportersSection=document.getElementById("supportersSection");
+const connectMount=document.getElementById("connectMount");
 
 if(hero){
 hero.classList.toggle("hidden",activeView==="live");
+if(activeView!=="live" && views[activeView]){
+views[activeView].insertBefore(hero,views[activeView].firstChild);
+}
 }
 
 if(!communitySection)return;
@@ -3556,8 +3561,6 @@ return;
 }
 
 if(views.home){
-const supportersSection=document.getElementById("supportersSection");
-const connectMount=document.getElementById("connectMount");
 views.home.appendChild(communitySection);
 if(supportersSection){
 views.home.appendChild(supportersSection);
