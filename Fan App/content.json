@@ -162,9 +162,9 @@
     "url": "./media/background-video-1782997587093.mp4"
   },
   "chime": {
-    "enabled": false,
-    "url": "",
-    "volume": 0.6
+    "enabled": true,
+    "url": "./media/chime-1782998219929.mp3",
+    "volume": 0.45
   },
   "heroMedia": {
     "enabled": true,
