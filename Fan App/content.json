@@ -164,7 +164,7 @@
   "chime": {
     "enabled": false,
     "url": "",
-    "volume": 0.35
+    "volume": 0.6
   },
   "heroMedia": {
     "enabled": true,
