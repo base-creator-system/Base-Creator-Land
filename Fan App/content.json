@@ -105,7 +105,7 @@
       }
     ]
   },
-  "pillColor": "#b51a00",
+  "pillColor": "#77bb41",
   "live": {
     "enabled": true,
     "status": "live",
@@ -158,25 +158,23 @@
   },
   "background": {
     "enabled": true,
-    "type": "image",
-    "url": "./media/background-image-1782475488278.png"
+    "type": "video",
+    "url": "./media/background-video-1782997587093.mp4"
   },
   "chime": {
     "enabled": false,
     "url": "",
-    "volume": 0.65
+    "volume": 0.35
   },
   "heroMedia": {
     "enabled": true,
     "type": "image",
     "url": "./media/hero-image-1782304362799.png",
-    "animation": "spin"
+    "animation": "flat"
   },
   "innerSurface": {
-    "style": "video",
-    "color": "#000000",
-    "url": "./media/inner-surface-video-1782480543329.mp4",
-    "video": "./media/inner-surface-video-1782480543329.mp4",
-    "backgroundVideo": "./media/inner-surface-video-1782480543329.mp4"
+    "style": "color",
+    "color": "#791a3e",
+    "url": "./media/inner-surface-video-1782480543329.mp4"
   }
 }
