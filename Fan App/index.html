@@ -71,6 +71,8 @@ margin:0 auto;
 padding:20px 16px 100px;
 position:relative;
 z-index:1;
+display:flex;
+flex-direction:column;
 }
 
 .top{
@@ -3550,8 +3552,6 @@ function enforceViewPlacement(){
 
 const hero=document.querySelector(".hero");
 const supportersSection=document.getElementById("supportersSection");
-const communitySection=document.getElementById("communitySection");
-const viewLive=document.getElementById("view-live");
 
 if(hero){
 hero.classList.toggle("hidden", heroHiddenByData);
@@ -3562,17 +3562,7 @@ if(supportersSection){
 supportersSection.classList.toggle("hidden", supportersHiddenByData || activeView!=="home");
 }
 
-if(communitySection && supportersSection && viewLive){
-if(activeView==="live"){
-if(communitySection.previousElementSibling!==viewLive){
-viewLive.insertAdjacentElement("afterend",communitySection)
-}
-}else{
-if(communitySection.nextElementSibling!==supportersSection){
-supportersSection.insertAdjacentElement("beforebegin",communitySection)
-}
-}
-}
+document.body.classList.toggle("liveActive", activeView==="live");
 
 }
 
