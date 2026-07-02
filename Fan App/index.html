@@ -1,3 +1,5 @@
+
+
 <!doctype html>
 
 <html lang="en">
@@ -1333,12 +1335,34 @@ i
 
 <div class="hero"></div>
 
+<section id="communitySection" class="hidden">
+<div class="card">
+<div class="communityHeader">
+<img id="communityIcon" class="communityIcon" src="" alt="">
+<div class="h1" id="communityTitle">Community</div>
+</div>
+<p class="p" id="communityDescription">Join the community.</p>
+<a id="communityBtn" class="btn" href="#" target="_blank" rel="noopener">Enter Community</a>
+<div id="communityEmbedMount" class="communityEmbedMount hidden"></div>
+<button id="communityExpandBtn" class="communityExpandBtn hidden" type="button">Expand</button>
+</div>
+</section>
+
+<section id="supportersSection" class="hidden">
+<div class="supportersCard">
+<div class="supportersInnerSurface innerSurface">
+<div id="supportersList" class="supportersList"></div>
+</div>
+</div>
+</section>
+
 <section id="view-home">
 <div class="card">
 <div class="homeInnerSurface innerSurface">
 <div class="h1">Home</div>
 <p class="p" id="bio"></p>
 </div>
+<div id="connectMount"></div>
 </div>
 </section>
 
@@ -1364,29 +1388,6 @@ allowfullscreen="true">
 <button id="liveDescriptionToggle" class="liveDescriptionToggle hidden" type="button">▼ Description</button>
 <p class="liveDescription hidden" id="liveDescription"></p>
 </section>
-
-<section id="communitySection" class="hidden">
-<div class="card">
-<div class="communityHeader">
-<img id="communityIcon" class="communityIcon" src="" alt="">
-<div class="h1" id="communityTitle">Community</div>
-</div>
-<p class="p" id="communityDescription">Join the community.</p>
-<a id="communityBtn" class="btn" href="#" target="_blank" rel="noopener">Enter Community</a>
-<div id="communityEmbedMount" class="communityEmbedMount hidden"></div>
-<button id="communityExpandBtn" class="communityExpandBtn hidden" type="button">Expand</button>
-</div>
-</section>
-
-<section id="supportersSection" class="hidden">
-<div class="supportersCard">
-<div class="supportersInnerSurface innerSurface">
-<div id="supportersList" class="supportersList"></div>
-</div>
-</div>
-</section>
-
-<div id="connectMount" class="hidden"></div>
 
 <div class="baseFooter">Powered by BASE</div>
 
@@ -3543,20 +3544,21 @@ document.querySelectorAll(".tab").forEach(t=>{
 t.classList.toggle("active",t.dataset.id===id)
 })
 
-document.body.classList.toggle("liveActive",id==="live");
+applyPlacementVisibility();
+
+}
+
+function applyPlacementVisibility(){
 
 const hero=document.querySelector(".hero");
+const supportersSection=document.getElementById("supportersSection");
+
 if(hero){
-hero.classList.toggle("hidden",id==="live");
+hero.classList.toggle("hidden",activeView==="live");
 }
 
-const connectMount=document.getElementById("connectMount");
-if(connectMount){
-connectMount.classList.toggle("hidden",id!=="home");
-}
-
-if(currentState){
-renderSupporters(currentState);
+if(supportersSection){
+supportersSection.classList.toggle("hidden",activeView!=="home");
 }
 
 }
@@ -3767,21 +3769,11 @@ communitySection.classList.add("hidden");
 }
 
 renderSupporters(d);
+applyPlacementVisibility();
 renderLinks(d);
 renderMedia(d);
 applyGlobalCardPresentation(d);
 applyInnerSurfacePresentation(d);
-
-const activeHero=document.querySelector(".hero");
-if(activeHero){
-activeHero.classList.toggle("hidden",activeView==="live");
-}
-
-const activeConnectMount=document.getElementById("connectMount");
-if(activeConnectMount){
-activeConnectMount.classList.toggle("hidden",activeView!=="home");
-}
-
 runLaunchIntro(d);
 
 }
@@ -3955,11 +3947,6 @@ String(item.buttonText||"").trim()
 );
 
 });
-
-if(activeView!=="home"){
-section.classList.add("hidden");
-return;
-}
 
 if(visible.length===0){
 
