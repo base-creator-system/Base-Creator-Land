@@ -1948,6 +1948,9 @@ document.body.classList.remove("launchIntroPending","launchIntroReady");
 
 if(animateContent===true){
 document.body.classList.add("launchIntroDone");
+setTimeout(()=>{
+document.body.classList.remove("launchIntroDone");
+},400);
 }
 
 }
