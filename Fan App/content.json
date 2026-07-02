@@ -105,7 +105,7 @@
       }
     ]
   },
-  "pillColor": "#77bb41",
+  "pillColor": "#7b2900",
   "live": {
     "enabled": true,
     "status": "live",
@@ -174,7 +174,7 @@
   },
   "innerSurface": {
     "style": "color",
-    "color": "#791a3e",
+    "color": "#a67b01",
     "url": "./media/inner-surface-video-1782480543329.mp4"
   }
 }
