@@ -1,5 +1,3 @@
-
-
 <!doctype html>
 
 <html lang="en">
@@ -3544,23 +3542,6 @@ document.querySelectorAll(".tab").forEach(t=>{
 t.classList.toggle("active",t.dataset.id===id)
 })
 
-applyPlacementVisibility();
-
-}
-
-function applyPlacementVisibility(){
-
-const hero=document.querySelector(".hero");
-const supportersSection=document.getElementById("supportersSection");
-
-if(hero){
-hero.classList.toggle("hidden",activeView==="live");
-}
-
-if(supportersSection){
-supportersSection.classList.toggle("hidden",activeView!=="home");
-}
-
 }
 
 function applyState(d){
@@ -3769,7 +3750,6 @@ communitySection.classList.add("hidden");
 }
 
 renderSupporters(d);
-applyPlacementVisibility();
 renderLinks(d);
 renderMedia(d);
 applyGlobalCardPresentation(d);
