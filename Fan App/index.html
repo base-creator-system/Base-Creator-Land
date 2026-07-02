@@ -3547,6 +3547,8 @@ function enforceViewPlacement(){
 
 const hero=document.querySelector(".hero");
 const supportersSection=document.getElementById("supportersSection");
+const communitySection=document.getElementById("communitySection");
+const viewLive=document.getElementById("view-live");
 
 if(hero){
 hero.classList.toggle("hidden", heroHiddenByData);
@@ -3555,6 +3557,18 @@ hero.classList.toggle("heroViewHidden", !heroHiddenByData && activeView==="live"
 
 if(supportersSection){
 supportersSection.classList.toggle("hidden", supportersHiddenByData || activeView!=="home");
+}
+
+if(communitySection && supportersSection && viewLive){
+if(activeView==="live"){
+if(communitySection.previousElementSibling!==viewLive){
+viewLive.insertAdjacentElement("afterend",communitySection)
+}
+}else{
+if(communitySection.nextElementSibling!==supportersSection){
+supportersSection.insertAdjacentElement("beforebegin",communitySection)
+}
+}
 }
 
 }
