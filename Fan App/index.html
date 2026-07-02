@@ -1310,6 +1310,16 @@ border-radius:18px;
 min-height:100%;
 }
 
+.heroViewHidden{
+position:absolute;
+width:1px;
+height:1px;
+margin:0;
+opacity:0;
+overflow:hidden;
+pointer-events:none;
+}
+
 </style>
 
 </head>
@@ -1420,7 +1430,7 @@ Add this app to your phone so it opens like a regular app from your Home Screen.
 
 <div class="installBlock">
 <div class="installBlockTitle">
-<div class="installBadge"></div>
+<div class="installBadge"></div>
 <div>iPhone / iPad</div>
 </div>
 
@@ -1520,6 +1530,8 @@ let activeConnectRenderSignature=""
 let sharedPresentationVideoCache={}
 let launchIntroResolved=false
 let launchIntroTimer=null
+let heroHiddenByData=false
+let supportersHiddenByData=false
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -1820,6 +1832,7 @@ stopHeroVideo();
 activeHeroAsset="";
 hero.innerHTML="";
 hero.classList.add("hidden");
+heroHiddenByData=true;
 return;
 }
 
@@ -1830,6 +1843,7 @@ const assetKey="fallback|" + fallbackSrc + "|" + heroAnimation;
 
 stopHeroVideo();
 hero.classList.remove("hidden");
+heroHiddenByData=false;
 
 if(assetKey===activeHeroAsset){
 return;
@@ -1853,6 +1867,7 @@ return;
 const assetKey=config.type + "|" + config.src + "|" + heroAnimation;
 
 hero.classList.remove("hidden");
+heroHiddenByData=false;
 
 if(assetKey===activeHeroAsset){
 return;
@@ -3528,6 +3543,24 @@ document.querySelectorAll(".tab").forEach(t=>{
 t.onclick=()=>setView(t.dataset.id)
 })
 
+function enforceViewPlacement(){
+
+const hero=document.querySelector(".hero");
+const supportersSection=document.getElementById("supportersSection");
+
+if(hero){
+hero.classList.toggle("hidden", heroHiddenByData);
+hero.classList.toggle("heroViewHidden", !heroHiddenByData && activeView==="live");
+}
+
+if(supportersSection){
+supportersSection.classList.toggle("hidden", supportersHiddenByData || activeView!=="home");
+}
+
+document.body.classList.toggle("liveActive", activeView==="live");
+
+}
+
 function setView(id){
 
 if(!views[id])return;
@@ -3541,6 +3574,8 @@ views[k].classList.toggle("hidden",k!==id)
 document.querySelectorAll(".tab").forEach(t=>{
 t.classList.toggle("active",t.dataset.id===id)
 })
+
+enforceViewPlacement()
 
 }
 
@@ -3755,6 +3790,7 @@ renderMedia(d);
 applyGlobalCardPresentation(d);
 applyInnerSurfacePresentation(d);
 runLaunchIntro(d);
+enforceViewPlacement();
 
 }
 
@@ -3933,6 +3969,7 @@ if(visible.length===0){
 container.innerHTML="";
 container.classList.remove("carousel");
 section.classList.add("hidden");
+supportersHiddenByData=true;
 supportersRuntimeSignature="";
 supportersRuntimeIndex=0;
 stopSupportersAutoRotate();
@@ -3944,6 +3981,7 @@ return;
 const signature=getSupportersSignature(visible);
 
 section.classList.remove("hidden");
+supportersHiddenByData=false;
 
 if(signature===supportersRuntimeSignature && container.dataset.supportersReady==="true"){
 container.classList.toggle("carousel",visible.length>1);
