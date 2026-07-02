@@ -71,8 +71,6 @@ margin:0 auto;
 padding:20px 16px 100px;
 position:relative;
 z-index:1;
-display:flex;
-flex-direction:column;
 }
 
 .top{
@@ -3558,8 +3556,6 @@ hero.classList.toggle("heroViewHidden", !heroHiddenByData && activeView==="live"
 if(supportersSection){
 supportersSection.classList.toggle("hidden", supportersHiddenByData || activeView!=="home");
 }
-
-document.body.classList.toggle("liveActive", activeView==="live");
 
 }
 
