@@ -159,7 +159,7 @@
   "background": {
     "enabled": true,
     "type": "video",
-    "url": "./media/background-video-1782997587093.mp4"
+    "url": "./media/background-video-1783121425413.mp4"
   },
   "chime": {
     "enabled": true,
@@ -169,8 +169,8 @@
   "heroMedia": {
     "enabled": true,
     "type": "image",
-    "url": "./media/hero-image-1782304362799.png",
-    "animation": "flat"
+    "url": "./media/hero-image-1783121432552.png",
+    "animation": "spin"
   },
   "innerSurface": {
     "style": "default",
