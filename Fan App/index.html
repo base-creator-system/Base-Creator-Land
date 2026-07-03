@@ -3570,6 +3570,8 @@ function setView(id){
 
 if(!views[id])return;
 
+const scrollY=window.scrollY;
+
 activeView=id
 
 Object.keys(views).forEach(k=>{
@@ -3581,6 +3583,12 @@ t.classList.toggle("active",t.dataset.id===id)
 })
 
 enforceViewPlacement()
+
+window.scrollTo(0,scrollY);
+
+requestAnimationFrame(()=>{
+window.scrollTo(0,scrollY);
+});
 
 }
 
