@@ -3560,8 +3560,7 @@ const hero=document.querySelector(".hero");
 const supportersSection=document.getElementById("supportersSection");
 
 if(hero){
-hero.classList.toggle("hidden", heroHiddenByData);
-hero.classList.toggle("heroViewHidden", !heroHiddenByData && activeView==="live");
+hero.classList.toggle("hidden", heroHiddenByData || activeView==="live");
 }
 
 if(supportersSection){
