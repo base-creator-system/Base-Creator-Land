@@ -513,6 +513,10 @@ width:100%;
 height:100%;
 border:0;
 background:#000;
+display:block;
+transform:translateZ(0);
+-webkit-transform:translateZ(0);
+will-change:transform;
 }
 
 .liveDescription{
@@ -1534,6 +1538,8 @@ let launchIntroResolved=false
 let launchIntroTimer=null
 let heroHiddenByData=false
 let supportersHiddenByData=false
+let activeLiveURL=""
+let liveRendererRecoveryTimer=null
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -3590,6 +3596,94 @@ enforceViewPlacement()
 
 }
 
+
+function getCurrentLiveURL(){
+
+if(!currentState || !currentState.live || currentState.live.enabled!==true) return "";
+
+return safeURL(currentState.live.watch_url || "");
+
+}
+
+function recoverLiveRenderer(){
+
+const livePlayer=document.getElementById("livePlayer");
+const liveFrame=document.getElementById("liveFrame");
+
+if(!livePlayer || !liveFrame) return;
+if(!activeLiveURL && !getCurrentLiveURL()) return;
+if(livePlayer.classList.contains("hidden")) return;
+if(document.hidden) return;
+
+try{
+
+livePlayer.style.transform="translateZ(0)";
+livePlayer.style.webkitTransform="translateZ(0)";
+liveFrame.style.transform="translateZ(0)";
+liveFrame.style.webkitTransform="translateZ(0)";
+liveFrame.style.opacity="0.999";
+
+void livePlayer.offsetHeight;
+void liveFrame.offsetHeight;
+
+requestAnimationFrame(()=>{
+requestAnimationFrame(()=>{
+liveFrame.style.opacity="1";
+livePlayer.style.transform="";
+livePlayer.style.webkitTransform="";
+});
+});
+
+}catch(e){}
+
+}
+
+function scheduleLiveRendererRecovery(){
+
+if(liveRendererRecoveryTimer){
+clearTimeout(liveRendererRecoveryTimer);
+liveRendererRecoveryTimer=null;
+}
+
+liveRendererRecoveryTimer=setTimeout(()=>{
+liveRendererRecoveryTimer=null;
+recoverLiveRenderer();
+},250);
+
+}
+
+document.addEventListener("visibilitychange",()=>{
+
+if(!document.hidden){
+scheduleLiveRendererRecovery();
+}
+
+});
+
+window.addEventListener("pageshow",()=>{
+
+scheduleLiveRendererRecovery();
+
+});
+
+window.addEventListener("focus",()=>{
+
+scheduleLiveRendererRecovery();
+
+});
+
+document.addEventListener("fullscreenchange",()=>{
+
+scheduleLiveRendererRecovery();
+
+});
+
+document.addEventListener("webkitfullscreenchange",()=>{
+
+scheduleLiveRendererRecovery();
+
+});
+
 function applyState(d){
 
 if(!d)return;
@@ -3644,13 +3738,17 @@ const liveURL=safeURL(d.live.watch_url || "");
 
 if(liveURL){
 livePlayer.classList.remove("hidden");
+activeLiveURL=liveURL;
 
 if(liveFrame.src!==liveURL){
 liveFrame.src=liveURL;
 }
 
+scheduleLiveRendererRecovery();
+
 }else{
 livePlayer.classList.add("hidden");
+activeLiveURL="";
 liveFrame.removeAttribute("src");
 }
 
@@ -3675,6 +3773,7 @@ liveDescriptionToggle.onclick=null;
 }else{
 liveStatus.textContent="Unavailable";
 livePlayer.classList.add("hidden");
+activeLiveURL="";
 liveFrame.removeAttribute("src");
 liveDescriptionExpanded=false;
 liveDescription.textContent="";
