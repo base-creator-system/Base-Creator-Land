@@ -3464,6 +3464,28 @@ let icon512Name=null
 
 const iconFile=el.appIconInput.files[0]
 
+const meta=await ghGetFileMeta(token,TARGET_PATH)
+
+if(!meta?.sha){
+throw new Error("GitHub SHA missing.")
+}
+
+if(meta.sha !== loadedSha){
+shaConflict=true
+el.lastSha.textContent=`sha: ${meta.sha}`
+setPill("bad","STATUS: remote changed")
+log("Publish blocked: remote content changed. Reload current state.")
+enablePublishIfReady()
+return
+}
+
+let existing={}
+try{
+existing=JSON.parse(fromBase64Utf8(meta.content))
+}catch(e){
+existing={}
+}
+
 if(iconFile){
 appIconResetRequested=false
 log("Icon detected. Publish will update icons, manifest, and fan app HTML together.")
@@ -3608,28 +3630,6 @@ toBase64Utf8(JSON.stringify(manifest,null,2)),
 const latest=await getLatestIconVersion(token)
 icon192Name=latest.icon192Name
 icon512Name=latest.icon512Name
-}
-
-const meta=await ghGetFileMeta(token,TARGET_PATH)
-
-if(!meta?.sha){
-throw new Error("GitHub SHA missing.")
-}
-
-if(meta.sha !== loadedSha){
-shaConflict=true
-el.lastSha.textContent=`sha: ${meta.sha}`
-setPill("bad","STATUS: remote changed")
-log("Publish blocked: remote content changed. Reload current state.")
-enablePublishIfReady()
-return
-}
-
-let existing={}
-try{
-existing=JSON.parse(fromBase64Utf8(meta.content))
-}catch(e){
-existing={}
 }
 
 const merged={
