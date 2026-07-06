@@ -4,9 +4,9 @@
   "links": [],
   "backgroundColor": "#000000",
   "contactEmail": "",
-  "contactLabel": "",
+  "contactLabel": "Your Email",
   "mediaGateway": {
-    "enabled": false,
+    "enabled": true,
     "collections": [
       {
         "id": "collection-1783344920975-5673979ad81098",
@@ -24,10 +24,10 @@
   },
   "pillColor": "#000000",
   "live": {
-    "enabled": false,
+    "enabled": true,
     "status": "offline",
     "watch_url": "",
-    "description": ""
+    "description": "Your Live Description Here!"
   },
   "supporters": [],
   "community": {
