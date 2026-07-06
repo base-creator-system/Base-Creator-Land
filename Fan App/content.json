@@ -40,9 +40,9 @@
     "embed": ""
   },
   "background": {
-    "enabled": false,
-    "type": "none",
-    "url": ""
+    "enabled": true,
+    "type": "image",
+    "url": "./media/background-image-1783353669771.png"
   },
   "chime": {
     "enabled": false,
@@ -50,10 +50,10 @@
     "volume": 0.65
   },
   "heroMedia": {
-    "enabled": false,
-    "type": "none",
-    "url": "",
-    "animation": "none"
+    "enabled": true,
+    "type": "image",
+    "url": "./media/hero-image-1783353671710.png",
+    "animation": "spin"
   },
   "innerSurface": {
     "style": "default",
