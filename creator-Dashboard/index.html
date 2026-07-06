@@ -626,6 +626,10 @@ height:520px;
 <div style="margin-top:18px;border-top:1px solid #222;padding-top:14px;">
 <label>App Icon</label>
 <input id="appIconInput" type="file" accept="image/png,image/jpeg">
+<div class="btnRow">
+<button id="btnClearAppIcon" class="danger" type="button">Remove App Icon</button>
+</div>
+<div class="tiny">Removes the custom app icon and restores the BASE template icon on publish.</div>
 </div>
 
 <div style="margin-top:18px;border-top:1px solid #222;padding-top:14px;">
@@ -1324,6 +1328,7 @@ innerSurfaceColor:$("innerSurfaceColor"),
 innerSurfaceFile:$("innerSurfaceFile"),
 innerSurfaceUrl:$("innerSurfaceUrl"),
 appIconInput:$("appIconInput"),
+btnClearAppIcon:$("btnClearAppIcon"),
 heroMediaType:$("heroMediaType"),
 heroMediaFile:$("heroMediaFile"),
 heroMediaUrl:$("heroMediaUrl"),
@@ -1414,6 +1419,7 @@ let isPublishing=false
 let isDirty=false
 let loadedSha=null
 let shaConflict=false
+let appIconResetRequested=false
 const defaultPublishLabel="Publish"
 
 function log(t){
@@ -2930,6 +2936,51 @@ icon512Name:latest512.name
 }
 }
 
+async function getBaseIconVersion(token){
+const folderPath="Fan App/icons"
+const api=`https://api.github.com/repos/${OWNER}/${REPO}/contents/${ghEncodePath(folderPath)}?ref=${BRANCH}`
+const res=await fetch(api,{headers:ghHeaders(token)})
+
+if(!res.ok) throw new Error(`GitHub icons folder read failed (${res.status})`)
+
+const files=await res.json()
+
+let base192=null
+let base512=null
+
+files.forEach(file=>{
+const name=String(file?.name || "")
+
+const match192=name.match(/^icon-192-v(\d+)\.png$/)
+const match512=name.match(/^icon-512-v(\d+)\.png$/)
+
+if(match192){
+const v=parseInt(match192[1],10)
+if(!base192 || v<base192.v){
+base192={v,name}
+}
+}
+
+if(match512){
+const v=parseInt(match512[1],10)
+if(!base512 || v<base512.v){
+base512={v,name}
+}
+}
+})
+
+if(!base192 || !base512){
+throw new Error("Base versioned icons not found in Fan App/icons")
+}
+
+return{
+icon192Path:`Fan App/icons/${base192.name}`,
+icon512Path:`Fan App/icons/${base512.name}`,
+icon192Name:base192.name,
+icon512Name:base512.name
+}
+}
+
 async function updateAppIcon(){
 
 try{
@@ -3372,6 +3423,7 @@ let icon512Name=null
 const iconFile=el.appIconInput.files[0]
 
 if(iconFile){
+appIconResetRequested=false
 log("Icon detected. Publish will update icons, manifest, and fan app HTML together.")
 
 const base64=await fileToBase64(iconFile)
@@ -3438,6 +3490,44 @@ manifestPath,
 manifestMeta.sha,
 toBase64Utf8(JSON.stringify(manifest,null,2)),
 `BASE manifest icon v${newVersion}`
+)
+
+}else if(appIconResetRequested){
+log("App icon reset detected. Publish will restore the BASE template icon.")
+
+const baseIcon=await getBaseIconVersion(token)
+icon192Name=baseIcon.icon192Name
+icon512Name=baseIcon.icon512Name
+
+const manifestPath="Fan App/manifest.json"
+const manifestMeta=await ghGetFileMeta(token,manifestPath)
+
+let manifest={}
+try{
+manifest=JSON.parse(fromBase64Utf8(manifestMeta.content))
+}catch(e){
+manifest={}
+}
+
+manifest.icons=[
+{
+src:`icons/${icon192Name}`,
+sizes:"192x192",
+type:"image/png"
+},
+{
+src:`icons/${icon512Name}`,
+sizes:"512x512",
+type:"image/png"
+}
+]
+
+await ghPutFile(
+token,
+manifestPath,
+manifestMeta.sha,
+toBase64Utf8(JSON.stringify(manifest,null,2)),
+"BASE manifest icon reset"
 )
 
 }else{
@@ -3555,7 +3645,7 @@ fanIndexHtml=fanIndexHtml.replace(
 )
 
 fanIndexHtml=fanIndexHtml.replace(
-/<img id="logo" src="icons\/icon-192-v\d+\.png(?:\?v=\d+)?">/g,
+/<img id="logo" src="icons\/[^"]+">/g,
 `<img id="logo" src="icons/${icon192Name}?v=${cacheVersion}">`
 )
 
@@ -3574,6 +3664,7 @@ el.lastSha.textContent=`sha: ${result.content.sha}`
 }
 
 el.appIconInput.value=""
+appIconResetRequested=false
 
 clearDirty()
 setPill("ok","STATUS: published")
@@ -3649,6 +3740,16 @@ el.innerSurfaceStyle.addEventListener("change",markDirty)
 el.innerSurfaceColor.addEventListener("input",markDirty)
 el.innerSurfaceFile.addEventListener("change",markDirty)
 el.innerSurfaceUrl.addEventListener("input",markDirty)
+el.appIconInput.addEventListener("change",()=>{
+appIconResetRequested=false
+markDirty()
+})
+el.btnClearAppIcon.onclick=()=>{
+el.appIconInput.value=""
+appIconResetRequested=true
+markDirty()
+log("App icon reset staged for publish.")
+}
 el.heroMediaType.addEventListener("change",markDirty)
 el.heroMediaFile.addEventListener("change",markDirty)
 el.heroMediaUrl.addEventListener("input",markDirty)
