@@ -9,8 +9,8 @@
     "enabled": false,
     "collections": [
       {
-        "id": "collection-1779899294715-fc45f74d9e30d8",
-        "title": "Alex & India’s Prom 2026",
+        "id": "collection-1783344920975-5673979ad81098",
+        "title": "latest",
         "items": []
       }
     ],
@@ -31,17 +31,17 @@
   },
   "supporters": [],
   "community": {
-    "enabled": true,
+    "enabled": false,
     "provider": "custom",
-    "name": "Where conversation Lives!",
-    "icon": "./media/community-icon-1781146353784.png",
+    "name": "",
+    "icon": "",
     "buttonText": "Enter Community",
     "url": "",
-    "embed": "https://organizations.minnit.chat/274505522146345/c/Main?embed&app"
+    "embed": ""
   },
   "background": {
-    "enabled": true,
-    "type": "video",
+    "enabled": false,
+    "type": "none",
     "url": ""
   },
   "chime": {
