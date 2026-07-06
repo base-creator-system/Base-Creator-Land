@@ -1,89 +1,17 @@
 {
-  "name": "DJ MOFIYA APP",
-  "bio": "Music, live sessions, bookings & more   Tap below to reach me",
-  "links": [
-    {
-      "label": "Youtube",
-      "url": "https://www.youtube.com/@DjMoFiya"
-    },
-    {
-      "label": "Instagram",
-      "url": "https://www.instagram.com/djmofiya/"
-    }
-  ],
+  "name": "Base Creator System",
+  "bio": "",
+  "links": [],
   "backgroundColor": "#000000",
-  "contactEmail": "bookdjmofiya@gmail.com",
-  "contactLabel": "Email",
+  "contactEmail": "",
+  "contactLabel": "",
   "mediaGateway": {
-    "enabled": true,
+    "enabled": false,
     "collections": [
-      {
-        "id": "collection-default",
-        "title": "Latest",
-        "items": [
-          {
-            "id": "item-1778513053656-013590dc68dbc",
-            "title": "APP Types",
-            "description": "APP Types",
-            "thumbnail": "./media/thumb-item-1778513053656-013590dc68dbc-1778513071756.png",
-            "url": "https://canva.link/7928yrfb9fho4s3",
-            "access": "public"
-          },
-          {
-            "id": "item-1778941165452-9665ff71f15698",
-            "title": "Test media",
-            "description": "Test Media",
-            "thumbnail": "./media/thumb-item-1778941165452-9665ff71f15698-1778941175480.png",
-            "url": "./media/media-item-1778941165452-9665ff71f15698-1778941174489.mp4",
-            "access": "public"
-          },
-          {
-            "id": "item-1779210556893-da64255cf802b",
-            "title": "YouTube test",
-            "description": "app live testing",
-            "thumbnail": "./media/thumb-item-1779210556893-da64255cf802b-1779210561633.png",
-            "url": "https://youtube.com/shorts/n531VztXLsM?si=CMN9dZXCRFQFOE5r",
-            "access": "public"
-          }
-        ]
-      },
       {
         "id": "collection-1779899294715-fc45f74d9e30d8",
         "title": "Alex & India’s Prom 2026",
-        "items": [
-          {
-            "id": "item-1779900979953-f2972685c85368",
-            "title": "Grandparents R US",
-            "description": "🇵🇦 🇩🇪",
-            "thumbnail": "./media/thumb-item-1779900979953-f2972685c85368-1779901129883.png",
-            "url": "./media/media-item-1779900979953-f2972685c85368-1779901125967.jpg",
-            "access": "public"
-          },
-          {
-            "id": "item-1779901048955-a4dbb0c9d895d",
-            "title": "Parents ❤️",
-            "description": "",
-            "thumbnail": "./media/thumb-item-1779901048955-a4dbb0c9d895d-1779901133786.png",
-            "url": "./media/media-item-1779901048955-a4dbb0c9d895d-1779901130919.jpg",
-            "access": "public"
-          },
-          {
-            "id": "item-1779901120843-f614f2cd9e157",
-            "title": "My Twin ❤️",
-            "description": "💪🏿💪🏿💪🏿",
-            "thumbnail": "./media/thumb-item-1779901120843-f614f2cd9e157-1779901137996.png",
-            "url": "./media/media-item-1779901120843-f614f2cd9e157-1779901135015.png",
-            "access": "public"
-          },
-          {
-            "id": "item-1779901332427-b46ca573d07b28",
-            "title": "Cousin Brothers",
-            "description": "⛓️⛓️",
-            "thumbnail": "./media/thumb-item-1779901332427-b46ca573d07b28-1779901340579.png",
-            "url": "./media/media-item-1779901332427-b46ca573d07b28-1779901337740.jpg",
-            "access": "public"
-          }
-        ]
+        "items": []
       }
     ],
     "presentation": {
@@ -92,61 +20,16 @@
       "url": "",
       "animation": "none"
     },
-    "externalMedia": [
-      {
-        "id": "external-1782248587773-6788fb3e47e0e8",
-        "provider": "custom",
-        "name": "TEsTing",
-        "url": "",
-        "embed": "<picflow-gallery id=\"gal_CjkXXVJPUq15Ll6R\" tenant=\"tnt_wF010uQK9a411fbe\" lightbox=\"#000000E6\" no-padding=\"true\" no-background=\"true\" show-cover=\"true\"></picflow-gallery>",
-        "thumbnail": "",
-        "buttonText": "Testing",
-        "enabled": true
-      }
-    ]
+    "externalMedia": []
   },
-  "pillColor": "#b51a00",
+  "pillColor": "#000000",
   "live": {
-    "enabled": true,
-    "status": "live",
-    "watch_url": "https://customer-sb4ix37adh6j9xvg.cloudflarestream.com/80cb955843a44433f4b0608b3e90f963/iframe",
-    "description": "Live DJ performance may be included as part of this real-time broadcast and is not provided as an on-demand service. Every session is different!"
+    "enabled": false,
+    "status": "offline",
+    "watch_url": "",
+    "description": ""
   },
-  "supporters": [
-    {
-      "id": "supporter-1780500588661-b9ee67454252d",
-      "type": "supporter",
-      "name": "DJ ALAMO",
-      "tagline": "",
-      "description": "ALAMO ALLSTARS",
-      "thumbnail": "./media/supporter-supporter-1780500588661-b9ee67454252d-1780500601317.png",
-      "url": "https://djalamo.com/",
-      "buttonText": "DJ Alamo.com",
-      "enabled": true
-    },
-    {
-      "id": "supporter-1782475432502-8bd5c5c81eab2",
-      "type": "supporter",
-      "name": "High Demand 2022",
-      "tagline": "High demand",
-      "description": "testing",
-      "thumbnail": "./media/supporter-supporter-1782475432502-8bd5c5c81eab2-1782475489895.png",
-      "url": "https://highdemandclothingcompany.com/?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQPOTM2NjE5NzQzMzkyNDU5AAGnZ1xAu4VSDxd4vZRk3nDJ4fheXwWvzGW-0H17gocUYlqBbdjfi7n4JUpXgaw_aem_-oCbvFTH2O73fomlgClPtA",
-      "buttonText": "test",
-      "enabled": true
-    },
-    {
-      "id": "supporter-1782484404456-7b2d2e22e0c928",
-      "type": "sponsor",
-      "name": "DJ Mofiya",
-      "tagline": "",
-      "description": "",
-      "thumbnail": "",
-      "url": "",
-      "buttonText": "Visit Supporter",
-      "enabled": true
-    }
-  ],
+  "supporters": [],
   "community": {
     "enabled": true,
     "provider": "custom",
@@ -159,18 +42,18 @@
   "background": {
     "enabled": true,
     "type": "video",
-    "url": "./media/background-video-1783121753332.mp4"
+    "url": ""
   },
   "chime": {
-    "enabled": true,
-    "url": "./media/chime-1782998219929.mp3",
-    "volume": 0.45
+    "enabled": false,
+    "url": "",
+    "volume": 0.65
   },
   "heroMedia": {
-    "enabled": true,
-    "type": "image",
-    "url": "./media/hero-image-1783122053433.png",
-    "animation": "spin"
+    "enabled": false,
+    "type": "none",
+    "url": "",
+    "animation": "none"
   },
   "innerSurface": {
     "style": "default",
