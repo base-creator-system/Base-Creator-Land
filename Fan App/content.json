@@ -6,7 +6,7 @@
   "contactEmail": "",
   "contactLabel": "",
   "mediaGateway": {
-    "enabled": false,
+    "enabled": true,
     "collections": [
       {
         "id": "collection-1783344920975-5673979ad81098",
