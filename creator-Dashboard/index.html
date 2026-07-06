@@ -626,6 +626,10 @@ height:520px;
 <div style="margin-top:18px;border-top:1px solid #222;padding-top:14px;">
 <label>App Icon</label>
 <input id="appIconInput" type="file" accept="image/png,image/jpeg">
+<div class="btnRow">
+<button id="btnClearAppIcon" class="danger" type="button">Remove App Icon</button>
+</div>
+<div class="tiny">Remove App Icon resets the Fan App icon back to the BASE template icon on publish.</div>
 </div>
 
 <div style="margin-top:18px;border-top:1px solid #222;padding-top:14px;">
@@ -1324,6 +1328,7 @@ innerSurfaceColor:$("innerSurfaceColor"),
 innerSurfaceFile:$("innerSurfaceFile"),
 innerSurfaceUrl:$("innerSurfaceUrl"),
 appIconInput:$("appIconInput"),
+btnClearAppIcon:$("btnClearAppIcon"),
 heroMediaType:$("heroMediaType"),
 heroMediaFile:$("heroMediaFile"),
 heroMediaUrl:$("heroMediaUrl"),
@@ -1412,6 +1417,7 @@ let communityHydrated=false
 let communityTouched=false
 let isPublishing=false
 let isDirty=false
+let appIconRemoveRequested=false
 let loadedSha=null
 let shaConflict=false
 const defaultPublishLabel="Publish"
@@ -2930,6 +2936,51 @@ icon512Name:latest512.name
 }
 }
 
+async function getBaseIconVersion(token){
+const folderPath="Fan App/icons"
+const api=`https://api.github.com/repos/${OWNER}/${REPO}/contents/${ghEncodePath(folderPath)}?ref=${BRANCH}`
+const res=await fetch(api,{headers:ghHeaders(token)})
+
+if(!res.ok) throw new Error(`GitHub icons folder read failed (${res.status})`)
+
+const files=await res.json()
+
+let base192=null
+let base512=null
+
+files.forEach(file=>{
+const name=String(file?.name || "")
+
+const match192=name.match(/^icon-192-v(\d+)\.png$/)
+const match512=name.match(/^icon-512-v(\d+)\.png$/)
+
+if(match192){
+const v=parseInt(match192[1],10)
+if(!base192 || v<base192.v){
+base192={v,name}
+}
+}
+
+if(match512){
+const v=parseInt(match512[1],10)
+if(!base512 || v<base512.v){
+base512={v,name}
+}
+}
+})
+
+if(!base192 || !base512){
+throw new Error("Base versioned icons not found in Fan App/icons")
+}
+
+return{
+icon192Path:`Fan App/icons/${base192.name}`,
+icon512Path:`Fan App/icons/${base512.name}`,
+icon192Name:base192.name,
+icon512Name:base512.name
+}
+}
+
 async function updateAppIcon(){
 
 try{
@@ -3307,6 +3358,8 @@ hydrateSupporters(state)
 hydrateCommunity(state)
 
 renderLinks()
+appIconRemoveRequested=false
+el.appIconInput.value=""
 
 hasLoadedState=true
 clearDirty()
@@ -3438,6 +3491,44 @@ manifestPath,
 manifestMeta.sha,
 toBase64Utf8(JSON.stringify(manifest,null,2)),
 `BASE manifest icon v${newVersion}`
+)
+
+}else if(appIconRemoveRequested){
+log("App icon removal requested. Publish will reset the Fan App icon to the BASE template icon.")
+
+const baseIcon=await getBaseIconVersion(token)
+icon192Name=baseIcon.icon192Name
+icon512Name=baseIcon.icon512Name
+
+const manifestPath="Fan App/manifest.json"
+const manifestMeta=await ghGetFileMeta(token,manifestPath)
+
+let manifest={}
+try{
+manifest=JSON.parse(fromBase64Utf8(manifestMeta.content))
+}catch(e){
+manifest={}
+}
+
+manifest.icons=[
+{
+src:`icons/${icon192Name}`,
+sizes:"192x192",
+type:"image/png"
+},
+{
+src:`icons/${icon512Name}`,
+sizes:"512x512",
+type:"image/png"
+}
+]
+
+await ghPutFile(
+token,
+manifestPath,
+manifestMeta.sha,
+toBase64Utf8(JSON.stringify(manifest,null,2)),
+"BASE manifest icon reset"
 )
 
 }else{
@@ -3574,6 +3665,7 @@ el.lastSha.textContent=`sha: ${result.content.sha}`
 }
 
 el.appIconInput.value=""
+appIconRemoveRequested=false
 
 clearDirty()
 setPill("ok","STATUS: published")
@@ -3612,6 +3704,8 @@ el.btnResetToken.addEventListener("click",()=>{
 localStorage.removeItem(LS_TOKEN)
 el.token.value=""
 hasLoadedState=false
+appIconRemoveRequested=false
+el.appIconInput.value=""
 clearDirty()
 clearShaState()
 setPublishBusy(false)
@@ -3643,6 +3737,16 @@ el.chimeFile.value=""
 el.chimeUrl.value=""
 el.chimeVolume.value="0.65"
 markDirty()
+}
+el.appIconInput.addEventListener("change",()=>{
+appIconRemoveRequested=false
+markDirty()
+})
+el.btnClearAppIcon.onclick=()=>{
+el.appIconInput.value=""
+appIconRemoveRequested=true
+markDirty()
+log("App icon reset staged. Publish to restore the BASE template icon.")
 }
 el.pillColor.addEventListener("input",markDirty)
 el.innerSurfaceStyle.addEventListener("change",markDirty)
@@ -3761,6 +3865,8 @@ renderSupporters()
 hydrateCommunity({})
 hydrateBackground({})
 hydrateChime({})
+appIconRemoveRequested=false
+el.appIconInput.value=""
 communityHydrated=false
 communityTouched=false
 setPublishBusy(false)
