@@ -1,0 +1,17 @@
+BASE Creator System
+
+This software includes the BASE Framework.
+
+The BASE Framework provides the underlying software architecture for creator deployments.
+
+Creator Deployments built with BASE remain separate from the BASE Framework.
+
+Creator identity, creator content, creator media, and creator audience remain the responsibility of their respective creators.
+
+The BASE Framework, its architecture, and associated framework documentation remain subject to their respective rights and licensing.
+
+For additional information, see:
+
+LICENSE
+RIGHTS.md
+COPYRIGHT
