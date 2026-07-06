@@ -4,9 +4,9 @@
   "links": [],
   "backgroundColor": "#000000",
   "contactEmail": "",
-  "contactLabel": "Your Email",
+  "contactLabel": "",
   "mediaGateway": {
-    "enabled": true,
+    "enabled": false,
     "collections": [
       {
         "id": "collection-1783344920975-5673979ad81098",
@@ -27,7 +27,7 @@
     "enabled": true,
     "status": "offline",
     "watch_url": "",
-    "description": "Your Live Description Here!"
+    "description": ""
   },
   "supporters": [],
   "community": {
