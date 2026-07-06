@@ -11,7 +11,16 @@
       {
         "id": "collection-1783344920975-5673979ad81098",
         "title": "latest",
-        "items": []
+        "items": [
+          {
+            "id": "item-1783358382083-8585641d3ad948",
+            "title": "Place Your Image",
+            "description": "",
+            "thumbnail": "./media/thumb-item-1783358382083-8585641d3ad948-1783358434771.png",
+            "url": "./media/media-item-1783358382083-8585641d3ad948-1783358433606.png",
+            "access": "public"
+          }
+        ]
       }
     ],
     "presentation": {
