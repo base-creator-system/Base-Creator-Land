@@ -4,13 +4,13 @@
 
 This document defines the supported operating environments for the BASE Creator System.
 
-The BASE Creator System is designed to remain portable, deployment-independent, and compatible with modern web technologies.
+The BASE Tier 2 Creator Template v1 is designed to remain portable, deployment-independent, and compatible with modern web technologies.
 
 ---
 
 # Hosting Environments
 
-The BASE Creator System may be deployed using any compatible web hosting environment, including but not limited to:
+Creator Deployments built using the BASE Tier 2 Creator Template v1 may be deployed using any compatible web hosting environment, including but not limited to:
 
 - GitHub Pages
 - Netlify
@@ -27,7 +27,7 @@ They do not define the BASE Creator System.
 
 # Browser Support
 
-The BASE Creator System is designed to operate on modern web browsers that support current web standards and Progressive Web App (PWA) technologies.
+The BASE Tier 2 Creator Template v1 is designed to operate on modern web browsers that support current web standards and Progressive Web App (PWA) technologies.
 
 Browser capabilities may vary depending on browser version and operating system.
 
@@ -35,7 +35,7 @@ Browser capabilities may vary depending on browser version and operating system.
 
 # Progressive Web App (PWA)
 
-The BASE Creator System is designed to function as a Progressive Web App (PWA) where supported.
+The BASE Tier 2 Creator Template v1 is designed to function as a Progressive Web App (PWA) where supported.
 
 PWA behavior may differ between operating systems and browsers based on their respective implementations.
 
@@ -43,7 +43,7 @@ PWA behavior may differ between operating systems and browsers based on their re
 
 # Device Support
 
-The BASE Creator System is intended to support:
+The BASE Tier 2 Creator Template v1 is intended to support:
 
 - Desktop computers
 - Laptop computers
@@ -56,7 +56,7 @@ Performance may vary depending on device capabilities.
 
 # Network Connectivity
 
-The BASE Creator System operates using standard web technologies.
+The BASE Tier 2 Creator Template v1 operates using standard web technologies.
 
 Application loading, media playback, live streaming, synchronization, and general responsiveness may be affected by network conditions.
 
@@ -69,7 +69,7 @@ Performance may vary depending upon:
 - Browser implementation
 - Third-party service availability
 
-Temporary delays, slower rendering, buffering, synchronization delays, or reduced responsiveness caused by network conditions should not be interpreted as defects in the BASE Creator System.
+Temporary delays, slower rendering, buffering, synchronization delays, or reduced responsiveness caused by network conditions should not be interpreted as defects in the BASE Tier 2 Creator Template v1.
 
 As internet infrastructure and network technologies continue to evolve, Creator Deployments may benefit from improved performance without requiring changes to the BASE Creator System.
 
@@ -95,4 +95,4 @@ Deployment portability remains a core design objective of the BASE Creator Syste
 
 # Environment Goal
 
-The BASE Creator System is designed to provide creators with a portable, deployment-independent system capable of operating across compatible hosting environments, browsers, devices, and network conditions while preserving creator control and deployment flexibility.
+The BASE Creator System is designed to provide creators with a portable, deployment-independent system capable of operating across compatible hosting environments, browsers, devices, and network conditions while preserving creator ownership and deployment flexibility.
