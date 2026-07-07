@@ -2,17 +2,17 @@
 
 ## Purpose
 
-This document defines how official BASE Creator System releases are prepared, frozen, and published.
+This document defines how official releases of the BASE Tier 2 Creator Template are prepared, frozen, and published.
 
-The objective is to preserve stable production versions while allowing continued framework development.
+The objective is to preserve stable production releases while allowing the continued evolution of the BASE Creator System.
 
 ---
 
 # Release Philosophy
 
-Official BASE releases represent stable production milestones.
+Official releases represent stable production milestones.
 
-A release should not be published until the Creator System has been verified and documentation has been updated.
+A release should not be published until the BASE Tier 2 Creator Template has been verified and its documentation has been updated.
 
 ---
 
@@ -20,7 +20,7 @@ A release should not be published until the Creator System has been verified and
 
 Before creating an official release:
 
-- Framework functionality verified
+- BASE Tier 2 Creator Template functionality verified
 - Creator Dashboard verified
 - Fan App verified
 - Documentation updated
@@ -34,13 +34,13 @@ Before creating an official release:
 
 A production release should be considered frozen once published.
 
-Future framework improvements should be introduced through new framework versions rather than modifying previous production releases.
+Future improvements to the BASE Creator System should be introduced through future releases of the BASE Tier 2 Creator Template rather than modifying previous production releases.
 
 ---
 
 # Versioning
 
-Each official release should receive:
+Each official release should include:
 
 - Version identifier
 - Release title
@@ -51,6 +51,6 @@ Each official release should receive:
 
 # Long-Term Stability
 
-Official releases provide historical snapshots of the BASE Creator System.
+Official releases provide historical production snapshots of the BASE Tier 2 Creator Template.
 
-Future development should build upon previous releases while preserving the integrity of the release history.
+Future development of the BASE Creator System should build upon previous releases while preserving the integrity of the release history.
