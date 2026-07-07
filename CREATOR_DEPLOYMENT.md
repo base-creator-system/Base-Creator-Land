@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document defines how Creator Deployments are built from the BASE Creator System.
+This document defines how Creator Deployments are created from the BASE Creator System.
 
 A Creator Deployment is an independent implementation of the BASE Framework while preserving the integrity of the BASE Framework itself.
 
@@ -14,6 +14,7 @@ Each Creator Deployment may customize:
 
 - Creator Name
 - Creator Identity
+- Creator Branding
 - Creator Logo
 - Creator Hero
 - Creator Background
@@ -46,11 +47,13 @@ The following remain part of the BASE Framework unless intentionally changed thr
 
 The BASE Framework is independent of any hosting provider.
 
-A Creator Deployment may be hosted, migrated, or deployed using any compatible hosting environment.
+Creator Deployments may be hosted, migrated, or deployed using any compatible hosting environment.
 
 GitHub is one deployment option.
 
-A hosting provider does not define the BASE Framework.
+Creators may also choose custom infrastructure, private servers, cloud hosting, or other compatible deployment environments.
+
+Hosting infrastructure does not define the BASE Framework.
 
 The BASE Framework defines the deployment.
 
@@ -62,7 +65,17 @@ A Creator Deployment remains a BASE deployment regardless of where it is hosted,
 
 Moving a deployment between hosting providers does not change the identity of the BASE Framework.
 
-If the BASE Framework is fundamentally altered, replaced, or intentionally removed, the resulting software should not be represented as an official BASE Framework deployment.
+Framework improvements should be introduced through official BASE Framework development whenever practical to preserve compatibility across Creator Deployments.
+
+---
+
+# Privacy
+
+The BASE Framework is designed to operate without requiring user accounts, audience tracking, or framework-level data collection.
+
+Creators may integrate third-party services whose functionality and data practices are governed by those respective services.
+
+Those services are independent of the BASE Framework.
 
 ---
 
@@ -70,10 +83,10 @@ If the BASE Framework is fundamentally altered, replaced, or intentionally remov
 
 Future BASE Framework releases may introduce additional capabilities.
 
-Creator Deployments may adopt future BASE Framework versions at their own discretion.
+Creator Deployments may adopt future BASE Framework versions at the creator's discretion.
 
 ---
 
 # Deployment Goal
 
-Every Creator Deployment should preserve the creator's identity, content, media, audience, and independence while remaining compatible with continued BASE Framework development.
+Every Creator Deployment should preserve the creator's identity, branding, content, media, audience, and independence while remaining compatible with continued BASE Framework development.
