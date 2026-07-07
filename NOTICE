@@ -1,14 +1,16 @@
 BASE Creator System
 
-This software includes the BASE Framework.
+This software package contains the **BASE Tier 2 Creator Template v1**.
 
-The BASE Framework provides the underlying software architecture for creator deployments.
+The BASE Creator System provides the architecture, workflows, and design principles for building Creator Deployments.
 
-Creator Deployments built with BASE remain separate from the BASE Framework.
+The BASE Tier 2 Creator Template v1 is the licensed software product used to build Creator Deployments.
 
-Creator identity, creator content, creator media, and creator audience remain the responsibility of their respective creators.
+Creator Deployments remain independent of the BASE Creator System.
 
-The BASE Framework, its architecture, and associated framework documentation remain subject to their respective rights and licensing.
+Creator identity, creator content, creator media, creator branding, and creator audience remain the responsibility and property of their respective creators.
+
+The BASE Creator System, the BASE Tier 2 Creator Template v1, and their associated software, architecture, documentation, and intellectual property remain subject to their respective rights and licensing.
 
 For additional information, see:
 
