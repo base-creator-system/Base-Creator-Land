@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-<title>Base Creator System</title>
+<title>DJ MOFIYA APP</title>
 
-<link rel="manifest" href="manifest.json?v=1783370843541">
+<link rel="manifest" href="manifest.json?v=1783122055984">
 <meta name="theme-color" content="#000000">
-<link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512-v38.png?v=1783370843541">
-<link rel="shortcut icon" type="image/png" href="icons/icon-192-v38.png?v=1783370843541">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192-v38.png?v=1783370843541">
+<link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512-v37.png?v=1783122055984">
+<link rel="shortcut icon" type="image/png" href="icons/icon-192-v37.png?v=1783122055984">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192-v37.png?v=1783122055984">
 
 <style>
 :root{
@@ -513,10 +513,6 @@ width:100%;
 height:100%;
 border:0;
 background:#000;
-display:block;
-transform:translateZ(0);
--webkit-transform:translateZ(0);
-will-change:transform;
 }
 
 .liveDescription{
@@ -1338,7 +1334,7 @@ pointer-events:none;
 
 <div class="top">
 <div class="brand">
-<img id="logo" src="icons/icon-192-v38.png?v=1783370843541">
+<img id="logo" src="icons/icon-192-v37.png?v=1783122055984">
 <div class="name" id="name">Creator</div>
 </div>
 
@@ -1538,8 +1534,6 @@ let launchIntroResolved=false
 let launchIntroTimer=null
 let heroHiddenByData=false
 let supportersHiddenByData=false
-let activeLiveURL=""
-let liveRendererRecoveryTimer=null
 
 const installInfoBtn=document.getElementById("installInfoBtn")
 const installModal=document.getElementById("installModal")
@@ -3596,94 +3590,6 @@ enforceViewPlacement()
 
 }
 
-
-function getCurrentLiveURL(){
-
-if(!currentState || !currentState.live || currentState.live.enabled!==true) return "";
-
-return safeURL(currentState.live.watch_url || "");
-
-}
-
-function recoverLiveRenderer(){
-
-const livePlayer=document.getElementById("livePlayer");
-const liveFrame=document.getElementById("liveFrame");
-
-if(!livePlayer || !liveFrame) return;
-if(!activeLiveURL && !getCurrentLiveURL()) return;
-if(livePlayer.classList.contains("hidden")) return;
-if(document.hidden) return;
-
-try{
-
-livePlayer.style.transform="translateZ(0)";
-livePlayer.style.webkitTransform="translateZ(0)";
-liveFrame.style.transform="translateZ(0)";
-liveFrame.style.webkitTransform="translateZ(0)";
-liveFrame.style.opacity="0.999";
-
-void livePlayer.offsetHeight;
-void liveFrame.offsetHeight;
-
-requestAnimationFrame(()=>{
-requestAnimationFrame(()=>{
-liveFrame.style.opacity="1";
-livePlayer.style.transform="";
-livePlayer.style.webkitTransform="";
-});
-});
-
-}catch(e){}
-
-}
-
-function scheduleLiveRendererRecovery(){
-
-if(liveRendererRecoveryTimer){
-clearTimeout(liveRendererRecoveryTimer);
-liveRendererRecoveryTimer=null;
-}
-
-liveRendererRecoveryTimer=setTimeout(()=>{
-liveRendererRecoveryTimer=null;
-recoverLiveRenderer();
-},250);
-
-}
-
-document.addEventListener("visibilitychange",()=>{
-
-if(!document.hidden){
-scheduleLiveRendererRecovery();
-}
-
-});
-
-window.addEventListener("pageshow",()=>{
-
-scheduleLiveRendererRecovery();
-
-});
-
-window.addEventListener("focus",()=>{
-
-scheduleLiveRendererRecovery();
-
-});
-
-document.addEventListener("fullscreenchange",()=>{
-
-scheduleLiveRendererRecovery();
-
-});
-
-document.addEventListener("webkitfullscreenchange",()=>{
-
-scheduleLiveRendererRecovery();
-
-});
-
 function applyState(d){
 
 if(!d)return;
@@ -3738,17 +3644,13 @@ const liveURL=safeURL(d.live.watch_url || "");
 
 if(liveURL){
 livePlayer.classList.remove("hidden");
-activeLiveURL=liveURL;
 
 if(liveFrame.src!==liveURL){
 liveFrame.src=liveURL;
 }
 
-scheduleLiveRendererRecovery();
-
 }else{
 livePlayer.classList.add("hidden");
-activeLiveURL="";
 liveFrame.removeAttribute("src");
 }
 
@@ -3773,7 +3675,6 @@ liveDescriptionToggle.onclick=null;
 }else{
 liveStatus.textContent="Unavailable";
 livePlayer.classList.add("hidden");
-activeLiveURL="";
 liveFrame.removeAttribute("src");
 liveDescriptionExpanded=false;
 liveDescription.textContent="";
