@@ -1,25 +1,28 @@
 BASE Creator System
 
-Framework Version: Tier 2 v1
+Product Name:
+BASE Tier 2 Creator Template v1
 
-Framework Status: Frozen Production Template
+Product Version:
+1.0.0
 
-Template Version: 1.0.0
+Product Status:
+Frozen Production Release
 
-Framework Name:
+System:
 BASE Creator System
 
-Template Name:
-BASE Tier 2 Creator Template
+Repository:
+BASE Creator Land
 
 Deployment Type:
 Creator Deployment
 
-Current Stage:
+Release Stage:
 Tier 2
 
 Purpose:
-Official production template for BASE Creator deployments.
+Official production release of the BASE Tier 2 Creator Template v1 for building independent Creator Deployments.
 
 Notes:
-Future BASE framework versions will receive new version identifiers while existing creator deployments may continue operating on previous framework versions.
+Future releases of the BASE Tier 2 Creator Template will receive new version identifiers while existing Creator Deployments may continue operating on previous production releases, preserving compatibility whenever practical within the continued evolution of the BASE Creator System.
