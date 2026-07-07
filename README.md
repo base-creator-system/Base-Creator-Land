@@ -2,9 +2,9 @@
 
 ## Creator-Owned by Design
 
-BASE is a creator-owned framework for building independent creator apps.
+BASE is a framework for building independent Creator Deployments.
 
-It is designed to give creators direct ownership of their identity, content, audience, and deployment while providing a common framework for building and publishing creator experiences.
+It is designed to allow creators to control their identity, branding, content, audience, and deployment while providing a consistent framework for building, publishing, and evolving creator experiences.
 
 BASE is a framework, not a platform.
 
@@ -16,9 +16,56 @@ Creators should own their home.
 
 Platforms are discovery.
 
-Creator deployments are home.
+Creator Deployments are home.
 
-BASE exists to provide the framework that allows creators to build, manage, and evolve their own independent creator presence.
+BASE exists to provide a framework that allows creators to build, manage, and evolve their own independent creator presence.
+
+The framework is designed to preserve creator independence while allowing the framework itself to continue evolving.
+
+---
+
+# Framework Principles
+
+BASE is built around several core principles.
+
+- Creator control
+- Direct creator-to-audience relationships
+- Framework independence
+- Deployment independence
+- Hosting independence
+- Open architecture
+- Long-term sustainability
+- Framework evolution
+
+---
+
+# Hosting Independence
+
+BASE is independent of any specific hosting provider.
+
+Creators are free to deploy their Creator Deployment using any compatible hosting environment.
+
+GitHub is one deployment option.
+
+A custom server is another.
+
+Cloud hosting is another.
+
+The hosting provider is infrastructure.
+
+It is not the BASE Framework.
+
+Using third-party hosting does not change the creator's control of their deployment.
+
+---
+
+# Privacy by Design
+
+The BASE Framework is designed to operate without requiring user accounts, audience tracking, or framework-level data collection.
+
+Creators may choose to integrate third-party services whose own functionality and data practices are governed by those respective services.
+
+Those services are independent of the BASE Framework.
 
 ---
 
@@ -35,11 +82,11 @@ BASE exists to provide the framework that allows creators to build, manage, and 
 
 ---
 
-# Creator Ownership
+# Creator Deployments
 
-Each Creator Deployment remains independent.
+Every Creator Deployment remains independent.
 
-Creators retain control of their:
+Creators control their:
 
 - Creator Identity
 - Creator Branding
@@ -50,45 +97,37 @@ Creators retain control of their:
 
 BASE provides the framework.
 
-Creators provide everything that makes their deployment their own.
-
----
-
-# Framework Principles
-
-BASE is built around several core principles.
-
-- Creator ownership
-- Direct relationships
-- Framework evolution
-- Independent deployments
-- Open architecture
-- Long-term sustainability
+Creators determine how their deployment is presented, managed, hosted, and evolved.
 
 ---
 
 # Repository Purpose
 
-This repository contains the official BASE Creator System framework.
+This repository contains the official BASE Creator System template.
 
-Individual creator deployments are created from this framework and evolve independently while remaining compatible with future BASE framework development.
+Creator Deployments are built from this template while remaining independent of one another.
+
+Future BASE Framework releases may expand the framework while preserving compatibility with existing Creator Deployments where practical.
 
 ---
 
 # Documentation
 
-See the accompanying documentation for additional information.
+Additional documentation is included within this repository.
 
+- README.md
 - RIGHTS.md
 - NOTICE
 - COPYRIGHT
 - LICENSE
 - VERSION
+- CREATOR_DEPLOYMENT.md
+- BUILDER_GUIDE.md
 
 ---
 
 # Version
 
-Current Framework Version:
+Framework Version:
 
 **BASE Tier 2 Creator Template v1**
