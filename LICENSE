@@ -17,17 +17,17 @@ and maintaining Creator Deployments.
 
 This License grants permission to use the software.
 
-This License does not transfer ownership of the software or its intellectual
-property.
+This License does not transfer ownership of the software or its associated
+intellectual property.
 
 ------------------------------------------------------------------------------
 
 2. Ownership
 
-The BASE Tier 2 Creator Template v1, including its source code, architecture,
-software, documentation, publishing workflow, deployment workflow, design,
-and associated intellectual property, remains the exclusive property of
-William Smith McClinton unless ownership is transferred through a separate
+The BASE Tier 2 Creator Template v1, including its software, source code,
+architecture, documentation, publishing workflow, deployment workflow,
+design, and associated intellectual property, remains the exclusive property
+of William Smith McClinton unless ownership is transferred through a separate
 written legal agreement.
 
 Nothing contained within this License transfers ownership of the
@@ -39,12 +39,12 @@ BASE Tier 2 Creator Template v1.
 
 The Licensee may:
 
-• Install and use the licensed copy.
+• Install and use one licensed copy.
 
 • Build Creator Deployments.
 
 • Customize creator identity, branding, media, content, links,
-communication, appearance, and deployment configuration.
+communications, appearance, and deployment configuration.
 
 • Publish Creator Deployments.
 
@@ -81,7 +81,7 @@ the BASE Tier 2 Creator Template v1.
 Creator Deployments built using the BASE Tier 2 Creator Template v1 remain
 under the control of their respective creators.
 
-Creators retain ownership of their own:
+Creators retain ownership of their:
 
 • Creator Identity
 
@@ -125,11 +125,11 @@ third-party software or services.
 
 8. Updates
 
-Future versions of the BASE Tier 2 Creator Template v1 may be released
+Future releases of the BASE Tier 2 Creator Template may be made available
 separately.
 
-Nothing in this License guarantees future versions,
-updates, maintenance, support, or additional services.
+Nothing in this License guarantees future releases, updates,
+maintenance, support, or additional services.
 
 Such offerings may be provided under separate agreements.
 
