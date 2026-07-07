@@ -4,7 +4,7 @@
 
 This document defines the core principles that guide the design, development, and long-term evolution of the BASE Creator System.
 
-These principles are intended to remain consistent as the BASE Creator System, BASE Creator Land, and BASE Core continue to evolve.
+These principles are intended to remain consistent as the BASE Creator System, BASE Creator Land, and future releases of the BASE Tier 2 Creator Template continue to evolve.
 
 ---
 
@@ -20,7 +20,7 @@ Creator Deployments remain the destination.
 
 ---
 
-# Creator Control
+# Creator Ownership
 
 Creators control their Creator Deployments.
 
@@ -62,11 +62,11 @@ One Creator Deployment should never redefine or interfere with another.
 
 ---
 
-# Framework Evolution
+# System Evolution
 
 The BASE Creator System is designed to evolve.
 
-Future development should expand capabilities while preserving creator independence, deployment portability, and compatibility whenever practical.
+Future releases of the BASE Tier 2 Creator Template should expand capabilities while preserving creator ownership, deployment portability, and compatibility whenever practical.
 
 ---
 
@@ -74,7 +74,7 @@ Future development should expand capabilities while preserving creator independe
 
 BASE is intended to remain sustainable across future generations.
 
-Development decisions should preserve creator independence, long-term adaptability, and the continued evolution of the BASE Creator System.
+Development decisions should preserve creator ownership, long-term adaptability, and the continued evolution of the BASE Creator System.
 
 ---
 
