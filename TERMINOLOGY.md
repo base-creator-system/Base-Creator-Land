@@ -10,67 +10,71 @@ Consistent terminology helps preserve clarity across documentation, releases, an
 
 # BASE
 
-The overall project and identity.
-
----
-
-# BASE Core
-
-The open-source foundation upon which the BASE Creator System is built.
+The brand identity of the project.
 
 ---
 
 # BASE Creator System
 
-The creator system that provides the tools, architecture, and workflow for building Creator Deployments.
+The overall creator system that provides the architecture, tools, workflows, and philosophy for building Creator Deployments.
 
 ---
 
 # BASE Creator Land
 
-The official repository containing the BASE Creator System.
+The official repository containing the BASE Creator System and the official BASE Tier 2 Creator Template releases.
+
+---
+
+# BASE Tier 2 Creator Template v1
+
+The official licensed software product contained within this repository.
+
+This is the production release used to build Creator Deployments.
 
 ---
 
 # Creator Deployment
 
-An independent creator implementation built using the BASE Creator System.
+An independent creator application built using the BASE Tier 2 Creator Template v1.
 
-Each Creator Deployment represents an individual creator's application.
+Each Creator Deployment represents an individual creator while remaining compatible with the BASE Creator System.
 
 ---
 
 # Creator Dashboard
 
-The administrative interface used to configure and publish Creator Deployments.
+The administrative interface used to configure, manage, and publish Creator Deployments.
 
 ---
 
 # Fan App
 
-The public-facing Progressive Web App experienced by the creator's audience.
+The public-facing Progressive Web App (PWA) experienced by the creator's audience.
 
 ---
 
 # Builder
 
-A person configuring or developing a Creator Deployment using the BASE Creator System.
+A person configuring, customizing, deploying, or maintaining Creator Deployments using the BASE Tier 2 Creator Template v1.
 
 ---
 
 # Framework
 
-A descriptive term referring to the underlying architecture of the BASE Creator System.
+A descriptive architectural term.
 
-Framework is not the name of the product.
+Framework describes aspects of the BASE Creator System architecture.
+
+Framework is not the official product name.
 
 ---
 
 # Hosting Provider
 
-The infrastructure used to deploy a Creator Deployment.
+The infrastructure used to deploy Creator Deployments.
 
-Examples include GitHub Pages, Netlify, Cloudflare Pages, self-hosted servers, and other compatible hosting environments.
+Examples include GitHub Pages, Netlify, Cloudflare Pages, self-hosted servers, private hosting, and other compatible hosting environments.
 
 Hosting providers are infrastructure.
 
@@ -82,12 +86,12 @@ They do not define the BASE Creator System.
 
 An optional external service integrated into a Creator Deployment.
 
-Third-party services remain independent of the BASE Creator System.
+Third-party services remain independent of the BASE Creator System and are governed by their own functionality, terms, and policies.
 
 ---
 
 # Official Release
 
-A documented production milestone of the BASE Creator System.
+A documented production release of the BASE Tier 2 Creator Template.
 
-Official releases are intended to remain stable historical snapshots of the system.
+Official releases are intended to remain stable historical production snapshots of the software.
