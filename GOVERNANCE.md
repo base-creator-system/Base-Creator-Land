@@ -12,7 +12,7 @@ Its purpose is to preserve the integrity of the BASE Creator System while suppor
 
 The BASE Creator System is intended to evolve through deliberate, documented development.
 
-Every official release should strengthen the system while preserving its core principles.
+Every official release of the BASE Tier 2 Creator Template should strengthen the BASE Creator System while preserving its core principles.
 
 ---
 
@@ -20,7 +20,7 @@ Every official release should strengthen the system while preserving its core pr
 
 Development should preserve the integrity of the BASE Creator System.
 
-Changes should improve the system without compromising its architecture, portability, creator independence, or long-term sustainability.
+Changes should improve the system without compromising its architecture, portability, creator ownership, or long-term sustainability.
 
 ---
 
@@ -28,7 +28,7 @@ Changes should improve the system without compromising its architecture, portabi
 
 Official documentation is considered part of the BASE Creator System.
 
-Documentation should evolve alongside the system and accurately reflect each official release.
+Documentation should evolve alongside the system and accurately reflect each official release of the BASE Tier 2 Creator Template.
 
 ---
 
@@ -50,7 +50,7 @@ Each release should include:
 
 Development decisions should support:
 
-- Creator control
+- Creator ownership
 - Creator independence
 - Hosting independence
 - Privacy by design
@@ -63,7 +63,7 @@ Development decisions should support:
 
 # Compatibility
 
-Whenever practical, future versions of the BASE Creator System should preserve compatibility with existing Creator Deployments.
+Whenever practical, future releases of the BASE Tier 2 Creator Template should preserve compatibility with existing Creator Deployments.
 
 When compatibility cannot reasonably be maintained, changes should be clearly documented.
 
