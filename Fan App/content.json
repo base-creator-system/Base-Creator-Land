@@ -1,10 +1,10 @@
 {
-  "name": "Base Creator System APP",
-  "bio": "",
+  "name": "DJ MOFIYA APP",
+  "bio": "Music, live sessions, bookings & more Tap below to reach me!",
   "links": [],
   "backgroundColor": "#000000",
-  "contactEmail": "",
-  "contactLabel": "",
+  "contactEmail": "Bookdjmofiya@gmail.com",
+  "contactLabel": "Email",
   "mediaGateway": {
     "enabled": true,
     "collections": [
@@ -31,9 +31,9 @@
     },
     "externalMedia": []
   },
-  "pillColor": "#000000",
+  "pillColor": "#e32400",
   "live": {
-    "enabled": true,
+    "enabled": false,
     "status": "offline",
     "watch_url": "",
     "description": "Put your stream info here!"
@@ -50,18 +50,18 @@
   },
   "background": {
     "enabled": true,
-    "type": "image",
-    "url": "./media/background-image-1783353669771.png"
+    "type": "video",
+    "url": "./media/background-video-1783474900632.mp4"
   },
   "chime": {
-    "enabled": false,
-    "url": "",
+    "enabled": true,
+    "url": "./media/chime-1783474904011.mp3",
     "volume": 0.65
   },
   "heroMedia": {
     "enabled": true,
     "type": "image",
-    "url": "./media/hero-image-1783353671710.png",
+    "url": "./media/hero-image-1783474902583.png",
     "animation": "spin"
   },
   "innerSurface": {
