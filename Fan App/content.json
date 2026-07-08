@@ -24,10 +24,10 @@
       }
     ],
     "presentation": {
-      "style": "default",
+      "style": "image",
       "color": "#000000",
-      "url": "",
-      "animation": "none"
+      "url": "./media/media-card-image-1783486613643.png",
+      "animation": "pulse"
     },
     "externalMedia": []
   },
