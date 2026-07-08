@@ -1,3 +1,5 @@
+
+
 <!doctype html>
 
 <html lang="en">
@@ -2670,8 +2672,6 @@ source.cardWallpaper ||
 source.mediaCardWallpaper ||
 source.backgroundImage ||
 source.image ||
-source.url ||
-source.src ||
 ""
 ).trim();
 
@@ -2680,8 +2680,6 @@ source.video ||
 source.cardVideo ||
 source.mediaCardVideo ||
 source.backgroundVideo ||
-source.url ||
-source.src ||
 ""
 ).trim();
 
@@ -3016,11 +3014,11 @@ d.cardPresentation,
 d.mediaPresentation,
 d.mediaCardPresentation,
 d.cardStyle,
+gateway.presentation,
 gateway.outerSurfacePresentation,
 gateway.outerSurface,
 gateway.cardSurfacePresentation,
 gateway.cardSurface,
-gateway.presentation,
 gateway.cardPresentation,
 gateway.mediaPresentation,
 gateway.mediaCardPresentation,
@@ -3069,9 +3067,7 @@ const config=getGlobalCardPresentationConfig(d);
 const selector=[
 ".card",
 ".supportersCard",
-".supporterCard",
-".collectionCard",
-".externalMediaCard"
+".supporterCard"
 ].join(",");
 
 document.querySelectorAll(selector).forEach(card=>{
@@ -4167,7 +4163,7 @@ collections.forEach(collection=>{
 const card=document.createElement("div")
 card.className="collectionCard"
 
-applyMediaPresentation(card,getMediaPresentationConfig(collection,gateway) || getGlobalCardPresentationConfig(d),"global")
+applyMediaPresentation(card,getMediaPresentationConfig(collection,gateway) || getGlobalCardPresentationConfig(d),"media")
 
 card.onclick=()=>openCollection(collection)
 
