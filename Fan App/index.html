@@ -2670,6 +2670,8 @@ source.cardWallpaper ||
 source.mediaCardWallpaper ||
 source.backgroundImage ||
 source.image ||
+source.url ||
+source.src ||
 ""
 ).trim();
 
@@ -2678,6 +2680,8 @@ source.video ||
 source.cardVideo ||
 source.mediaCardVideo ||
 source.backgroundVideo ||
+source.url ||
+source.src ||
 ""
 ).trim();
 
@@ -3004,10 +3008,19 @@ if(!d) return null;
 const gateway=d.mediaGateway || {};
 
 return getMediaPresentationConfig(
+d.outerSurfacePresentation,
+d.outerSurface,
+d.cardSurfacePresentation,
+d.cardSurface,
 d.cardPresentation,
 d.mediaPresentation,
 d.mediaCardPresentation,
 d.cardStyle,
+gateway.outerSurfacePresentation,
+gateway.outerSurface,
+gateway.cardSurfacePresentation,
+gateway.cardSurface,
+gateway.presentation,
 gateway.cardPresentation,
 gateway.mediaPresentation,
 gateway.mediaCardPresentation,
@@ -3056,7 +3069,9 @@ const config=getGlobalCardPresentationConfig(d);
 const selector=[
 ".card",
 ".supportersCard",
-".supporterCard"
+".supporterCard",
+".collectionCard",
+".externalMediaCard"
 ].join(",");
 
 document.querySelectorAll(selector).forEach(card=>{
