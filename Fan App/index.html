@@ -1,5 +1,3 @@
-
-
 <!doctype html>
 
 <html lang="en">
@@ -9,11 +7,11 @@
 
 <title>DJ MOFIYA APP</title>
 
-<link rel="manifest" href="manifest.json?v=1783537384826">
+<link rel="manifest" href="manifest.json?v=1783487785306">
 <meta name="theme-color" content="#000000">
-<link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512-v41.png?v=1783537384826">
-<link rel="shortcut icon" type="image/png" href="icons/icon-192-v41.png?v=1783537384826">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192-v41.png?v=1783537384826">
+<link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512-v41.png?v=1783487785306">
+<link rel="shortcut icon" type="image/png" href="icons/icon-192-v41.png?v=1783487785306">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192-v41.png?v=1783487785306">
 
 <style>
 :root{
@@ -1336,7 +1334,7 @@ pointer-events:none;
 
 <div class="top">
 <div class="brand">
-<img id="logo" src="icons/icon-192-v41.png?v=1783537384826">
+<img id="logo" src="icons/icon-192-v41.png?v=1783487785306">
 <div class="name" id="name">Creator</div>
 </div>
 
@@ -3006,23 +3004,22 @@ if(!d) return null;
 const gateway=d.mediaGateway || {};
 
 return getMediaPresentationConfig(
-d.outerSurfacePresentation,
-d.outerSurface,
-d.cardSurfacePresentation,
-d.cardSurface,
 d.cardPresentation,
 d.mediaPresentation,
 d.mediaCardPresentation,
 d.cardStyle,
-gateway.presentation,
-gateway.outerSurfacePresentation,
-gateway.outerSurface,
-gateway.cardSurfacePresentation,
-gateway.cardSurface,
+d.outerSurfacePresentation,
+d.outerSurface,
+d.cardSurfacePresentation,
+d.cardSurface,
 gateway.cardPresentation,
 gateway.mediaPresentation,
 gateway.mediaCardPresentation,
-gateway.cardStyle
+gateway.cardStyle,
+gateway.outerSurfacePresentation,
+gateway.outerSurface,
+gateway.cardSurfacePresentation,
+gateway.cardSurface
 );
 
 }
@@ -4163,7 +4160,7 @@ collections.forEach(collection=>{
 const card=document.createElement("div")
 card.className="collectionCard"
 
-applyMediaPresentation(card,getMediaPresentationConfig(collection,gateway) || getGlobalCardPresentationConfig(d),"media")
+applyMediaPresentation(card,getMediaPresentationConfig(collection,gateway) || getGlobalCardPresentationConfig(d),"global")
 
 card.onclick=()=>openCollection(collection)
 
