@@ -24,9 +24,9 @@
       }
     ],
     "presentation": {
-      "style": "video",
+      "style": "image",
       "color": "#831100",
-      "url": "./media/media-card-video-1783487268119.mp4",
+      "url": "./media/media-card-image-1783537379375.png",
       "animation": "none"
     },
     "externalMedia": []
