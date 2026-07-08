@@ -65,11 +65,10 @@
     "animation": "spin"
   },
   "innerSurface": {
-    "style": "image",
+    "style": "video",
     "color": "#050505",
-    "url": "./media/inner-surface-image-1783486931428.png",
-    "image": "./media/inner-surface-image-1783486931428.png",
-    "wallpaper": "./media/inner-surface-image-1783486931428.png",
-    "backgroundImage": "./media/inner-surface-image-1783486931428.png"
+    "url": "./media/inner-surface-video-1783487777535.mp4",
+    "video": "./media/inner-surface-video-1783487777535.mp4",
+    "backgroundVideo": "./media/inner-surface-video-1783487777535.mp4"
   }
 }
