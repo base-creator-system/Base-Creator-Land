@@ -25,7 +25,7 @@
     ],
     "presentation": {
       "style": "image",
-      "color": "#000000",
+      "color": "#831100",
       "url": "./media/media-card-image-1783486613643.png",
       "animation": "pulse"
     },
@@ -65,8 +65,11 @@
     "animation": "spin"
   },
   "innerSurface": {
-    "style": "default",
-    "color": "",
-    "url": ""
+    "style": "image",
+    "color": "#050505",
+    "url": "./media/inner-surface-image-1783486931428.png",
+    "image": "./media/inner-surface-image-1783486931428.png",
+    "wallpaper": "./media/inner-surface-image-1783486931428.png",
+    "backgroundImage": "./media/inner-surface-image-1783486931428.png"
   }
 }
