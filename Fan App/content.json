@@ -24,10 +24,10 @@
       }
     ],
     "presentation": {
-      "style": "image",
+      "style": "video",
       "color": "#831100",
-      "url": "./media/media-card-image-1783486613643.png",
-      "animation": "pulse"
+      "url": "./media/media-card-video-1783487268119.mp4",
+      "animation": "none"
     },
     "externalMedia": []
   },
