@@ -2348,13 +2348,27 @@ function buildMediaPresentation(){
 const style=String(el.mediaCardStyle.value || "default").toLowerCase().trim()
 const safeStyle=["color","image","video"].includes(style) ? style : "default"
 const animation=String(el.mediaCardAnimation.value || "none").toLowerCase().trim()
+const url=String(el.mediaCardUrl.value || "").trim()
 
-return{
+const output={
 style:safeStyle,
 color:el.mediaCardColor.value || "#050505",
-url:String(el.mediaCardUrl.value || "").trim(),
+url,
 animation:["float","pulse","drift"].includes(animation) ? animation : "none"
 }
+
+if(safeStyle==="image"){
+output.image=url
+output.wallpaper=url
+output.backgroundImage=url
+}
+
+if(safeStyle==="video"){
+output.video=url
+output.backgroundVideo=url
+}
+
+return output
 }
 
 async function uploadMediaCardAsset(token,file,style){
@@ -2397,12 +2411,25 @@ el.mediaCardFile.value=""
 if(safeStyle==="default") url=""
 }
 
-return{
+const output={
 style:safeStyle,
 color:el.mediaCardColor.value || "#050505",
 url,
 animation:["float","pulse","drift"].includes(animation) ? animation : "none"
 }
+
+if(safeStyle==="image"){
+output.image=url
+output.wallpaper=url
+output.backgroundImage=url
+}
+
+if(safeStyle==="video"){
+output.video=url
+output.backgroundVideo=url
+}
+
+return output
 }
 
 function getPresentationSourceUrl(presentation){
