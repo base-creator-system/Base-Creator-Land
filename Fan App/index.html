@@ -1512,6 +1512,7 @@ const POLL_INTERVAL=15000
 
 let previewMode=false
 let activeCommunityEmbed=""
+let activeLiveAsset=""
 let activeBackgroundAsset=""
 let activeBackgroundVideo=null
 let backgroundVideoRecoveryTimer=null
@@ -3648,13 +3649,15 @@ const liveURL=safeURL(d.live.watch_url || "");
 if(liveURL){
 livePlayer.classList.remove("hidden");
 
-if(liveFrame.src!==liveURL){
+if(liveURL!==activeLiveAsset){
+activeLiveAsset=liveURL;
 liveFrame.src=liveURL;
 }
 
 }else{
 livePlayer.classList.add("hidden");
 liveFrame.removeAttribute("src");
+activeLiveAsset=""
 }
 
 if(String(d.live.description || "").trim()){
