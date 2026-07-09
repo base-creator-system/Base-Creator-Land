@@ -24,10 +24,13 @@
       }
     ],
     "presentation": {
-      "style": "video",
+      "style": "image",
       "color": "#831100",
-      "url": "./media/media-card-video-1783541623348.mp4",
-      "animation": "float"
+      "url": "./media/media-card-image-1783557219474.png",
+      "animation": "float",
+      "image": "./media/media-card-image-1783557219474.png",
+      "wallpaper": "./media/media-card-image-1783557219474.png",
+      "backgroundImage": "./media/media-card-image-1783557219474.png"
     },
     "externalMedia": []
   },
