@@ -7,11 +7,11 @@
 
 <title>DJ MOFIYA APP</title>
 
-<link rel="manifest" href="manifest.json?v=1783561686513">
+<link rel="manifest" href="manifest.json?v=1783487785306">
 <meta name="theme-color" content="#000000">
-<link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512-v41.png?v=1783561686513">
-<link rel="shortcut icon" type="image/png" href="icons/icon-192-v41.png?v=1783561686513">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192-v41.png?v=1783561686513">
+<link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512-v41.png?v=1783487785306">
+<link rel="shortcut icon" type="image/png" href="icons/icon-192-v41.png?v=1783487785306">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192-v41.png?v=1783487785306">
 
 <style>
 :root{
@@ -1334,7 +1334,7 @@ pointer-events:none;
 
 <div class="top">
 <div class="brand">
-<img id="logo" src="icons/icon-192-v41.png?v=1783561686513">
+<img id="logo" src="icons/icon-192-v41.png?v=1783487785306">
 <div class="name" id="name">Creator</div>
 </div>
 
@@ -3457,8 +3457,8 @@ document.body.style.overflow="hidden"
 ;(collection.items || []).forEach(item=>{
 
 const card=document.createElement("div")
-card.className="media-card innerSurface"
-applyMediaPresentation(card,getMediaPresentationConfig(item,collection,gateway) || collectionPresentation,"inner")
+card.className="media-card"
+applyMediaPresentation(card,getMediaPresentationConfig(item,collection,gateway) || collectionPresentation,"media")
 
 card.onclick=()=>{
 collectionBody.querySelectorAll(".media-card.selected").forEach(activeCard=>{
@@ -4053,6 +4053,12 @@ function renderLinks(d){
 const container=document.getElementById("links");
 
 const links=Array.isArray(d.links)?d.links:[];
+
+const wrapperCard=document.querySelector("#view-links .card");
+
+if(wrapperCard){
+wrapperCard.classList.toggle("hidden",links.length===0);
+}
 
 const renderSignature=JSON.stringify({
 links:links,
