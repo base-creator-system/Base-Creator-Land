@@ -31,7 +31,18 @@
       "video": "./media/media-card-video-1783557414496.mp4",
       "backgroundVideo": "./media/media-card-video-1783557414496.mp4"
     },
-    "externalMedia": []
+    "externalMedia": [
+      {
+        "id": "external-1783558701660-4a840c988ac0e",
+        "provider": "custom",
+        "name": "The Fiya Vault",
+        "url": "",
+        "embed": "<script>if(!window.picflow){window.picflow=!0;var s=document.createElement(\"script\");s.src=\"https://picflow.com/embed/main.js\";s.type='module';s.defer=true;document.head.appendChild(s);}</script><picflow-gallery id=\"gal_CjkXXVJPUq15Ll6R\" tenant=\"tnt_wF010uQK9a411fbe\" lightbox=\"#000000E6\" no-padding=\"true\" no-background=\"true\" show-cover=\"true\"><p style=\"font-size:12px;color:#999;font-family:sans-serif\">Client gallery powered by <a href=\"https://picflow.com\">Picflow</a></p></picflow-gallery>",
+        "thumbnail": "",
+        "buttonText": "Open Media",
+        "enabled": true
+      }
+    ]
   },
   "pillColor": "#e32400",
   "live": {
@@ -40,15 +51,27 @@
     "watch_url": "https://customer-sb4ix37adh6j9xvg.cloudflarestream.com/80cb955843a44433f4b0608b3e90f963/iframe",
     "description": "Put your stream info here!"
   },
-  "supporters": [],
+  "supporters": [
+    {
+      "id": "supporter-1783558242972-add54272361b78",
+      "type": "supporter",
+      "name": "DJ Alamo",
+      "tagline": "Alamo Allstars",
+      "description": "",
+      "thumbnail": "",
+      "url": "https://djalamo.com",
+      "buttonText": "Open",
+      "enabled": true
+    }
+  ],
   "community": {
-    "enabled": false,
+    "enabled": true,
     "provider": "custom",
-    "name": "",
-    "icon": "",
-    "buttonText": "Enter Community",
+    "name": "Fiya Talk",
+    "icon": "./media/community-icon-1783560021487.png",
+    "buttonText": "Enter",
     "url": "",
-    "embed": ""
+    "embed": "https://organizations.minnit.chat/274505522146345/c/Main?embed&app"
   },
   "background": {
     "enabled": true,
