@@ -1001,13 +1001,18 @@ background:rgba(255,255,255,0.04);
 border-radius:16px;
 padding:14px;
 margin:14px 0;
+width:100%;
+min-width:0;
+overflow:hidden;
+cursor:pointer;
+}
+
+.media-inner{
 display:flex;
 align-items:center;
 gap:10px;
 width:100%;
 min-width:0;
-overflow:hidden;
-cursor:pointer;
 }
 
 .media-card.selected{
@@ -3503,8 +3508,12 @@ body.appendChild(desc)
 
 }
 
-card.appendChild(thumb)
-card.appendChild(body)
+const inner=document.createElement("div")
+inner.className="media-inner innerSurface"
+applyMediaPresentation(inner,getInnerSurfacePresentationConfig(rootState),"inner")
+
+inner.appendChild(thumb)
+inner.appendChild(body)
 
 if(item.url || item.embed || item.embedUrl || item.embedURL || item.embed_url){
 
@@ -3522,9 +3531,11 @@ card.classList.add("selected")
 openMediaRuntime(item)
 }
 
-card.appendChild(btn)
+inner.appendChild(btn)
 
 }
+
+card.appendChild(inner)
 
 collectionBody.appendChild(card)
 
