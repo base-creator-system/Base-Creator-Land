@@ -53,12 +53,12 @@
   },
   "supporters": [
     {
-      "id": "supporter-1783558242972-add54272361b78",
+      "id": "supporter-1783561015241-c4391bbfd32a4",
       "type": "supporter",
       "name": "DJ Alamo",
-      "tagline": "Alamo Allstars",
+      "tagline": "",
       "description": "",
-      "thumbnail": "",
+      "thumbnail": "./media/supporter-supporter-1783561015241-c4391bbfd32a4-1783561033813.png",
       "url": "https://djalamo.com",
       "buttonText": "Open",
       "enabled": true
