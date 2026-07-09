@@ -3004,18 +3004,7 @@ if(!d) return null;
 const gateway=d.mediaGateway || {};
 
 return getMediaPresentationConfig(
-d.outerSurfacePresentation,
-d.outerSurface,
-d.outerCardPresentation,
-d.outerCardStyle,
-d.cardSurfacePresentation,
-d.cardSurface,
-gateway.outerSurfacePresentation,
-gateway.outerSurface,
-gateway.outerCardPresentation,
-gateway.outerCardStyle,
-gateway.cardSurfacePresentation,
-gateway.cardSurface
+gateway.presentation
 );
 
 }
