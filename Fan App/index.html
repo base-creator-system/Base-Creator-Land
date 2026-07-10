@@ -1795,6 +1795,67 @@ return "";
 }
 
 
+function attachVideoFreezeWatchdog(video){
+
+if(!video || video.dataset.freezeWatchdogAttached==="true") return;
+
+video.dataset.freezeWatchdogAttached="true";
+
+let lastTime=-1;
+let stallHits=0;
+
+const timer=setInterval(()=>{
+
+if(!video.isConnected){
+clearInterval(timer);
+return;
+}
+
+if(document.hidden) return;
+
+if(video.paused){
+
+try{
+const playPromise=video.play();
+if(playPromise && typeof playPromise.catch==="function"){
+playPromise.catch(()=>{});
+}
+}catch(e){}
+
+return;
+
+}
+
+const currentTime=video.currentTime;
+
+if(currentTime===lastTime){
+
+stallHits++;
+
+if(stallHits>=2){
+
+stallHits=0;
+
+try{
+video.load();
+const playPromise=video.play();
+if(playPromise && typeof playPromise.catch==="function"){
+playPromise.catch(()=>{});
+}
+}catch(e){}
+
+}
+
+}else{
+stallHits=0;
+}
+
+lastTime=currentTime;
+
+},3000);
+
+}
+
 function applyHeroAnimation(element,animationName){
 
 if(!element) return;
@@ -1906,6 +1967,8 @@ applyHeroAnimation(video,heroAnimation);
 
 hero.appendChild(video);
 activeHeroVideo=video;
+
+attachVideoFreezeWatchdog(video);
 
 try{
 const playPromise=video.play();
@@ -2342,6 +2405,8 @@ video.preload="auto";
 
 appBackground.appendChild(video);
 appBackground.classList.add("active");
+
+attachVideoFreezeWatchdog(video);
 
 startBackgroundVideoRecovery(video);
 
@@ -2856,6 +2921,8 @@ runSharedPresentationVideoLoop(state);
 });
 
 document.body.appendChild(video);
+
+attachVideoFreezeWatchdog(video);
 
 state={
 video:video,
