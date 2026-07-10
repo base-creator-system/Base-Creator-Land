@@ -2252,13 +2252,29 @@ document.addEventListener("visibilitychange",()=>{
 
 if(!document.hidden){
 setTimeout(resumeBackgroundVideo,250);
+setTimeout(resumeLiveStream,250);
 }
 
 });
 
 window.addEventListener("pageshow",()=>{
 setTimeout(resumeBackgroundVideo,250);
+setTimeout(resumeLiveStream,250);
 });
+
+function resumeLiveStream(){
+
+if(!activeLiveAsset) return;
+
+const liveFrame=document.getElementById("liveFrame");
+
+if(!liveFrame) return;
+
+if(liveFrame.src!==activeLiveAsset){
+liveFrame.src=activeLiveAsset;
+}
+
+}
 
 function applyBackground(d){
 
