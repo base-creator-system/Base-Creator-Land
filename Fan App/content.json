@@ -29,10 +29,13 @@
       }
     ],
     "presentation": {
-      "style": "color",
+      "style": "image",
       "color": "#371a94",
-      "url": "",
-      "animation": "pulse"
+      "url": "./media/media-card-image-1783817964659.png",
+      "animation": "none",
+      "image": "./media/media-card-image-1783817964659.png",
+      "wallpaper": "./media/media-card-image-1783817964659.png",
+      "backgroundImage": "./media/media-card-image-1783817964659.png"
     },
     "externalMedia": [
       {
@@ -47,7 +50,7 @@
       }
     ]
   },
-  "pillColor": "#96d35f",
+  "pillColor": "#000000",
   "live": {
     "enabled": true,
     "status": "live",
@@ -88,9 +91,9 @@
     "embed": "https://organizations.minnit.chat/274505522146345/c/Main?embed&app"
   },
   "background": {
-    "enabled": false,
-    "type": "none",
-    "url": ""
+    "enabled": true,
+    "type": "image",
+    "url": "./media/background-image-1783817960539.png"
   },
   "chime": {
     "enabled": true,
@@ -101,11 +104,14 @@
     "enabled": true,
     "type": "image",
     "url": "./media/hero-image-1783474902583.png",
-    "animation": "spin"
+    "animation": "drift"
   },
   "innerSurface": {
-    "style": "color",
+    "style": "image",
     "color": "#371a94",
-    "url": ""
+    "url": "./media/inner-surface-image-1783817962201.png",
+    "image": "./media/inner-surface-image-1783817962201.png",
+    "wallpaper": "./media/inner-surface-image-1783817962201.png",
+    "backgroundImage": "./media/inner-surface-image-1783817962201.png"
   }
 }
