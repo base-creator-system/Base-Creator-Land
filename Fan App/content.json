@@ -13,7 +13,7 @@
     "enabled": true,
     "type": "image",
     "url": "./media/hero-image-1783820062284.png",
-    "animation": "spin"
+    "animation": "float"
   },
   "chime": {
     "enabled": false,
