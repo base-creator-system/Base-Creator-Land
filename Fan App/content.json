@@ -1,117 +1,57 @@
 {
-  "name": "DJ MOFIYA APP",
-  "bio": "Music, live sessions, bookings & more Tap below to reach me!",
-  "links": [
-    {
-      "label": "Instagram 📸",
-      "url": "https://www.instagram.com/djmofiya/?hl=en"
-    }
-  ],
+  "name": "BASE Creator",
+  "bio": "",
+  "contactEmail": "",
+  "contactLabel": "Connect",
   "backgroundColor": "#000000",
-  "contactEmail": "Bookdjmofiya@gmail.com",
-  "contactLabel": "Email",
-  "mediaGateway": {
-    "enabled": true,
-    "collections": [
-      {
-        "id": "collection-1783344920975-5673979ad81098",
-        "title": "latest",
-        "items": [
-          {
-            "id": "item-1783358382083-8585641d3ad948",
-            "title": "Place Your Image",
-            "description": "",
-            "thumbnail": "./media/thumb-item-1783358382083-8585641d3ad948-1783358434771.png",
-            "url": "./media/media-item-1783358382083-8585641d3ad948-1783358433606.png",
-            "access": "public"
-          }
-        ]
-      }
-    ],
-    "presentation": {
-      "style": "image",
-      "color": "#371a94",
-      "url": "./media/media-card-image-1783817964659.png",
-      "animation": "none",
-      "image": "./media/media-card-image-1783817964659.png",
-      "wallpaper": "./media/media-card-image-1783817964659.png",
-      "backgroundImage": "./media/media-card-image-1783817964659.png"
-    },
-    "externalMedia": [
-      {
-        "id": "external-1783558701660-4a840c988ac0e",
-        "provider": "custom",
-        "name": "The Fiya Vault",
-        "url": "",
-        "embed": "<script>if(!window.picflow){window.picflow=!0;var s=document.createElement(\"script\");s.src=\"https://picflow.com/embed/main.js\";s.type='module';s.defer=true;document.head.appendChild(s);}</script><picflow-gallery id=\"gal_CjkXXVJPUq15Ll6R\" tenant=\"tnt_wF010uQK9a411fbe\" lightbox=\"#000000E6\" no-padding=\"true\" no-background=\"true\" show-cover=\"true\"><p style=\"font-size:12px;color:#999;font-family:sans-serif\">Client gallery powered by <a href=\"https://picflow.com\">Picflow</a></p></picflow-gallery>",
-        "thumbnail": "",
-        "buttonText": "Open Media",
-        "enabled": true
-      }
-    ]
-  },
-  "pillColor": "#000000",
-  "live": {
-    "enabled": true,
-    "status": "live",
-    "watch_url": "https://customer-sb4ix37adh6j9xvg.cloudflarestream.com/80cb955843a44433f4b0608b3e90f963/iframe",
-    "description": "Put your stream info here!"
-  },
-  "supporters": [
-    {
-      "id": "supporter-1783561015241-c4391bbfd32a4",
-      "type": "supporter",
-      "name": "DJ Alamo",
-      "tagline": "",
-      "description": "",
-      "thumbnail": "./media/supporter-supporter-1783561015241-c4391bbfd32a4-1783561033813.png",
-      "url": "https://djalamo.com",
-      "buttonText": "Open",
-      "enabled": true
-    },
-    {
-      "id": "supporter-1783816582001-163259eb97642",
-      "type": "supporter",
-      "name": "High Demand",
-      "tagline": "",
-      "description": "",
-      "thumbnail": "./media/supporter-supporter-1783816582001-163259eb97642-1783816662012.png",
-      "url": "https://highdemandclothingcompany.com/?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQPOTM2NjE5NzQzMzkyNDU5AAGnqzGvrEJsVixjLg-Pze93sZrJ3Vnu3aDySaow6h48E1ESu1FtlNMHwao7aws_aem_FqjeBhZqUS_2Ln9XyHeyjA",
-      "buttonText": "Visit",
-      "enabled": true
-    }
-  ],
-  "community": {
-    "enabled": true,
-    "provider": "custom",
-    "name": "Fiya Talk",
-    "icon": "./media/community-icon-1783560021487.png",
-    "buttonText": "Enter",
-    "url": "",
-    "embed": "https://organizations.minnit.chat/274505522146345/c/Main?embed&app"
-  },
   "background": {
-    "enabled": true,
-    "type": "image",
-    "url": "./media/background-image-1783817960539.png"
-  },
-  "chime": {
-    "enabled": true,
-    "url": "./media/chime-1783474904011.mp3",
-    "volume": 0.65
+    "enabled": false,
+    "type": "none",
+    "url": ""
   },
   "heroMedia": {
-    "enabled": true,
-    "type": "image",
-    "url": "./media/hero-image-1783474902583.png",
-    "animation": "drift"
+    "enabled": false,
+    "type": "none",
+    "url": "",
+    "animation": "none"
   },
+  "chime": {
+    "enabled": false,
+    "url": "",
+    "volume": 0.65
+  },
+  "pillColor": "#000000",
   "innerSurface": {
-    "style": "image",
-    "color": "#371a94",
-    "url": "./media/inner-surface-image-1783817962201.png",
-    "image": "./media/inner-surface-image-1783817962201.png",
-    "wallpaper": "./media/inner-surface-image-1783817962201.png",
-    "backgroundImage": "./media/inner-surface-image-1783817962201.png"
+    "style": "default",
+    "color": "#050505",
+    "url": ""
+  },
+  "live": {
+    "enabled": false,
+    "status": "offline",
+    "watch_url": "",
+    "description": ""
+  },
+  "links": [],
+  "mediaGateway": {
+    "enabled": true,
+    "collections": [],
+    "presentation": {
+      "style": "default",
+      "color": "#050505",
+      "url": "",
+      "animation": "none"
+    },
+    "externalMedia": []
+  },
+  "supporters": [],
+  "community": {
+    "enabled": false,
+    "provider": "custom",
+    "name": "",
+    "icon": "",
+    "buttonText": "Enter Community",
+    "url": "",
+    "embed": ""
   }
 }
