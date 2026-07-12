@@ -1,8 +1,8 @@
 {
   "name": "BASE Creator",
   "bio": "",
-  "contactEmail": "",
-  "contactLabel": "Connect",
+  "contactEmail": "Place Email",
+  "contactLabel": "Email",
   "backgroundColor": "#000000",
   "background": {
     "enabled": false,
@@ -10,10 +10,10 @@
     "url": ""
   },
   "heroMedia": {
-    "enabled": false,
-    "type": "none",
-    "url": "",
-    "animation": "none"
+    "enabled": true,
+    "type": "image",
+    "url": "./media/hero-image-1783820062284.png",
+    "animation": "spin"
   },
   "chime": {
     "enabled": false,
@@ -23,7 +23,7 @@
   "pillColor": "#000000",
   "innerSurface": {
     "style": "default",
-    "color": "#050505",
+    "color": "",
     "url": ""
   },
   "live": {
@@ -34,8 +34,14 @@
   },
   "links": [],
   "mediaGateway": {
-    "enabled": true,
-    "collections": [],
+    "enabled": false,
+    "collections": [
+      {
+        "id": "collection-1783820011390-b6c047e8c036d8",
+        "title": "Add Media",
+        "items": []
+      }
+    ],
     "presentation": {
       "style": "default",
       "color": "#050505",
