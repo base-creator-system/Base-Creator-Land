@@ -1,6 +1,6 @@
 {
   "name": "DJ MOFIYA APP",
-  "bio": "",
+  "bio": "Music, live sessions, bookings & more Tap below to reach me ⬇️",
   "contactEmail": "Place Email",
   "contactLabel": "Email",
   "backgroundColor": "#000000",
@@ -16,9 +16,9 @@
     "animation": "spin"
   },
   "chime": {
-    "enabled": false,
-    "url": "",
-    "volume": 0.65
+    "enabled": true,
+    "url": "./media/chime-1783958608929.mp3",
+    "volume": 0.45
   },
   "pillColor": "#000000",
   "innerSurface": {
@@ -50,7 +50,30 @@
     },
     "externalMedia": []
   },
-  "supporters": [],
+  "supporters": [
+    {
+      "id": "supporter-1783958427506-5cb4af48c743b",
+      "type": "supporter",
+      "name": "Dj Alamo",
+      "tagline": "",
+      "description": "",
+      "thumbnail": "./media/supporter-supporter-1783958427506-5cb4af48c743b-1783958610017.png",
+      "url": "https://djalamo.com",
+      "buttonText": "Visit",
+      "enabled": true
+    },
+    {
+      "id": "supporter-1783958562751-30df3f30db37f",
+      "type": "supporter",
+      "name": "High Demand 2022",
+      "tagline": "",
+      "description": "",
+      "thumbnail": "./media/supporter-supporter-1783958562751-30df3f30db37f-1783958611146.png",
+      "url": "https://highdemandclothingcompany.com/?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQPOTM2NjE5NzQzMzkyNDU5AAGnPfN6m6eOUH6gmQwnlXHAfvkgtwAcpm19cy2JHHimrzuDK-Qq-5GdY-FMMf0_aem_d3uccOXypfMDjP1U0-VoTQ",
+      "buttonText": "Visit",
+      "enabled": true
+    }
+  ],
   "community": {
     "enabled": true,
     "provider": "custom",
