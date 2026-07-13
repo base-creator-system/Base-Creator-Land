@@ -24,9 +24,9 @@
   "innerSurface": {
     "style": "video",
     "color": "#050505",
-    "url": "./media/inner-surface-video-1783961398420.mp4",
-    "video": "./media/inner-surface-video-1783961398420.mp4",
-    "backgroundVideo": "./media/inner-surface-video-1783961398420.mp4"
+    "url": "./media/inner-surface-video-1783961744436.mp4",
+    "video": "./media/inner-surface-video-1783961744436.mp4",
+    "backgroundVideo": "./media/inner-surface-video-1783961744436.mp4"
   },
   "live": {
     "enabled": true,
