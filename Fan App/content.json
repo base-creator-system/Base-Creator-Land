@@ -6,13 +6,13 @@
   "backgroundColor": "#000000",
   "background": {
     "enabled": true,
-    "type": "video",
-    "url": "./media/background-video-1783962088473.mp4"
+    "type": "image",
+    "url": "./media/background-image-1783962490845.png"
   },
   "heroMedia": {
     "enabled": true,
     "type": "image",
-    "url": "./media/hero-image-1783954784226.png",
+    "url": "./media/hero-image-1783962493295.png",
     "animation": "spin"
   },
   "chime": {
