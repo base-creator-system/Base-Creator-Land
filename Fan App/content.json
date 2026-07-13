@@ -22,9 +22,11 @@
   },
   "pillColor": "#000000",
   "innerSurface": {
-    "style": "default",
-    "color": "",
-    "url": ""
+    "style": "video",
+    "color": "#050505",
+    "url": "./media/inner-surface-video-1783959299780.mp4",
+    "video": "./media/inner-surface-video-1783959299780.mp4",
+    "backgroundVideo": "./media/inner-surface-video-1783959299780.mp4"
   },
   "live": {
     "enabled": true,
@@ -39,7 +41,7 @@
     }
   ],
   "mediaGateway": {
-    "enabled": false,
+    "enabled": true,
     "collections": [
       {
         "id": "collection-1783820011390-b6c047e8c036d8",
@@ -48,10 +50,12 @@
       }
     ],
     "presentation": {
-      "style": "default",
+      "style": "video",
       "color": "#050505",
-      "url": "",
-      "animation": "none"
+      "url": "./media/media-card-video-1783959306043.mp4",
+      "animation": "none",
+      "video": "./media/media-card-video-1783959306043.mp4",
+      "backgroundVideo": "./media/media-card-video-1783959306043.mp4"
     },
     "externalMedia": []
   },
