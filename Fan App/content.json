@@ -3,11 +3,11 @@
   "bio": "Music, live sessions, bookings & more Tap below to reach me ⬇️",
   "contactEmail": "Place Email",
   "contactLabel": "Email",
-  "backgroundColor": "#000000",
+  "backgroundColor": "#b51a00",
   "background": {
-    "enabled": true,
-    "type": "image",
-    "url": "./media/background-image-1783984354485.png"
+    "enabled": false,
+    "type": "none",
+    "url": ""
   },
   "heroMedia": {
     "enabled": true,
