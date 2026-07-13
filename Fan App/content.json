@@ -32,7 +32,12 @@
     "watch_url": "https://customer-sb4ix37adh6j9xvg.cloudflarestream.com/8550e5120e7faadd5ff7b621cb0c34fe/iframe",
     "description": ""
   },
-  "links": [],
+  "links": [
+    {
+      "label": "Instagram 📸",
+      "url": "https://www.instagram.com/djmofiya/"
+    }
+  ],
   "mediaGateway": {
     "enabled": false,
     "collections": [
