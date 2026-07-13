@@ -7,7 +7,7 @@
   "background": {
     "enabled": true,
     "type": "image",
-    "url": "./media/background-image-1783983160803.png"
+    "url": "./media/background-image-1783984227352.png"
   },
   "heroMedia": {
     "enabled": true,
@@ -24,9 +24,9 @@
   "innerSurface": {
     "style": "video",
     "color": "#050505",
-    "url": "./media/inner-surface-video-1783961744436.mp4",
-    "video": "./media/inner-surface-video-1783961744436.mp4",
-    "backgroundVideo": "./media/inner-surface-video-1783961744436.mp4"
+    "url": "./media/inner-surface-video-1783984229341.mp4",
+    "video": "./media/inner-surface-video-1783984229341.mp4",
+    "backgroundVideo": "./media/inner-surface-video-1783984229341.mp4"
   },
   "live": {
     "enabled": true,
