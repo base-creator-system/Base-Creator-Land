@@ -5,9 +5,9 @@
   "contactLabel": "Email",
   "backgroundColor": "#831100",
   "background": {
-    "enabled": false,
-    "type": "none",
-    "url": ""
+    "enabled": true,
+    "type": "video",
+    "url": "./media/background-video-1784196955690.mov"
   },
   "heroMedia": {
     "enabled": true,
