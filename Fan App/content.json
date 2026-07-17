@@ -20,13 +20,14 @@
     "url": "./media/chime-1783958608929.mp3",
     "volume": 0.45
   },
-  "pillColor": "#000000",
+  "pillColor": "#b51a00",
   "innerSurface": {
-    "style": "video",
+    "style": "image",
     "color": "#050505",
-    "url": "./media/inner-surface-video-1783984229341.mp4",
-    "video": "./media/inner-surface-video-1783984229341.mp4",
-    "backgroundVideo": "./media/inner-surface-video-1783984229341.mp4"
+    "url": "./media/inner-surface-image-1784247075858.jpeg",
+    "image": "./media/inner-surface-image-1784247075858.jpeg",
+    "wallpaper": "./media/inner-surface-image-1784247075858.jpeg",
+    "backgroundImage": "./media/inner-surface-image-1784247075858.jpeg"
   },
   "live": {
     "enabled": true,
