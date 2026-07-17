@@ -51,13 +51,10 @@
       }
     ],
     "presentation": {
-      "style": "image",
+      "style": "default",
       "color": "#050505",
-      "url": "./media/media-card-image-1783983572200.png",
-      "animation": "none",
-      "image": "./media/media-card-image-1783983572200.png",
-      "wallpaper": "./media/media-card-image-1783983572200.png",
-      "backgroundImage": "./media/media-card-image-1783983572200.png"
+      "url": "",
+      "animation": "none"
     },
     "externalMedia": []
   },
