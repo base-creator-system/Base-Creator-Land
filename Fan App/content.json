@@ -1,55 +1,41 @@
 {
-  "name": "DJ MOFIYA APP",
-  "bio": "Music, live sessions, bookings & more Tap below to reach me ⬇️",
-  "contactEmail": "Place Email",
-  "contactLabel": "Email",
+  "name": "BASE Creator",
+  "bio": "",
+  "contactEmail": "",
+  "contactLabel": "Connect",
   "backgroundColor": "#000000",
   "background": {
-    "enabled": true,
-    "type": "video",
-    "url": "./media/background-video-1784197466121.mp4"
+    "enabled": false,
+    "type": "none",
+    "url": ""
   },
   "heroMedia": {
-    "enabled": true,
-    "type": "image",
-    "url": "./media/hero-image-1783984355630.png",
-    "animation": "spin"
+    "enabled": false,
+    "type": "none",
+    "url": "",
+    "animation": "none"
   },
   "chime": {
-    "enabled": true,
-    "url": "./media/chime-1783958608929.mp3",
-    "volume": 0.45
+    "enabled": false,
+    "url": "",
+    "volume": 0.65
   },
-  "pillColor": "#b51a00",
+  "pillColor": "#000000",
   "innerSurface": {
-    "style": "image",
+    "style": "default",
     "color": "#050505",
-    "url": "./media/inner-surface-image-1784247075858.jpeg",
-    "image": "./media/inner-surface-image-1784247075858.jpeg",
-    "wallpaper": "./media/inner-surface-image-1784247075858.jpeg",
-    "backgroundImage": "./media/inner-surface-image-1784247075858.jpeg"
+    "url": ""
   },
   "live": {
-    "enabled": true,
-    "status": "live",
-    "watch_url": "https://customer-sb4ix37adh6j9xvg.cloudflarestream.com/8550e5120e7faadd5ff7b621cb0c34fe/iframe",
+    "enabled": false,
+    "status": "offline",
+    "watch_url": "",
     "description": ""
   },
-  "links": [
-    {
-      "label": "Instagram 📸",
-      "url": "https://www.instagram.com/djmofiya/"
-    }
-  ],
+  "links": [],
   "mediaGateway": {
     "enabled": true,
-    "collections": [
-      {
-        "id": "collection-1783820011390-b6c047e8c036d8",
-        "title": "Add Media",
-        "items": []
-      }
-    ],
+    "collections": [],
     "presentation": {
       "style": "default",
       "color": "#050505",
@@ -58,37 +44,14 @@
     },
     "externalMedia": []
   },
-  "supporters": [
-    {
-      "id": "supporter-1783958427506-5cb4af48c743b",
-      "type": "supporter",
-      "name": "Dj Alamo",
-      "tagline": "",
-      "description": "",
-      "thumbnail": "./media/supporter-supporter-1783958427506-5cb4af48c743b-1783958610017.png",
-      "url": "https://djalamo.com",
-      "buttonText": "Visit",
-      "enabled": true
-    },
-    {
-      "id": "supporter-1783958562751-30df3f30db37f",
-      "type": "supporter",
-      "name": "High Demand 2022",
-      "tagline": "",
-      "description": "",
-      "thumbnail": "./media/supporter-supporter-1783958562751-30df3f30db37f-1783958611146.png",
-      "url": "https://highdemandclothingcompany.com/?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQPOTM2NjE5NzQzMzkyNDU5AAGnPfN6m6eOUH6gmQwnlXHAfvkgtwAcpm19cy2JHHimrzuDK-Qq-5GdY-FMMf0_aem_d3uccOXypfMDjP1U0-VoTQ",
-      "buttonText": "Visit",
-      "enabled": true
-    }
-  ],
+  "supporters": [],
   "community": {
-    "enabled": true,
+    "enabled": false,
     "provider": "custom",
-    "name": "FIYA TALK",
-    "icon": "./media/community-icon-1783954785852.png",
-    "buttonText": "Expand",
+    "name": "",
+    "icon": "",
+    "buttonText": "Enter Community",
     "url": "",
-    "embed": "https://organizations.minnit.chat/274505522146345/c/Main?embed&app"
+    "embed": ""
   }
 }
